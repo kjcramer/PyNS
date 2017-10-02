@@ -7,6 +7,9 @@ Source:
 
 from __future__ import print_function
 
+# Specific Python modules
+import time
+
 # Standard Python modules
 from pyns.standard import *
 
@@ -65,6 +68,9 @@ def bicgstab(a, phi, b, tol,
     # ---------------
     # Iteration loop
     # ---------------
+
+    start = time.time()    
+    
     if max_iter == -1:
         max_iter = prod(phi.val.shape)
         
@@ -80,6 +86,8 @@ def bicgstab(a, phi, b, tol,
         if abs(rho) < TINY * TINY:
             write.at(__name__)
             print("  Fails becuase rho = %12.5e" % rho)
+            end = time.time() 
+            print("Elapsed time in bigstab %2.3e" %(end - start))
             return x
 
         if i == 1:
@@ -112,6 +120,8 @@ def bicgstab(a, phi, b, tol,
                 write.at(__name__)
                 print("  Fails becuase rho = %12.5e" % rho)
             x[:,:,:] += alfa * p_hat.val[:,:,:]
+            end = time.time() 
+            print("Elapsed time in bigstab %2.3e" %(end - start))
             return x
 
         # Solve M s^ = s
@@ -137,6 +147,8 @@ def bicgstab(a, phi, b, tol,
 
         # If tolerance has been reached, get out of here
         if res < tol:
+            end = time.time() 
+            print("Elapsed time in bigstab %2.3e" %(end - start))
             return x
 
         # Prepare for next iteration

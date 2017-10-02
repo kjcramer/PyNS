@@ -28,6 +28,8 @@
 """
 from __future__ import division
 
+# Specific Python modules
+import time
 import sys
 sys.path.append("../..")
 
@@ -151,6 +153,8 @@ def main(show_plot=True, time_steps=5, plot_freq=5):
     for ts in range(1, ndt+1):
 
         write.time_step(ts)
+        
+        start_tot = time.time()
 
         # ------------------
         # Store old values
@@ -182,6 +186,9 @@ def main(show_plot=True, time_steps=5, plot_freq=5):
 
         # Check the CFL number too
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
+        
+        end_tot = time.time()
+        print("Elapsed time in total %2.3e" %(end_tot - start_tot))
 
 # =============================================================================
 #
@@ -194,6 +201,7 @@ def main(show_plot=True, time_steps=5, plot_freq=5):
                 plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
                 plot.gmv("obst-thinner-collocated-%6.6d" % ts, 
                          (xn,yn,zn), (uc,vc,wc,p))
+                      
 
 if __name__ == "__main__":
     main()
