@@ -42,6 +42,9 @@ def bicgstab(a, phi, b, tol,
       x: Three-dimensional array with solution.
     """
 
+    # if gpu == True, run CUDA-accelerated version of routines
+    gpu = False
+
     if verbose is True:
         write.at(__name__)
 
@@ -80,7 +83,7 @@ def bicgstab(a, phi, b, tol,
             print("  iteration: %3d:" % (i), end = "" )
 
         # rho = r~ * r
-        rho = vec_vec(r_tilda, r)
+        rho = vec_vec(r_tilda, r, gpu)
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
@@ -108,7 +111,7 @@ def bicgstab(a, phi, b, tol,
         v[:,:,:] = mat_vec_bnd(a, p_hat)
 
         # alfa = rho / (r~ * v)
-        alfa = rho / vec_vec(r_tilda, v)
+        alfa = rho / vec_vec(r_tilda, v, gpu)
 
         # s = r - alfa v
         s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
@@ -131,7 +134,7 @@ def bicgstab(a, phi, b, tol,
         t = mat_vec_bnd(a, s_hat)
 
         # omega = (t * s) / (t * t)
-        omega = vec_vec(t, s) / vec_vec(t, t)
+        omega = vec_vec(t, s, gpu) / vec_vec(t, t, gpu)
 
         # x = x + alfa p^ + omega * s^
         x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
