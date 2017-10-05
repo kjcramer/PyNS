@@ -11,7 +11,7 @@ import pycuda.gpuarray as gpuarray
 from pyns.standard import *
 
 # =============================================================================
-def vec_vec(x, y, gpu=False):
+def vec_vec(x, y, alloc1=None, alloc2=None, gpu=False):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -29,6 +29,6 @@ def vec_vec(x, y, gpu=False):
 
     # if gpu == True then run on GPU
     if gpu:
-        return (gpuarray.dot( gpuarray.to_gpu(x), gpuarray.to_gpu(y) )).get()
+        return (gpuarray.dot( alloc1.set(x), alloc2.set(y) )).get()
 
     return sum( sum( sum( multiply(x, y) ) ) )  # end of function
