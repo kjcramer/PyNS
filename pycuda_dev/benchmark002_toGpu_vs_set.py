@@ -73,13 +73,11 @@ def benchmark(sz, iters):
 # ==============================================================================
 # ------------------------------------------------------------------------------
 
-# array size
-# SZ = [16,32,64,128,256]
-SZ = [16,32]
+# array size, in powers of 2 from 16 to 256
+SZ = [2**x for x in range(4,9)]
 
-# number of iterations
-# ITERS = [500, 1000, 2000]
-ITERS = [500, 1000]
+# number of iterations, in powers of 2 from 16 to 262144
+ITERS = [2**x for x in range(4, 12)]
 
 times = np.empty([3, len(SZ), len(ITERS)], np.float64)
 
@@ -88,4 +86,4 @@ for (isz, sz) in enumerate(SZ):
         [cpu, gpu_toGpu, gpu_set] = benchmark(sz, iters)
         times[:,isz,iiters] = [cpu, gpu_toGpu, gpu_set]
 
-print(times)
+np.savez('outData.npz', size=SZ, iterations=ITERS, times=times)
