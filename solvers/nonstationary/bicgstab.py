@@ -46,7 +46,7 @@ def bicgstab(a, phi, b, tol,
     """
 
     # if gpu == True, run CUDA-accelerated version of routines
-    gpu = True 
+    gpu = True
    
     # Preallocating arrays for vec_vec
     gpu_ptr1 = cuda.mem_alloc(phi.val.nbytes)
