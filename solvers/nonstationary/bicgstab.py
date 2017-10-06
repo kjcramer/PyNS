@@ -49,9 +49,8 @@ def bicgstab(a, phi, b, tol,
     gpu = True 
    
     # Preallocating arrays for vec_vec
-    alloc1 = gpuarray.empty( phi.val.shape, phi.val.dtype )
-    alloc2 = gpuarray.empty( phi.val.shape, phi.val.dtype )
-    print(phi.val.dtype)
+    gpu_ptr1 = cuda.mem_alloc(phi.val.nbytes)
+    gpu_ptr2 = cuda.mem_alloc(phi.val.nbytes)
 
     if verbose is True:
         write.at(__name__)
@@ -91,7 +90,7 @@ def bicgstab(a, phi, b, tol,
             print("  iteration: %3d:" % (i), end = "" )
 
         # rho = r~ * r
-        rho = vec_vec(r_tilda, r, alloc1, alloc2, gpu)
+        rho = vec_vec(r_tilda, r, gpu_ptr1, gpu_ptr2, gpu)
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
@@ -119,7 +118,7 @@ def bicgstab(a, phi, b, tol,
         v[:,:,:] = mat_vec_bnd(a, p_hat)
 
         # alfa = rho / (r~ * v)
-        alfa = rho / vec_vec(r_tilda, v, alloc1, alloc2, gpu)
+        alfa = rho / vec_vec(r_tilda, v, gpu_ptr1, gpu_ptr2, gpu)
 
         # s = r - alfa v
         s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
@@ -142,7 +141,7 @@ def bicgstab(a, phi, b, tol,
         t = mat_vec_bnd(a, s_hat)
 
         # omega = (t * s) / (t * t)
-        omega = vec_vec(t, s, alloc1, alloc2, gpu) / vec_vec(t, t, alloc1, alloc2, gpu)
+        omega = vec_vec(t, s, gpu_ptr1, gpu_ptr2, gpu) / vec_vec(t, t, gpu_ptr1, gpu_ptr2, gpu)
 
         # x = x + alfa p^ + omega * s^
         x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
