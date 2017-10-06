@@ -36,8 +36,8 @@ def benchmark(sz, iters):
     endtime = time.time()
 
     cputime = endtime - starttime
-    print("cpu -- %d iters, %2.3e elems in %2.3e s" \
-          %(iters, sz**3, cputime))
+    print("cpu -- size: %d -- iterations: %d -- in %2.3e s" \
+          %(sz, iters, cputime))
     
     # gpuarray.to_gpu -- push arrays to device, perform reduction
     starttime = time.time()
@@ -48,8 +48,8 @@ def benchmark(sz, iters):
     endtime = time.time()
 
     gputime_toGpu = endtime - starttime
-    print("gpuarray.to_gpu -- %d iters, %2.3e elems in %2.3e s" \
-          %(iters, sz**3, gputime_toGpu))
+    print("gpuarray.to_gpu -- size: %d -- iterations: %d -- in %2.3e s" \
+          %(sz, iters, gputime_toGpu))
     
     # gpuarray.set -- preallocate on device, push arrays to device, perform reduction
     starttime = time.time()
@@ -65,19 +65,19 @@ def benchmark(sz, iters):
     endtime = time.time()
 
     gputime_set = endtime - starttime
-    print("gpuarray.set -- %d iters, %2.3e elems in %2.3e s" \
-          %(iters, sz**3, gputime_set))
+    print("gpuarray.set -- size: %d -- iterations: %d -- in %2.3e s" \
+          %(sz, iters, gputime_set))
     
     return [cputime, gputime_toGpu, gputime_set]
 
 # ==============================================================================
 # ------------------------------------------------------------------------------
 
-# array size, in powers of 2 from 16 to 256
-SZ = [2**x for x in range(4,9)]
+# array size, from 64 to 256 in 16-increments
+SZ = [16*x for x in range(4,17)]
 
 # number of iterations, in powers of 2 from 16 to 262144
-ITERS = [2**x for x in range(4, 12)]
+ITERS = [2**x for x in range(5, 8)]
 
 times = np.empty([3, len(SZ), len(ITERS)], np.float64)
 
