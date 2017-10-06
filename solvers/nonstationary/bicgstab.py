@@ -46,11 +46,22 @@ def bicgstab(a, phi, b, tol,
     """
 
     # if gpu == True, run CUDA-accelerated version of routines
-    gpu = True 
+    gpu = True
    
     # Preallocating arrays for vec_vec
+    prealloc_time_start = time.time()
+
     gpu_ptr1 = cuda.mem_alloc(phi.val.nbytes)
     gpu_ptr2 = cuda.mem_alloc(phi.val.nbytes)
+
+    # treat the allocated memory as a GPUArray object
+    gpu_arr1 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr1 )
+    gpu_arr2 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr2 )
+
+    prealloc_time_end = time.time()
+    print("Elapsed time preallocating: %2.3e s" \
+          %(prealloc_time_end - prealloc_time_start))
+
 
     if verbose is True:
         write.at(__name__)
@@ -58,7 +69,7 @@ def bicgstab(a, phi, b, tol,
     # Helping variable
     x = phi.val
 
-    # Intitilize arrays
+    # Initialize arrays
     p       = zeros(x.shape)
     p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
                       verbose=False)
@@ -90,7 +101,7 @@ def bicgstab(a, phi, b, tol,
             print("  iteration: %3d:" % (i), end = "" )
 
         # rho = r~ * r
-        rho = vec_vec(r_tilda, r, gpu_ptr1, gpu_ptr2, gpu)
+        rho = vec_vec(r_tilda, r, gpu_arr1, gpu_arr2, gpu)
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
@@ -118,7 +129,7 @@ def bicgstab(a, phi, b, tol,
         v[:,:,:] = mat_vec_bnd(a, p_hat)
 
         # alfa = rho / (r~ * v)
-        alfa = rho / vec_vec(r_tilda, v, gpu_ptr1, gpu_ptr2, gpu)
+        alfa = rho / vec_vec(r_tilda, v, gpu_arr1, gpu_arr2, gpu)
 
         # s = r - alfa v
         s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
@@ -141,7 +152,7 @@ def bicgstab(a, phi, b, tol,
         t = mat_vec_bnd(a, s_hat)
 
         # omega = (t * s) / (t * t)
-        omega = vec_vec(t, s, gpu_ptr1, gpu_ptr2, gpu) / vec_vec(t, t, gpu_ptr1, gpu_ptr2, gpu)
+        omega = vec_vec(t, s, gpu_arr1, gpu_arr2, gpu) / vec_vec(t, t, gpu_arr1, gpu_arr2, gpu)
 
         # x = x + alfa p^ + omega * s^
         x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
