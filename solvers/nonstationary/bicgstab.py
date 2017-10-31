@@ -8,10 +8,10 @@ Source:
 from __future__ import print_function
 
 # Specific Python modules
-import pycuda.driver as cuda
-import pycuda.gpuarray as gpuarray
-import numpy as np
-import time
+#import pycuda.driver as cuda
+#import pycuda.gpuarray as gpuarray
+#import numpy as np
+#import time
 
 # Standard Python modules
 from pyns.standard import *
@@ -46,21 +46,21 @@ def bicgstab(a, phi, b, tol,
     """
 
     # if gpu == True, run CUDA-accelerated version of routines
-    gpu = True
+    gpu = False
    
     # Preallocating arrays for vec_vec
-    prealloc_time_start = time.time()
+    # prealloc_time_start = time.time()
 
-    gpu_ptr1 = cuda.mem_alloc(phi.val.nbytes)
-    gpu_ptr2 = cuda.mem_alloc(phi.val.nbytes)
+    #gpu_ptr1 = cuda.mem_alloc(phi.val.nbytes)
+    #gpu_ptr2 = cuda.mem_alloc(phi.val.nbytes)
 
     # treat the allocated memory as a GPUArray object
-    gpu_arr1 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr1 )
-    gpu_arr2 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr2 )
+    #gpu_arr1 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr1 )
+    #gpu_arr2 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr2 )
 
-    prealloc_time_end = time.time()
-    print("Elapsed time preallocating: %2.3e s" \
-          %(prealloc_time_end - prealloc_time_start))
+    #prealloc_time_end = time.time()
+    #print("Elapsed time preallocating: %2.3e s" \
+    #      %(prealloc_time_end - prealloc_time_start))
 
 
     if verbose is True:
@@ -88,9 +88,7 @@ def bicgstab(a, phi, b, tol,
 
     # ---------------
     # Iteration loop
-    # ---------------
-
-    start = time.time()    
+    # ---------------  
     
     if max_iter == -1:
         max_iter = prod(phi.val.shape)
@@ -101,14 +99,12 @@ def bicgstab(a, phi, b, tol,
             print("  iteration: %3d:" % (i), end = "" )
 
         # rho = r~ * r
-        rho = vec_vec(r_tilda, r, gpu_arr1, gpu_arr2, gpu)
+        rho = vec_vec(r_tilda, r)
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
             write.at(__name__)
             print("  Fails becuase rho = %12.5e" % rho)
-            end = time.time() 
-            print("Elapsed time in bigstab %2.3e" %(end - start))
             return x
 
         if i == 1:
@@ -129,7 +125,7 @@ def bicgstab(a, phi, b, tol,
         v[:,:,:] = mat_vec_bnd(a, p_hat)
 
         # alfa = rho / (r~ * v)
-        alfa = rho / vec_vec(r_tilda, v, gpu_arr1, gpu_arr2, gpu)
+        alfa = rho / vec_vec(r_tilda, v)
 
         # s = r - alfa v
         s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
@@ -141,8 +137,6 @@ def bicgstab(a, phi, b, tol,
                 write.at(__name__)
                 print("  Fails because rho = %12.5e" % rho)
             x[:,:,:] += alfa * p_hat.val[:,:,:]
-            end = time.time() 
-            print("Elapsed time in bigstab %2.3e" %(end - start))
             return x
 
         # Solve M s^ = s
@@ -152,7 +146,7 @@ def bicgstab(a, phi, b, tol,
         t = mat_vec_bnd(a, s_hat)
 
         # omega = (t * s) / (t * t)
-        omega = vec_vec(t, s, gpu_arr1, gpu_arr2, gpu) / vec_vec(t, t, gpu_arr1, gpu_arr2, gpu)
+        omega = vec_vec(t, s) / vec_vec(t, t)
 
         # x = x + alfa p^ + omega * s^
         x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
@@ -168,8 +162,6 @@ def bicgstab(a, phi, b, tol,
 
         # If tolerance has been reached, get out of here
         if res < tol:
-            end = time.time() 
-            print("Elapsed time in bigstab %2.3e" %(end - start))
             return x
 
         # Prepare for next iteration
