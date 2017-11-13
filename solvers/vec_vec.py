@@ -11,7 +11,7 @@ import pycuda.gpuarray as gpuarray
 from pyns.standard import *
 
 # =============================================================================
-def vec_vec(x, y, ptr1=None, ptr2=None, gpu=False):
+def vec_vec(x, y, gpu_arr1=None, gpu_arr2=None, gpu=False):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -31,10 +31,6 @@ def vec_vec(x, y, ptr1=None, ptr2=None, gpu=False):
 
     # if gpu == True then run on GPU
     if gpu:
-        # treat the allocated memory as a GPUArray object
-        gpu_arr1 = gpuarray.empty( x.shape, x.dtype, gpudata=ptr1 )
-        gpu_arr2 = gpuarray.empty( y.shape, y.dtype, gpudata=ptr2 )
-
         # populate the GPUArray with the values from x and y
         gpu_arr1.set(x)
         gpu_arr2.set(y)
