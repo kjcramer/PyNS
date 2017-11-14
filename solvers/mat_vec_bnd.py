@@ -9,6 +9,7 @@ from pyns.standard import *
 import pycuda.driver as cuda
 import pycuda.autoinit
 import pycuda.gpuarray as gpuarray
+from numpy import shape
 from numpy import pad
 
 # PyNS modules
@@ -27,16 +28,6 @@ def mat_vec_bnd(a, phi):
       r: Result of the matrix-vector product, which is a vector stored
          in a three-dimensional array.
     """
-
-    # preparing a for gpu
-    if True:
-        a.C = pad(a.C, ((1, 1), (1, 1), (1, 1)), 'constant')
-        a.W = pad(a.W, ((1, 1), (0, 2), (1, 1)), 'constant')
-        a.E = pad(a.E, ((1, 1), (2, 0), (1, 1)), 'constant')
-        a.S = pad(a.S, ((1, 1), (1, 1), (0, 2)), 'constant')
-        a.N = pad(a.N, ((1, 1), (1, 1), (2, 0)), 'constant')
-        a.B = pad(a.B, ((2, 0), (1, 1), (1, 1)), 'constant')
-        a.T = pad(a.T, ((0, 2), (1, 1), (1, 1)), 'constant')
 
     r = zeros(phi.val.shape)
     
@@ -62,7 +53,6 @@ def mat_vec_bnd(a, phi):
 
 
     if True:
-        from numpy import shape
         # append x-boundary conditions to phi
         phi_gpu = cat_x(( phi.bnd[W].val[:1,:,:], phi.val[:,:,:], phi.bnd[E].val[:1,:,:] ))
         
@@ -79,6 +69,17 @@ def mat_vec_bnd(a, phi):
         phi_gpu = cat_z(( z_bnd_B, phi_gpu, z_bnd_T ))
         
         print(shape(phi_gpu))
+   
+    # preparing a for gpu
+    if True:
+        a_C_gpu = pad(a.C, ((1, 1), (1, 1), (1, 1)), 'constant')
+        a_W_gpu = pad(a.W, ((1, 1), (0, 2), (1, 1)), 'constant')
+        a_E_gpu = pad(a.E, ((1, 1), (2, 0), (1, 1)), 'constant')
+        a_S_gpu = pad(a.S, ((1, 1), (1, 1), (0, 2)), 'constant')
+        a_N_gpu = pad(a.N, ((1, 1), (1, 1), (2, 0)), 'constant')
+        a_B_gpu = pad(a.B, ((2, 0), (1, 1), (1, 1)), 'constant')
+        a_T_gpu = pad(a.T, ((0, 2), (1, 1), (1, 1)), 'constant')
+        print(shape(a_C_gpu))
 
 
     return r  # end of function
