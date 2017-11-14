@@ -5,6 +5,12 @@ Matrix-vector product, including booundary values, for PyNS matrix format.
 # Standard Python modules
 from pyns.standard import *
 
+# Specific Python modules
+import pycuda.driver as cuda
+import pycuda.autoinit
+import pycuda.gpuarray as gpuarray
+from numpy import pad
+
 # PyNS modules
 from pyns.constants import W, E, S, N, B, T
 from pyns.operators import cat_x, cat_y, cat_z
@@ -14,13 +20,16 @@ def mat_vec_bnd(a, phi):
 # -----------------------------------------------------------------------------
     """
     Args:
-      a: Object of the type "Matrix", holding the matrix for multiplication.
-      x: Three-dimensional array holding a vector for multiplication.
+      a:   Object of the type "Matrix", holding the matrix for multiplication.
+      phi: Three-dimensional array holding a vector for multiplication.
 
     Returns:
       r: Result of the matrix-vector product, which is a vector stored
          in a three-dimensional array.
     """
+
+    
+
 
     r = zeros(phi.val.shape)
     
