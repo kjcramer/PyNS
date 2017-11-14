@@ -28,8 +28,15 @@ def mat_vec_bnd(a, phi):
          in a three-dimensional array.
     """
 
-    
-
+    # preparing a for gpu
+    if True:
+        a.C = pad(a.C, ((1, 1), (1, 1), (1, 1)), 'constant')
+        a.W = pad(a.W, ((1, 1), (0, 2), (1, 1)), 'constant')
+        a.E = pad(a.E, ((1, 1), (2, 0), (1, 1)), 'constant')
+        a.S = pad(a.S, ((1, 1), (1, 1), (0, 2)), 'constant')
+        a.N = pad(a.N, ((1, 1), (1, 1), (2, 0)), 'constant')
+        a.B = pad(a.B, ((2, 0), (1, 1), (1, 1)), 'constant')
+        a.T = pad(a.T, ((0, 2), (1, 1), (1, 1)), 'constant')
 
     r = zeros(phi.val.shape)
     
