@@ -32,7 +32,8 @@ c_gpu = gpuarray.empty_like(a_gpu)
 
 # perform multiplication on gpu
 starttime_gpu = time.time()
-gpu_mult(a_gpu[:,1,1], b_gpu[:,1,1], c_gpu[:,1,1])
+#gpu_mult(a_gpu[:,1,1], b_gpu[:,1,1], c_gpu[:,1,1])
+c_gpu[:,1,1] = a_gpu[:,1,1] * b_gpu[:,1,1]
 stoptime_gpu = time.time()
 
 
