@@ -3,6 +3,7 @@ import pycuda.driver as cuda
 import pycuda.autoinit
 import pycuda.gpuarray as gpuarray
 import pycuda.compiler as compiler
+import pycuda.tools as tools
 
 # Utils
 import time
@@ -11,9 +12,24 @@ import time
 import numpy as np
 
 # ==============================================================
+# https://stackoverflow.com/a/5731911
+
+(free,total)=cuda.mem_get_info()
+print("Global memory occupancy:%f%% free"%(free*100/total))
+
+for devicenum in range(cuda.Device.count()):
+    device=cuda.Device(devicenum)
+    attrs=device.get_attributes()
+
+    #Beyond this point is just pretty printing
+    print("\n===Attributes for device %d"%devicenum)
+    for (key,value) in attrs.iteritems():
+        print("%s:%s"%(str(key),str(value)))
+
+# ==============================================================
 
 # tune these numbers!!!
-blocks = 64
+blocks = 1
 block_size = 128
 
 # generate test array and push to gpu
@@ -53,12 +69,15 @@ __global__ void doublify(float *a)
 doublify = mod.get_function("doublify")
 
 # call the kernel on the card
-# may complain!
+starttime = time.time()
 doublify(a_gpu, grid=(blocks, 1), block=(block_size, 1, 1))
-
 a_gpu_fetch = a_gpu.get()
+stoptime = time.time()
 
-print(a_cpu)
-print("---")
-print(a_gpu)
 
+
+# print(a_cpu)
+# print("---")
+# print(a_gpu)
+
+print("GPU time: %2.3e" %(stoptime-starttime))
