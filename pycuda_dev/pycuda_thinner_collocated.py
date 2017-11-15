@@ -52,9 +52,9 @@ def main(show_plot=False, time_steps=5, plot_freq=5):
 # =============================================================================
 
     # Node coordinates
-    xn = nodes(0, 1.25, 256)
-    yn = nodes(0, 0.125, 32)
-    zn = nodes(0, 0.125, 32)
+    xn = nodes(0, 1.25, 512)
+    yn = nodes(0, 0.125, 128)
+    zn = nodes(0, 0.125, 128)
 
     # Cell coordinates
     xc = avg(xn)

@@ -11,6 +11,7 @@ import pycuda.autoinit
 import pycuda.gpuarray as gpuarray
 from numpy import shape
 from numpy import pad
+import time
 
 # PyNS modules
 from pyns.constants import W, E, S, N, B, T
@@ -28,6 +29,8 @@ def mat_vec_bnd(a, phi):
       r: Result of the matrix-vector product, which is a vector stored
          in a three-dimensional array.
     """
+
+    start_cpu = time.time()
 
     r = zeros(phi.val.shape)
     
@@ -53,6 +56,10 @@ def mat_vec_bnd(a, phi):
     r[:] -= a.T[:] * cat_z( (phi.val       [:,:, 1:], 
                              phi.bnd[T].val[:,:, :1]) )
     
+    stop_cpu=time.time()
+    print("CPU time: %2.3e s" %(stop_cpu-start_cpu))
+
+    start_gpu=time.time()
 
     # initialize and push data to gpu
     r_gpu = gpuarray.zeros(phi.val.shape,phi.val.dtype)
@@ -91,6 +98,9 @@ def mat_vec_bnd(a, phi):
                         phi.bnd[T].val[:,:, :1]) ))
     r_gpu = r_gpu - a_gpu * phi_gpu
     r_gpu = r_gpu.get()      
+
+    stop_gpu=time.time()
+    print("GPU time: %2.3e s" %(stop_gpu-start_gpu))
 
     if False:
         # append x-boundary conditions to phi
