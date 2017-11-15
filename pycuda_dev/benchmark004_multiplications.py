@@ -18,8 +18,8 @@ import numpy
 # ------------------------------------------------------------------------------
 
 # generate random matrices on gpu
-a_gpu = curand((12000, 100, 100))
-b_gpu = curand((12000, 100, 100))
+a_gpu = curand((120, 100, 100))
+b_gpu = curand((120, 100, 100))
 
 # define kernel for multiplications
 gpu_mult = ElementwiseKernel(
@@ -32,12 +32,8 @@ c_gpu = gpuarray.empty_like(a_gpu)
 
 # perform multiplication on gpu
 starttime_gpu = time.time()
-<<<<<<< HEAD
-#gpu_mult(a_gpu[:,1,1], b_gpu[:,1,1], c_gpu[:,1,1])
-c_gpu[:,1,1] = a_gpu[:,1,1] * b_gpu[:,1,1]
-=======
+#c_gpu = a_gpu * b_gpu
 gpu_mult(a_gpu, b_gpu, c_gpu)
->>>>>>> 8ceba902bcfdc564c55ea2a82bf6426879db7146
 stoptime_gpu = time.time()
 
 

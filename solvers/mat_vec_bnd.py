@@ -30,27 +30,61 @@ def mat_vec_bnd(a, phi):
     """
 
     r = zeros(phi.val.shape)
+
+    # initialize and push data to gpu
+    r_gpu = gpuarray.zeros(phi.val.shape)
+    a_gpu = gpuarray.to_gpu(a.C)
+    phi_gpu = gpuarray.to_gpu(phi.val)
     
     phi.exchange()
 
     r[:]  = a.C[:] * phi.val[:]
-    
+    r_gpu = a_gpu * phi_gpu
+
     r[:] -= a.W[:] * cat_x( (phi.bnd[W].val[ :1,:,:], 
                              phi.val       [:-1,:,:]) )
+    a_gpu.set(a.W)
+    phi_gpu.set(cat_x( (phi.bnd[W].val[ :1,:,:], 
+                        phi.val       [:-1,:,:]) ))
+    r_gpu = r_gpu - a_gpu * phi_gpu
+
     r[:] -= a.E[:] * cat_x( (phi.val       [ 1:,:,:], 
                              phi.bnd[E].val[ :1,:,:]) )
+    a_gpu.set(a.E)
+    phi_gpu.set(cat_x( (phi.val       [ 1:,:,:], 
+                        phi.bnd[E].val[ :1,:,:]) ))
+    r_gpu = r_gpu - a_gpu * phi_gpu
     
     r[:] -= a.S[:] * cat_y( (phi.bnd[S].val[:, :1,:], 
                              phi.val       [:,:-1,:]) )
+    a_gpu.set(a.S)
+    phi_gpu.set(cat_y( (phi.bnd[S].val[:, :1,:], 
+                        phi.val       [:,:-1,:]) ))
+    r_gpu = r_gpu - a_gpu * phi_gpu
+
     r[:] -= a.N[:] * cat_y( (phi.val       [:, 1:,:], 
                              phi.bnd[N].val[:, :1,:]) )
+    a_gpu.set(a.N)
+    phi_gpu.set(cat_y( (phi.val       [:, 1:,:], 
+                        phi.bnd[N].val[:, :1,:]) ))
+    r_gpu = r_gpu - a_gpu * phi_gpu
     
     r[:] -= a.B[:] * cat_z( (phi.bnd[B].val[:,:, :1], 
                              phi.val       [:,:,:-1]) )
+    a_gpu.set(a.B)
+    phi_gpu.set(cat_z( (phi.bnd[B].val[:,:, :1], 
+                        phi.val       [:,:,:-1]) ))
+    r_gpu = r_gpu - a_gpu * phi_gpu
+
     r[:] -= a.T[:] * cat_z( (phi.val       [:,:, 1:], 
                              phi.bnd[T].val[:,:, :1]) )
+    a_gpu.set(a.T)
+    phi_gpu.set(cat_z( (phi.val       [:,:, 1:], 
+                        phi.bnd[T].val[:,:, :1]) ))
+    r_gpu = r_gpu - a_gpu * phi_gpu
 
-    if True:
+
+    if False:
         # append x-boundary conditions to phi
         phi_gpu = cat_x(( phi.bnd[W].val[:1,:,:], phi.val[:,:,:], phi.bnd[E].val[:1,:,:] ))
         
