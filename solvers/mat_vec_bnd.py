@@ -102,6 +102,7 @@ def mat_vec_bnd(a, phi):
     stop_gpu=time.time()
     print("GPU time: %2.3e s" %(stop_gpu-start_gpu))
 
+
     if False:
         # append x-boundary conditions to phi
         phi_gpu = cat_x(( phi.bnd[W].val[:1,:,:], phi.val[:,:,:], phi.bnd[E].val[:1,:,:] ))
@@ -125,6 +126,19 @@ def mat_vec_bnd(a, phi):
         a_B_gpu = pad(a.B, ((1, 1), (1, 1), (0, 2)), 'constant')
         a_T_gpu = pad(a.T, ((1, 1), (1, 1), (2, 0)), 'constant')
 
-       
+        # C Kernel for oinly pushing phi once to gpu
+        
+        __global__ void doublify(float *a)
+        {
+            int idx = threadIdx.x + blockIdx.x * blockDim.x; // x coordinate  (numpy axis 2)
+            int idy = threadIdx.y + blockIdx.y * blockDim.y; // y coordinate (numpy axis 1)
+            int x_width = blockDim.x * gridDim.x;
+            int y_width = blockDim.y * gridDim.y;
+            for(int idz = 0; idz < 10; idz++) // loop over z coordinate (numpy axis 0)
+            {
+                int flat_id = idx + x_width * idy + (x_width * y_width) * idz;
+                a[flat_id] *= 2;
+            }
+         }
 
     return r  # end of function
