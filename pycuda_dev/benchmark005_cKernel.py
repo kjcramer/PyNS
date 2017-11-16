@@ -23,7 +23,7 @@ for devicenum in range(cuda.Device.count()):
 
     #Beyond this point is just pretty printing
     print("\n===Attributes for device %d"%devicenum)
-    for (key,value) in attrs.iteritems():
+    for (key,value) in attrs.items():
         print("%s:%s"%(str(key),str(value)))
 
 # ==============================================================
