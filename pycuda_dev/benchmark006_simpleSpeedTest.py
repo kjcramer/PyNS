@@ -92,6 +92,7 @@ a = numpy.ones(nbr_values).astype(numpy.float32)
 # create a destination array that will receive the result
 dest = numpy.zeros_like(a)
 
+<<<<<<< HEAD
 start_time = time.time()
 start.record() # start timing
 gpusin(drv.Out(dest), drv.In(a), numpy.int32(n_iter), grid=(blocks,1), block=(block_size,1,1) )
