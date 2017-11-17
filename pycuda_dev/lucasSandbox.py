@@ -1,0 +1,66 @@
+"""
+Testing performance of set vs to_gpu, save data
+"""
+
+# CUDA-related
+import pycuda.driver as cuda
+import pycuda.autoinit
+import pycuda.gpuarray as gpuarray
+import pycuda.curandom as curandom
+
+# Utils
+import time
+
+# Standard Python modules
+import numpy as np
+
+# ==============================================================================
+def copy_sandbox():
+# ------------------------------------------------------------------------------
+    """
+    Check the behavior of gpuarray.copy()
+    """
+    a = gpuarray.arange(1, 5, 1, dtype=np.float32)
+    b = a.copy()
+    print(b)
+    print(type(b))
+
+
+
+# ==============================================================================
+def elementwise_ops():
+# ------------------------------------------------------------------------------
+    """
+    Check whether elementwise ops work in a predictable way (they do)
+    """
+    a = gpuarray.arange(1, 5, 1, dtype=np.float32)
+    b = a*2
+    c = b/a
+    print(c)
+    print(type(c))
+
+
+# ==============================================================================
+def slicing_test():
+# ------------------------------------------------------------------------------
+    """
+    Check whether we can:
+    + slice (we should, as of PyCuda 2013.1) -- manipulate gpuarrays as Rvalues
+    + address and manipulate slices -- manipulate gpuarrays as Lvalues
+    """
+    a = curandom.rand((3, 3, 3))
+    print(a)
+    b = a[2,:,:]*2/2
+    print(b)
+    print(type(b))
+    b[0,0] = gpuarray.to_gpu( np.asarray(42).astype(np.float32) )
+    print(b)
+    print(type(b))
+
+# ==============================================================================
+# ------------------------------------------------------------------------------
+
+
+# copy_sandbox()
+# elementwise_ops()
+slicing_test()
