@@ -75,8 +75,22 @@ def gpu_norm():
 # ==============================================================================
 # ------------------------------------------------------------------------------
 
+# ==============================================================================
+def comparisons():
+# ------------------------------------------------------------------------------
+    """
+    Comparing values that live in different places
+    """
+    a = gpuarray.to_gpu( np.asarray(11).astype(np.float32) )
+    b_gpu = gpuarray.to_gpu( np.asarray(1000).astype(np.float32) )
+    b_cpu = np.asarray(1000)
+    print(a < b_gpu)
+    print(a < b_cpu)
+    
+
 
 # copy_sandbox()
 # elementwise_ops()
 # slicing_test()
-gpu_norm()
+# gpu_norm()
+comparisons()
