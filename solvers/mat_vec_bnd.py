@@ -25,8 +25,6 @@ def mat_vec_bnd(a, phi, gpu=False):
          in a three-dimensional array.
     """
 
-    phi.exchange()
-    
     if gpu:
 
         import pycuda.driver as cuda
@@ -38,42 +36,34 @@ def mat_vec_bnd(a, phi, gpu=False):
 	#start_gpu=time.time()
     
         # initialize and push data to gpu
-        r_gpu = gpuarray.zeros(phi.val.shape,phi.val.dtype)
-        a_gpu = gpuarray.to_gpu(a.C)
-        phi_gpu = gpuarray.to_gpu(phi.val)
+        r_gpu = gpuarray.zeros_like(phi_gpu.val)
+        x_gpu = gpuarray.zeros_like(phi_gpu.val)        
+      
+        r_gpu = a_gpu * phi_gpu.val
+    
+        x_gpu[:1,:,:]  = phi.bnd[W].val[ :1,:,:] 
+        x_gpu[1:,:,:]  = phi.val       [:-1,:,:]) ))
+        r_gpu = r_gpu - a_gpu.W * phi_gpu
+    
+        x_gpu[:-1,:,:] = phi.val[ 1:,:,:],
+        x_gpu[-1:,:,:] = phi.bnd[E].val[ :1,:,:]
+        r_gpu = r_gpu - a_gpu.E * x_gpu
+    
+        x_gpu[:,:1,:]  = phi.bnd[S].val[:, :1,:] 
+        x_gpu[:,1:,:]  = phi.val[:,:-1,:]
+        r_gpu = r_gpu - a_gpu.S * x_gpu
         
-        r_gpu = a_gpu * phi_gpu
-    
-        a_gpu.set(a.W)
-        phi_gpu.set(cat_x( (phi.bnd[W].val[ :1,:,:], 
-                            phi.val       [:-1,:,:]) ))
-        r_gpu = r_gpu - a_gpu * phi_gpu
-    
-        a_gpu.set(a.E)
-        phi_gpu.set(cat_x( (phi.val       [ 1:,:,:], 
-                            phi.bnd[E].val[ :1,:,:]) ))
-        r_gpu = r_gpu - a_gpu * phi_gpu
-    
-        a_gpu.set(a.S)
-        phi_gpu.set(cat_y( (phi.bnd[S].val[:, :1,:], 
-                            phi.val       [:,:-1,:]) ))
-        r_gpu = r_gpu - a_gpu * phi_gpu
+        x_gpu[:,:-1,:] = phi.val[:, 1:,:] 
+        x_gpu[:,-1:,:] = phi.bnd[N].val[:, :1,:]
+        r_gpu = r_gpu - a_gpu.N * x_gpu
         
-        a_gpu.set(a.N)    
-        phi_gpu.set(cat_y( (phi.val       [:, 1:,:], 
-                            phi.bnd[N].val[:, :1,:]) ))
-        r_gpu = r_gpu - a_gpu * phi_gpu
-        
-        a_gpu.set(a.B)
-        phi_gpu.set(cat_z( (phi.bnd[B].val[:,:, :1], 
-                            phi.val       [:,:,:-1]) ))
-        r_gpu = r_gpu - a_gpu * phi_gpu
+        x_gpu[:,:,:1]  = phi.bnd[B].val[:,:, :1], 
+        x_gpu[:;:,1:]  = phi.val[:,:,:-1]
+        r_gpu = r_gpu - a_gpu.B * x_gpu
     
-        a_gpu.set(a.T)
-        phi_gpu.set(cat_z( (phi.val       [:,:, 1:], 
-                            phi.bnd[T].val[:,:, :1]) ))
-        r_gpu = r_gpu - a_gpu * phi_gpu
-        r_gpu = r_gpu.get()      
+        x_gpu[:,:,:-1] = phi.val[:,:, 1:], 
+        x_gpu[:,:,-1:] = phi.bnd[T].val[:,:, :1]
+        r_gpu = r_gpu - a_gpu.T * x_gpu
     
         #stop_gpu=time.time()
         #print("GPU time: %2.3e s" %(stop_gpu-start_gpu))
@@ -81,6 +71,8 @@ def mat_vec_bnd(a, phi, gpu=False):
         return r_gpu
    
    
+    phi.exchange()
+    
     #start_cpu = time.time()
 
     r = zeros(phi.val.shape)

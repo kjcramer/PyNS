@@ -89,8 +89,8 @@ def comparisons():
     
 
 
-# copy_sandbox()
+copy_sandbox()
 # elementwise_ops()
 # slicing_test()
 # gpu_norm()
-comparisons()
+# comparisons()
