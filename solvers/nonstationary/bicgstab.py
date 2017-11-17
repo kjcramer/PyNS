@@ -176,13 +176,13 @@ def bicgstab(a, phi, b, tol,
     phi_gpu.bnd[B].val = gpuarray.to_gpu(phi.bnd[B].val.astype(np.float32)) 
     phi_gpu.bnd[T].val = gpuarray.to_gpu(phi.bnd[T].val.astype(np.float32)) 
 
-    a_gpu.c = gpuarray.to_gpu(a.c.astype(np.float32)) 
-    a_gpu.w = gpuarray.to_gpu(a.w.astype(np.float32))
-    a_gpu.e = gpuarray.to_gpu(a.e.astype(np.float32)) 
-    a_gpu.s = gpuarray.to_gpu(a.s.astype(np.float32)) 
-    a_gpu.n = gpuarray.to_gpu(a.n.astype(np.float32)) 
-    a_gpu.b = gpuarray.to_gpu(a.b.astype(np.float32)) 
-    a_gpu.t = gpuarray.to_gpu(a.t.astype(np.float32)) 
+    a_gpu.C = gpuarray.to_gpu(a.C.astype(np.float32))
+    a_gpu.W = gpuarray.to_gpu(a.W.astype(np.float32))
+    a_gpu.E = gpuarray.to_gpu(a.E.astype(np.float32))
+    a_gpu.S = gpuarray.to_gpu(a.S.astype(np.float32))
+    a_gpu.N = gpuarray.to_gpu(a.N.astype(np.float32))
+    a_gpu.B = gpuarray.to_gpu(a.B.astype(np.float32))
+    a_gpu.T = gpuarray.to_gpu(a.T.astype(np.float32))
 
     b_gpu = gpuarray.to_gpu(b.astype(np.float32))
 
@@ -226,7 +226,8 @@ def bicgstab(a, phi, b, tol,
     v_gpu = gpuarray.zeros_like(x_gpu)
 
     # --- r = b - A * x
-    r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi, gpu) # FIXME
+    # r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi, gpu)
+    r_gpu = b_gpu - mat_vec_bnd(a_gpu, phi_gpu, gpu)
 
     # --- Chose r~
     # r_tilda[:,:,:] = r[:,:,:]
@@ -239,7 +240,8 @@ def bicgstab(a, phi, b, tol,
     start = time.time()    
     
     if max_iter == -1:
-        max_iter = prod(phi.val.shape) # FIXME
+        # max_iter = prod(phi.val.shape)
+        max_iter = prod(phi_gpu.val.shape)
         
     for i in range(1, max_iter):
 
@@ -254,7 +256,7 @@ def bicgstab(a, phi, b, tol,
         # if abs(rho) < TINY * TINY:
         if cumath.fabs(rho_gpu) < TINY * TINY:
             write.at(__name__)
-            print("  Fails because rho = %12.5e" % rho)
+            print("  Fails because rho = %12.5e" % rho_gpu)
             end = time.time() 
             print("Elapsed time in bigstab %2.3e" %(end - start))
             return x_gpu
@@ -274,11 +276,12 @@ def bicgstab(a, phi, b, tol,
             p_gpu = r_gpu + beta_gpu * (p_gpu * v_gpu)
 
         # --- Solve M p_hat = p
-        p_hat.val[:,:,:] = p_gpu / a.C[:,:,:] # FIXME
+        # p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
+        p_hat_gpu.val = p_gpu / a_gpu.C
 
         # --- v = A * p^
         # v[:,:,:] = mat_vec_bnd(a, p_hat)
-        v_gpu = mat_vec_bnd(a_gpu, p_hat) # FIXME
+        v_gpu = mat_vec_bnd(a_gpu, p_hat_gpu)
 
         # --- alfa = rho / (r~ * v)
         # alfa = rho / vec_vec(r_tilda, v, gpu)
@@ -291,21 +294,23 @@ def bicgstab(a, phi, b, tol,
         # --- Check norm of s, if small enough set x = x + alfa p_hat and stop
         # res = norm(s)
         res_gpu = cumath.sqrt( gpuarray.dot(s_gpu, s_gpu))
-        if res_gpu < tol: # FIXME -- where should tol live? gpu or cpu?
+        # if res < tol:
+        if res_gpu < tol_gpu:
             if verbose is True == True:  
                 write.at(__name__)
                 print("  Fails because rho = %12.5e" % rho)
-            x_gpu += alfa_gpu * p_hat.val[:,:,:] # FIXME
+            x_gpu += alfa_gpu * p_hat_gpu.val
             end = time.time() 
             print("Elapsed time in bigstab %2.3e" %(end - start))
             return x_gpu
 
         # --- Solve M s^ = s
-        s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:] # FIXME
+        # s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:]
+        s_hat_gpu.val = s_gpu / a_gpu.C
 
         # --- t = A s^
         # t = mat_vec_bnd(a, s_hat, gpu)  
-        t_gpu = mat_vec_bnd(a_gpu, s_hat, gpu) # FIXME
+        t_gpu = mat_vec_bnd(a_gpu, s_hat_gpu, gpu)
 
         # --- omega = (t * s) / (t * t)
         # omega = vec_vec(t, s, gpu) / vec_vec(t, t, gpu)
@@ -313,7 +318,7 @@ def bicgstab(a, phi, b, tol,
 
         # --- x = x + alfa p^ + omega * s^
         # x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
-        x += alfa_gpu * p_hat.val[:,:,:] + omega_gpu * s_hat.val[:,:,:] # FIXME
+        x_gpu += alfa_gpu * p_hat_gpu.val + omega_gpu * s_hat_gpu.val
 
         # --- r = s - omega q^
         # r[:,:,:] = s[:,:,:] - omega * t[:,:,:]
@@ -324,10 +329,12 @@ def bicgstab(a, phi, b, tol,
         res_gpu = cumath.sqrt( gpuarray.dot(r_gpu, r_gpu))
 
         if verbose is True:
-            print("%12.5e" %res)
+            # print("%12.5e" %res_gpu)
+            print("%12.5e" %res_gpu)
 
         # If tolerance has been reached, get out of here
-        if res_gpu < tol:
+        # if res_gpu < tol:
+        if res_gpu < tol_gpu:
             end = time.time() 
             print("Elapsed time in bigstab %2.3e" %(end - start))
             return x_gpu
