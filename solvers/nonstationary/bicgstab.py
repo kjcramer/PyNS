@@ -240,17 +240,20 @@ def bicgstab(a, phi, b, tol,
 
         # --- v = A * p^
         # v[:,:,:] = mat_vec_bnd(a, p_hat)
-        v[:,:,:] = mat_vec_bnd(a, p_hat)
+        v_gpu = mat_vec_bnd(a_gpu, p_hat) # FIXME
 
-        # alfa = rho / (r~ * v)
-        alfa = rho / vec_vec(r_tilda, v, gpu)
+        # --- alfa = rho / (r~ * v)
+        # alfa = rho / vec_vec(r_tilda, v, gpu)
+        alfa_gpu = rho_gpu / vec_vec(r_tilda_gpu, v_gpu, gpu)
 
-        # s = r - alfa v
-        s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
+        # --- s = r - alfa v
+        # s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
+        s_gpu = r_gpu - alfa_gpu * v_gpu
 
-        # Check norm of s, if small enough set x = x + alfa p_hat and stop
-        res = norm(s)
-        if res < tol:
+        # --- Check norm of s, if small enough set x = x + alfa p_hat and stop
+        # res = norm(s)
+        res_gpu = cumath.sqrt( gpuarray.dot(s_gpu, s_gpu))
+        if res_gpu < tol: # FIXME -- where should tol live? gpu or cpu?
             if verbose is True == True:  
                 write.at(__name__)
                 print("  Fails because rho = %12.5e" % rho)
