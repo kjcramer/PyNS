@@ -44,28 +44,28 @@ def mat_vec_bnd(a, phi, gpu=False):
       
         r_gpu = a_gpu.C * phi_gpu.val
     
-        x_gpu[:1,:,:]  = phi.bnd[W].val[ :1,:,:] 
-        x_gpu[1:,:,:]  = phi.val       [:-1,:,:]) ))
+        x_gpu[:1,:,:]  = phi_gpu.bnd[W].val[ :1,:,:] 
+        x_gpu[1:,:,:]  = phi_gpu.val       [:-1,:,:]) ))
         r_gpu = r_gpu - a_gpu.W * phi_gpu
     
-        x_gpu[:-1,:,:] = phi.val[ 1:,:,:],
-        x_gpu[-1:,:,:] = phi.bnd[E].val[ :1,:,:]
+        x_gpu[:-1,:,:] = phi_gpu.val[ 1:,:,:],
+        x_gpu[-1:,:,:] = phi_gpu.bnd[E].val[ :1,:,:]
         r_gpu = r_gpu - a_gpu.E * x_gpu
     
-        x_gpu[:,:1,:]  = phi.bnd[S].val[:, :1,:] 
-        x_gpu[:,1:,:]  = phi.val[:,:-1,:]
+        x_gpu[:,:1,:]  = phi_gpu.bnd[S].val[:, :1,:] 
+        x_gpu[:,1:,:]  = phi_gpu.val[:,:-1,:]
         r_gpu = r_gpu - a_gpu.S * x_gpu
         
-        x_gpu[:,:-1,:] = phi.val[:, 1:,:] 
-        x_gpu[:,-1:,:] = phi.bnd[N].val[:, :1,:]
+        x_gpu[:,:-1,:] = phi_gpu.val[:, 1:,:] 
+        x_gpu[:,-1:,:] = phi_gpu.bnd[N].val[:, :1,:]
         r_gpu = r_gpu - a_gpu.N * x_gpu
         
-        x_gpu[:,:,:1]  = phi.bnd[B].val[:,:, :1], 
-        x_gpu[:;:,1:]  = phi.val[:,:,:-1]
+        x_gpu[:,:,:1]  = phi_gpu.bnd[B].val[:,:, :1], 
+        x_gpu[:;:,1:]  = phi_gpu.val[:,:,:-1]
         r_gpu = r_gpu - a_gpu.B * x_gpu
     
-        x_gpu[:,:,:-1] = phi.val[:,:, 1:], 
-        x_gpu[:,:,-1:] = phi.bnd[T].val[:,:, :1]
+        x_gpu[:,:,:-1] = phi_gpu.val[:,:, 1:], 
+        x_gpu[:,:,-1:] = phi_gpu.bnd[T].val[:,:, :1]
         r_gpu = r_gpu - a_gpu.T * x_gpu
     
         #stop_gpu=time.time()
