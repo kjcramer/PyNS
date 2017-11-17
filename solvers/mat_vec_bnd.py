@@ -25,6 +25,8 @@ def mat_vec_bnd(a, phi, gpu=False):
          in a three-dimensional array.
     """
 
+    phi.exchange()
+    
     if gpu:
 
         import pycuda.driver as cuda
@@ -83,8 +85,6 @@ def mat_vec_bnd(a, phi, gpu=False):
 
     r = zeros(phi.val.shape)
     
-    phi.exchange()
-
     r[:]  = a.C[:] * phi.val[:]
 
     r[:] -= a.W[:] * cat_x( (phi.bnd[W].val[ :1,:,:], 
