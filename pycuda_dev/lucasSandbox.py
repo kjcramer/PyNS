@@ -6,6 +6,7 @@ Testing performance of set vs to_gpu, save data
 import pycuda.driver as cuda
 import pycuda.autoinit
 import pycuda.gpuarray as gpuarray
+import pycuda.cumath as cumath
 import pycuda.curandom as curandom
 
 # Utils
@@ -57,10 +58,25 @@ def slicing_test():
     print(b)
     print(type(b))
 
+
+# ==============================================================================
+def gpu_norm():
+# ------------------------------------------------------------------------------
+    """
+    A GPU version of Bojan's norm()
+    """
+    a = curandom.rand((5))
+    print(a)
+    norm_on_gpu = cumath.sqrt(gpuarray.dot(a, a))
+    norm_on_cpu = np.sqrt(sum(a.get()**2))
+    print(norm_on_cpu)
+    print(norm_on_gpu)
+
 # ==============================================================================
 # ------------------------------------------------------------------------------
 
 
 # copy_sandbox()
 # elementwise_ops()
-slicing_test()
+# slicing_test()
+gpu_norm()
