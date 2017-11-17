@@ -47,7 +47,7 @@ def bicgstab(a, phi, b, tol,
     """
 
     # if gpu == True, run CUDA-accelerated version of routines
-    gpu = True
+    gpu = False
 
     if verbose is True:
         write.at(__name__)
@@ -67,7 +67,7 @@ def bicgstab(a, phi, b, tol,
     v       = zeros(x.shape)
 
     # r = b - A * x
-    r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi)
+    r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi, gpu)
 
     # Chose r~
     r_tilda[:,:,:] = r[:,:,:]
@@ -112,7 +112,7 @@ def bicgstab(a, phi, b, tol,
         p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
 
         # v = A * p^
-        v[:,:,:] = mat_vec_bnd(a, p_hat)
+        v[:,:,:] = mat_vec_bnd(a, p_hat, gpu)
 
         # alfa = rho / (r~ * v)
         alfa = rho / vec_vec(r_tilda, v, gpu)
@@ -135,7 +135,7 @@ def bicgstab(a, phi, b, tol,
         s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:]
 
         # t = A s^
-        t = mat_vec_bnd(a, s_hat)
+        t = mat_vec_bnd(a, s_hat, gpu)  
 
         # omega = (t * s) / (t * t)
         omega = vec_vec(t, s, gpu) / vec_vec(t, t, gpu)
