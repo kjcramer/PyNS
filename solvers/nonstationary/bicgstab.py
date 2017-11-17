@@ -166,7 +166,28 @@ def bicgstab(a, phi, b, tol,
     import pycuda.gpuarray as gpuarray
     import pycuda.cumath as cumath
     import numpy as np
-    
+   
+    # push input to gpu
+    phi_gpu.val = gpuarray.to_gpu(phi.val.astype(np.float32)) 
+    phi_gpu.bnd[W].val = gpuarray.to_gpu(phi.bnd[W].val.astype(np.float32)) 
+    phi_gpu.bnd[E].val = gpuarray.to_gpu(phi.bnd[E].val.astype(np.float32))
+    phi_gpu.bnd[S].val = gpuarray.to_gpu(phi.bnd[S].val.astype(np.float32)) 
+    phi_gpu.bnd[N].val = gpuarray.to_gpu(phi.bnd[N].val.astype(np.float32)) 
+    phi_gpu.bnd[B].val = gpuarray.to_gpu(phi.bnd[B].val.astype(np.float32)) 
+    phi_gpu.bnd[T].val = gpuarray.to_gpu(phi.bnd[T].val.astype(np.float32)) 
+
+    a_gpu.c = gpuarray.to_gpu(a.c.astype(np.float32)) 
+    a_gpu.w = gpuarray.to_gpu(a.w.astype(np.float32))
+    a_gpu.e = gpuarray.to_gpu(a.e.astype(np.float32)) 
+    a_gpu.s = gpuarray.to_gpu(a.s.astype(np.float32)) 
+    a_gpu.n = gpuarray.to_gpu(a.n.astype(np.float32)) 
+    a_gpu.b = gpuarray.to_gpu(a.b.astype(np.float32)) 
+    a_gpu.t = gpuarray.to_gpu(a.t.astype(np.float32)) 
+
+    b_gpu = gpuarray.to_gpu(b.astype(np.float32))
+
+    tol_gpu = gpuarray.to_gpu(tol.astype(np.float32))
+
     # --- Helping variable
     # x = phi.val
     x_gpu = gpuarray.to_gpu(phi.val.astype(np.float32))
@@ -177,13 +198,13 @@ def bicgstab(a, phi, b, tol,
     p_gpu = gpuarray.zeros(x_gpu.shape, x_gpu.dtype)
     # p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
     #                   verbose=False)
-    p_hat.val = gpuarray.zeros_like(x_gpu)
-    p_hat.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
-    p_hat.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
-    p_hat.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
-    p_hat.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
-    p_hat.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
-    p_hat.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
+    p_hat_gpu.val = gpuarray.zeros_like(x_gpu)
+    p_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
+    p_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
+    p_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
+    p_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
+    p_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
+    p_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
 
     # r       = zeros(x.shape)
     r_gpu = gpuarray.zeros_like(x_gpu)
@@ -193,13 +214,13 @@ def bicgstab(a, phi, b, tol,
     s_gpu = gpuarray.zeros_like(x_gpu)
     #s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
     #                  verbose=False)
-    s_hat.val = gpuarray.zeros_like(x_gpu)
-    s_hat.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
-    s_hat.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
-    s_hat.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
-    s_hat.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
-    s_hat.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
-    s_hat.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
+    s_hat_gpu.val = gpuarray.zeros_like(x_gpu)
+    s_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
+    s_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
+    s_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
+    s_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
+    s_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
+    s_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
     
     # v       = zeros(x.shape)
     v_gpu = gpuarray.zeros_like(x_gpu)
