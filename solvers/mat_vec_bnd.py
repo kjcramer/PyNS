@@ -36,10 +36,13 @@ def mat_vec_bnd(a, phi, gpu=False):
 	#start_gpu=time.time()
     
         # initialize and push data to gpu
+        a_gpu = a
+        phi_gpu = phi
+
         r_gpu = gpuarray.zeros_like(phi_gpu.val)
         x_gpu = gpuarray.zeros_like(phi_gpu.val)        
       
-        r_gpu = a_gpu * phi_gpu.val
+        r_gpu = a_gpu.C * phi_gpu.val
     
         x_gpu[:1,:,:]  = phi.bnd[W].val[ :1,:,:] 
         x_gpu[1:,:,:]  = phi.val       [:-1,:,:]) ))

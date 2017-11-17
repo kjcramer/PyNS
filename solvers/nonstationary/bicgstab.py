@@ -281,7 +281,7 @@ def bicgstab(a, phi, b, tol,
 
         # --- v = A * p^
         # v[:,:,:] = mat_vec_bnd(a, p_hat)
-        v_gpu = mat_vec_bnd(a_gpu, p_hat_gpu)
+        v_gpu = mat_vec_bnd(a_gpu, p_hat_gpu, gpu)
 
         # --- alfa = rho / (r~ * v)
         # alfa = rho / vec_vec(r_tilda, v, gpu)
@@ -314,7 +314,7 @@ def bicgstab(a, phi, b, tol,
 
         # --- omega = (t * s) / (t * t)
         # omega = vec_vec(t, s, gpu) / vec_vec(t, t, gpu)
-        omega = vec_vec(t_gpu, s_gpu, gpu) / vec_vec(t, t, gpu)
+        omega_gpu = vec_vec(t_gpu, s_gpu, gpu) / vec_vec(t, t, gpu)
 
         # --- x = x + alfa p^ + omega * s^
         # x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
