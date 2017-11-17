@@ -32,7 +32,7 @@ Note:
   sum(sum(sum()))
 """
 # test data
-dimension = 600
+dimension = 310
 x = np.random.random([dimension, dimension, dimension])
 y = np.random.random([dimension, dimension, dimension])
 
