@@ -236,7 +236,7 @@ def bicgstab(a, phi, b, tol,
             print("  Fails because rho = %12.5e" % rho)
             end = time.time() 
             print("Elapsed time in bigstab %2.3e" %(end - start))
-            return x
+            return x_gpu
 
         if i == 1:
             # p = r
@@ -274,7 +274,45 @@ def bicgstab(a, phi, b, tol,
             if verbose is True == True:  
                 write.at(__name__)
                 print("  Fails because rho = %12.5e" % rho)
-            x[:,:,:] += alfa * p_hat.val[:,:,:]
+            x_gpu += alfa_gpu * p_hat.val[:,:,:] # FIXME
             end = time.time() 
             print("Elapsed time in bigstab %2.3e" %(end - start))
-            return x
+            return x_gpu
+
+        # --- Solve M s^ = s
+        s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:] # FIXME
+
+        # --- t = A s^
+        # t = mat_vec_bnd(a, s_hat, gpu)  
+        t_gpu = mat_vec_bnd(a_gpu, s_hat, gpu) # FIXME
+
+        # --- omega = (t * s) / (t * t)
+        # omega = vec_vec(t, s, gpu) / vec_vec(t, t, gpu)
+        omega = vec_vec(t_gpu, s_gpu, gpu) / vec_vec(t, t, gpu)
+
+        # --- x = x + alfa p^ + omega * s^
+        # x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
+        x += alfa_gpu * p_hat.val[:,:,:] + omega_gpu * s_hat.val[:,:,:] # FIXME
+
+        # --- r = s - omega q^
+        # r[:,:,:] = s[:,:,:] - omega * t[:,:,:]
+        r_gpu = s_gpu - omega_gpu * t_gpu
+
+        # --- Compute residual
+        # res = norm(r)
+        res_gpu = cumath.sqrt( gpuarray.dot(r_gpu, r_gpu))
+
+        if verbose is True:
+            print("%12.5e" %res)
+
+        # If tolerance has been reached, get out of here
+        if res_gpu < tol:
+            end = time.time() 
+            print("Elapsed time in bigstab %2.3e" %(end - start))
+            return x_gpu
+
+        # --- Prepare for next iteration
+        # rho_old = rho
+        rho_old_gpu = rho_gpu
+
+    return x_gpu  # end of function
