@@ -8,10 +8,6 @@ Source:
 from __future__ import print_function
 
 # Specific Python modules
-import pycuda.driver as cuda
-import pycuda.gpuarray as gpuarray
-import pycuda.cumath as cumath
-import numpy as np
 import time
 
 # Standard Python modules
@@ -166,6 +162,11 @@ def bicgstab(a, phi, b, tol,
 
 # == full gpu version =========================================================
 
+    import pycuda.driver as cuda
+    import pycuda.gpuarray as gpuarray
+    import pycuda.cumath as cumath
+    import numpy as np
+    
     # --- Helping variable
     # x = phi.val
     x_gpu = gpuarray.to_gpu(phi.val.astype(np.float32))
@@ -176,14 +177,30 @@ def bicgstab(a, phi, b, tol,
     p_gpu = gpuarray.zeros(x_gpu.shape, x_gpu.dtype)
     # p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
     #                   verbose=False)
+    p_hat.val = gpuarray.zeros_like(x_gpu)
+    p_hat.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
+    p_hat.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
+    p_hat.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
+    p_hat.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
+    p_hat.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
+    p_hat.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
+
     # r       = zeros(x.shape)
     r_gpu = gpuarray.zeros_like(x_gpu)
     # r_tilda = zeros(x.shape)
     r_tilda_gpu = gpuarray.zeros_like(x_gpu)
     # s       = zeros(x.shape)
     s_gpu = gpuarray.zeros_like(x_gpu)
-    s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
-                      verbose=False)
+    #s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
+    #                  verbose=False)
+    s_hat.val = gpuarray.zeros_like(x_gpu)
+    s_hat.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
+    s_hat.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
+    s_hat.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
+    s_hat.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
+    s_hat.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
+    s_hat.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
+    
     # v       = zeros(x.shape)
     v_gpu = gpuarray.zeros_like(x_gpu)
 
@@ -216,7 +233,7 @@ def bicgstab(a, phi, b, tol,
         # if abs(rho) < TINY * TINY:
         if cumath.fabs(rho_gpu) < TINY * TINY:
             write.at(__name__)
-            print("  Fails becuase rho = %12.5e" % rho)
+            print("  Fails because rho = %12.5e" % rho)
             end = time.time() 
             print("Elapsed time in bigstab %2.3e" %(end - start))
             return x
