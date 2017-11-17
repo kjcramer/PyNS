@@ -32,12 +32,12 @@ Note:
   sum(sum(sum()))
 """
 # test data
-dimension = 600
+dimension = 200
 x = np.random.random([dimension, dimension, dimension])
 y = np.random.random([dimension, dimension, dimension])
 
 # cuda-specific parameters
-block_size = 256
+block_size = 512
 blocks = x.size // block_size + 1
 
 # timers
@@ -84,12 +84,12 @@ if sourceModule:
                    grid = (blocks, 1),
                    block = (block_size, 1, 1))
 
-    sourceModule_out = np.sum(dest)
+    sourceModule_out = np.sum(np.sum(np.sum(dest)))
     end.record()
     end.synchronize()
     secs = start.time_till(end)*1e-3
     print("SourceModule time and result:")
-    print("%fs, %s" % (secs, str(sourceModule_out)))
+    print("%fs, %2.3e" % (secs, sourceModule_out))
 
     # return gpuarray.sum(dest)
 # -------------------------------------------------------------------------
