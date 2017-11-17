@@ -53,8 +53,8 @@ def main(show_plot=False, time_steps=20, plot_freq=5):
 
     # Node coordinates
     xn = nodes(0, 1.25, 128)
-    yn = nodes(0, 0.125, 64)
-    zn = nodes(0, 0.125, 64)
+    yn = nodes(0, 0.125, 32)
+    zn = nodes(0, 0.125, 32)
 
     # Cell coordinates
     xc = avg(xn)

@@ -43,8 +43,205 @@ def bicgstab(a, phi, b, tol,
     """
 
     # if gpu == True, run CUDA-accelerated version of routines
-    gpu = False
+    gpu = True
 
+# == full gpu version =========================================================
+
+    if gpu:
+
+        import pycuda.driver as cuda
+        import pycuda.autoinit
+        import pycuda.gpuarray as gpuarray
+        import pycuda.cumath as cumath
+        import numpy as np
+        
+        # quick'n'dirty class definition
+        class phi_gpu:
+            val        = np.zeros((1, 1, 1))
+            # FIXME make a named tuple for bnd[whatever]
+
+        
+        # push input to gpu
+        print(phi.val.astype(np.float32).shape)
+        phi_gpu.val = gpuarray.to_gpu(phi.val.astype(np.float32))
+        phi_gpu.bnd[W].val = gpuarray.to_gpu(phi.bnd[W].val.astype(np.float32)) 
+        phi_gpu.bnd[E].val = gpuarray.to_gpu(phi.bnd[E].val.astype(np.float32))
+        phi_gpu.bnd[S].val = gpuarray.to_gpu(phi.bnd[S].val.astype(np.float32)) 
+        phi_gpu.bnd[N].val = gpuarray.to_gpu(phi.bnd[N].val.astype(np.float32)) 
+        phi_gpu.bnd[B].val = gpuarray.to_gpu(phi.bnd[B].val.astype(np.float32)) 
+        phi_gpu.bnd[T].val = gpuarray.to_gpu(phi.bnd[T].val.astype(np.float32)) 
+        
+        a_gpu.C = gpuarray.to_gpu(a.C.astype(np.float32))
+        a_gpu.W = gpuarray.to_gpu(a.W.astype(np.float32))
+        a_gpu.E = gpuarray.to_gpu(a.E.astype(np.float32))
+        a_gpu.S = gpuarray.to_gpu(a.S.astype(np.float32))
+        a_gpu.N = gpuarray.to_gpu(a.N.astype(np.float32))
+        a_gpu.B = gpuarray.to_gpu(a.B.astype(np.float32))
+        a_gpu.T = gpuarray.to_gpu(a.T.astype(np.float32))
+        
+        b_gpu = gpuarray.to_gpu(b.astype(np.float32))
+        
+        tol_gpu = gpuarray.to_gpu(tol.astype(np.float32))
+        
+        # --- Helping variable
+        # x = phi.val
+        x_gpu = gpuarray.to_gpu(phi.val.astype(np.float32))
+        
+        
+        # --- Initialize arrays
+        # p       = zeros(x.shape)
+        p_gpu = gpuarray.zeros(x_gpu.shape, x_gpu.dtype)
+        # p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
+        #                   verbose=False)
+        p_hat_gpu.val = gpuarray.zeros_like(x_gpu)
+        p_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
+        p_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
+        p_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
+        p_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
+        p_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
+        p_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
+        
+        # r       = zeros(x.shape)
+        r_gpu = gpuarray.zeros_like(x_gpu)
+        # r_tilda = zeros(x.shape)
+        r_tilda_gpu = gpuarray.zeros_like(x_gpu)
+        # s       = zeros(x.shape)
+        s_gpu = gpuarray.zeros_like(x_gpu)
+        #s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
+        #                  verbose=False)
+        s_hat_gpu.val = gpuarray.zeros_like(x_gpu)
+        s_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
+        s_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
+        s_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
+        s_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
+        s_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
+        s_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
+        
+        # v       = zeros(x.shape)
+        v_gpu = gpuarray.zeros_like(x_gpu)
+        
+        # --- r = b - A * x
+        # r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi, gpu)
+        r_gpu = b_gpu - mat_vec_bnd(a_gpu, phi_gpu, gpu)
+        
+        # --- Chose r~
+        # r_tilda[:,:,:] = r[:,:,:]
+        r_tilda_gpu = r_gpu.copy()
+        
+        # ---------------
+        # Iteration loop
+        # ---------------
+        
+        start = time.time()    
+        
+        if max_iter == -1:
+            # max_iter = prod(phi.val.shape)
+            max_iter = prod(phi_gpu.val.shape)
+            
+        for i in range(1, max_iter):
+        
+            if verbose is True:
+                print("  iteration: %3d:" % (i), end = "" )
+        
+            # --- rho = r~ * r
+            # rho = vec_vec(r_tilda, r, gpu)
+            rho_gpu = vec_vec(r_tilda_gpu, r_gpu, gpu)
+        
+            # If rho == 0 method fails
+            # if abs(rho) < TINY * TINY:
+            if cumath.fabs(rho_gpu) < TINY * TINY:
+                write.at(__name__)
+                print("  Fails because rho = %12.5e" % rho_gpu)
+                end = time.time() 
+                print("Elapsed time in bigstab %2.3e" %(end - start))
+                return x_gpu
+        
+            if i == 1:
+                # p = r
+                # p[:,:,:] = r[:,:,:]
+                p_gpu = r_gpu.copy()
+        
+            else:
+                # --- beta = (rho / rho_old)(alfa/omega)
+                # beta = rho / rho_old * alfa / omega
+                beta_cpu = rho_gpu / rho_old_gpu * alfa_gpu / omega_gpu
+        
+                # --- p = r + beta (p - omega v)
+                # p[:,:,:] = r[:,:,:] + beta * (p[:,:,:] - omega * v[:,:,:])
+                p_gpu = r_gpu + beta_gpu * (p_gpu * v_gpu)
+        
+            # --- Solve M p_hat = p
+            # p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
+            p_hat_gpu.val = p_gpu / a_gpu.C
+        
+            # --- v = A * p^
+            # v[:,:,:] = mat_vec_bnd(a, p_hat)
+            v_gpu = mat_vec_bnd(a_gpu, p_hat_gpu, gpu)
+        
+            # --- alfa = rho / (r~ * v)
+            # alfa = rho / vec_vec(r_tilda, v, gpu)
+            alfa_gpu = rho_gpu / vec_vec(r_tilda_gpu, v_gpu, gpu)
+        
+            # --- s = r - alfa v
+            # s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
+            s_gpu = r_gpu - alfa_gpu * v_gpu
+        
+            # --- Check norm of s, if small enough set x = x + alfa p_hat and stop
+            # res = norm(s)
+            res_gpu = cumath.sqrt( gpuarray.dot(s_gpu, s_gpu))
+            # if res < tol:
+            if res_gpu < tol_gpu:
+                if verbose is True == True:  
+                    write.at(__name__)
+                    print("  Fails because rho = %12.5e" % rho)
+                x_gpu += alfa_gpu * p_hat_gpu.val
+                end = time.time() 
+                print("Elapsed time in bigstab %2.3e" %(end - start))
+                return x_gpu
+        
+            # --- Solve M s^ = s
+            # s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:]
+            s_hat_gpu.val = s_gpu / a_gpu.C
+        
+            # --- t = A s^
+            # t = mat_vec_bnd(a, s_hat, gpu)  
+            t_gpu = mat_vec_bnd(a_gpu, s_hat_gpu, gpu)
+        
+            # --- omega = (t * s) / (t * t)
+            # omega = vec_vec(t, s, gpu) / vec_vec(t, t, gpu)
+            omega_gpu = vec_vec(t_gpu, s_gpu, gpu) / vec_vec(t, t, gpu)
+        
+            # --- x = x + alfa p^ + omega * s^
+            # x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
+            x_gpu += alfa_gpu * p_hat_gpu.val + omega_gpu * s_hat_gpu.val
+        
+            # --- r = s - omega q^
+            # r[:,:,:] = s[:,:,:] - omega * t[:,:,:]
+            r_gpu = s_gpu - omega_gpu * t_gpu
+        
+            # --- Compute residual
+            # res = norm(r)
+            res_gpu = cumath.sqrt( gpuarray.dot(r_gpu, r_gpu))
+        
+            if verbose is True:
+                # print("%12.5e" %res_gpu)
+                print("%12.5e" %res_gpu)
+        
+            # If tolerance has been reached, get out of here
+            # if res_gpu < tol:
+            if res_gpu < tol_gpu:
+                end = time.time() 
+                print("Elapsed time in bigstab %2.3e" %(end - start))
+                return x_gpu
+        
+            # --- Prepare for next iteration
+            # rho_old = rho
+            rho_old_gpu = rho_gpu
+        
+        return x_gpu  # end of function
+    
+
+# == full cpu version =========================================================
     if verbose is True:
         write.at(__name__)
 
@@ -160,187 +357,3 @@ def bicgstab(a, phi, b, tol,
     return x  # end of function
 
 
-# == full gpu version =========================================================
-
-    import pycuda.driver as cuda
-    import pycuda.gpuarray as gpuarray
-    import pycuda.cumath as cumath
-    import numpy as np
-   
-    # push input to gpu
-    phi_gpu.val = gpuarray.to_gpu(phi.val.astype(np.float32)) 
-    phi_gpu.bnd[W].val = gpuarray.to_gpu(phi.bnd[W].val.astype(np.float32)) 
-    phi_gpu.bnd[E].val = gpuarray.to_gpu(phi.bnd[E].val.astype(np.float32))
-    phi_gpu.bnd[S].val = gpuarray.to_gpu(phi.bnd[S].val.astype(np.float32)) 
-    phi_gpu.bnd[N].val = gpuarray.to_gpu(phi.bnd[N].val.astype(np.float32)) 
-    phi_gpu.bnd[B].val = gpuarray.to_gpu(phi.bnd[B].val.astype(np.float32)) 
-    phi_gpu.bnd[T].val = gpuarray.to_gpu(phi.bnd[T].val.astype(np.float32)) 
-
-    a_gpu.C = gpuarray.to_gpu(a.C.astype(np.float32))
-    a_gpu.W = gpuarray.to_gpu(a.W.astype(np.float32))
-    a_gpu.E = gpuarray.to_gpu(a.E.astype(np.float32))
-    a_gpu.S = gpuarray.to_gpu(a.S.astype(np.float32))
-    a_gpu.N = gpuarray.to_gpu(a.N.astype(np.float32))
-    a_gpu.B = gpuarray.to_gpu(a.B.astype(np.float32))
-    a_gpu.T = gpuarray.to_gpu(a.T.astype(np.float32))
-
-    b_gpu = gpuarray.to_gpu(b.astype(np.float32))
-
-    tol_gpu = gpuarray.to_gpu(tol.astype(np.float32))
-
-    # --- Helping variable
-    # x = phi.val
-    x_gpu = gpuarray.to_gpu(phi.val.astype(np.float32))
-
-
-    # --- Initialize arrays
-    # p       = zeros(x.shape)
-    p_gpu = gpuarray.zeros(x_gpu.shape, x_gpu.dtype)
-    # p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
-    #                   verbose=False)
-    p_hat_gpu.val = gpuarray.zeros_like(x_gpu)
-    p_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
-    p_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
-    p_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
-    p_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
-    p_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
-    p_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
-
-    # r       = zeros(x.shape)
-    r_gpu = gpuarray.zeros_like(x_gpu)
-    # r_tilda = zeros(x.shape)
-    r_tilda_gpu = gpuarray.zeros_like(x_gpu)
-    # s       = zeros(x.shape)
-    s_gpu = gpuarray.zeros_like(x_gpu)
-    #s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
-    #                  verbose=False)
-    s_hat_gpu.val = gpuarray.zeros_like(x_gpu)
-    s_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
-    s_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
-    s_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
-    s_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
-    s_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
-    s_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
-    
-    # v       = zeros(x.shape)
-    v_gpu = gpuarray.zeros_like(x_gpu)
-
-    # --- r = b - A * x
-    # r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi, gpu)
-    r_gpu = b_gpu - mat_vec_bnd(a_gpu, phi_gpu, gpu)
-
-    # --- Chose r~
-    # r_tilda[:,:,:] = r[:,:,:]
-    r_tilda_gpu = r_gpu.copy()
-
-    # ---------------
-    # Iteration loop
-    # ---------------
-
-    start = time.time()    
-    
-    if max_iter == -1:
-        # max_iter = prod(phi.val.shape)
-        max_iter = prod(phi_gpu.val.shape)
-        
-    for i in range(1, max_iter):
-
-        if verbose is True:
-            print("  iteration: %3d:" % (i), end = "" )
-
-        # --- rho = r~ * r
-        # rho = vec_vec(r_tilda, r, gpu)
-        rho_gpu = vec_vec(r_tilda_gpu, r_gpu, gpu)
-
-        # If rho == 0 method fails
-        # if abs(rho) < TINY * TINY:
-        if cumath.fabs(rho_gpu) < TINY * TINY:
-            write.at(__name__)
-            print("  Fails because rho = %12.5e" % rho_gpu)
-            end = time.time() 
-            print("Elapsed time in bigstab %2.3e" %(end - start))
-            return x_gpu
-
-        if i == 1:
-            # p = r
-            # p[:,:,:] = r[:,:,:]
-            p_gpu = r_gpu.copy()
-
-        else:
-            # --- beta = (rho / rho_old)(alfa/omega)
-            # beta = rho / rho_old * alfa / omega
-            beta_cpu = rho_gpu / rho_old_gpu * alfa_gpu / omega_gpu
-
-            # --- p = r + beta (p - omega v)
-            # p[:,:,:] = r[:,:,:] + beta * (p[:,:,:] - omega * v[:,:,:])
-            p_gpu = r_gpu + beta_gpu * (p_gpu * v_gpu)
-
-        # --- Solve M p_hat = p
-        # p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
-        p_hat_gpu.val = p_gpu / a_gpu.C
-
-        # --- v = A * p^
-        # v[:,:,:] = mat_vec_bnd(a, p_hat)
-        v_gpu = mat_vec_bnd(a_gpu, p_hat_gpu, gpu)
-
-        # --- alfa = rho / (r~ * v)
-        # alfa = rho / vec_vec(r_tilda, v, gpu)
-        alfa_gpu = rho_gpu / vec_vec(r_tilda_gpu, v_gpu, gpu)
-
-        # --- s = r - alfa v
-        # s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
-        s_gpu = r_gpu - alfa_gpu * v_gpu
-
-        # --- Check norm of s, if small enough set x = x + alfa p_hat and stop
-        # res = norm(s)
-        res_gpu = cumath.sqrt( gpuarray.dot(s_gpu, s_gpu))
-        # if res < tol:
-        if res_gpu < tol_gpu:
-            if verbose is True == True:  
-                write.at(__name__)
-                print("  Fails because rho = %12.5e" % rho)
-            x_gpu += alfa_gpu * p_hat_gpu.val
-            end = time.time() 
-            print("Elapsed time in bigstab %2.3e" %(end - start))
-            return x_gpu
-
-        # --- Solve M s^ = s
-        # s_hat.val[:,:,:] = s[:,:,:] / a.C[:,:,:]
-        s_hat_gpu.val = s_gpu / a_gpu.C
-
-        # --- t = A s^
-        # t = mat_vec_bnd(a, s_hat, gpu)  
-        t_gpu = mat_vec_bnd(a_gpu, s_hat_gpu, gpu)
-
-        # --- omega = (t * s) / (t * t)
-        # omega = vec_vec(t, s, gpu) / vec_vec(t, t, gpu)
-        omega_gpu = vec_vec(t_gpu, s_gpu, gpu) / vec_vec(t, t, gpu)
-
-        # --- x = x + alfa p^ + omega * s^
-        # x[:,:,:] += alfa * p_hat.val[:,:,:] + omega * s_hat.val[:,:,:]
-        x_gpu += alfa_gpu * p_hat_gpu.val + omega_gpu * s_hat_gpu.val
-
-        # --- r = s - omega q^
-        # r[:,:,:] = s[:,:,:] - omega * t[:,:,:]
-        r_gpu = s_gpu - omega_gpu * t_gpu
-
-        # --- Compute residual
-        # res = norm(r)
-        res_gpu = cumath.sqrt( gpuarray.dot(r_gpu, r_gpu))
-
-        if verbose is True:
-            # print("%12.5e" %res_gpu)
-            print("%12.5e" %res_gpu)
-
-        # If tolerance has been reached, get out of here
-        # if res_gpu < tol:
-        if res_gpu < tol_gpu:
-            end = time.time() 
-            print("Elapsed time in bigstab %2.3e" %(end - start))
-            return x_gpu
-
-        # --- Prepare for next iteration
-        # rho_old = rho
-        rho_old_gpu = rho_gpu
-
-    return x_gpu  # end of function
