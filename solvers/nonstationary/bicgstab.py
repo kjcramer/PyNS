@@ -10,6 +10,7 @@ from __future__ import print_function
 # Specific Python modules
 import pycuda.driver as cuda
 import pycuda.gpuarray as gpuarray
+import pycuda.cumath as cumath
 import numpy as np
 import time
 
@@ -47,25 +48,6 @@ def bicgstab(a, phi, b, tol,
 
     # if gpu == True, run CUDA-accelerated version of routines
     gpu = True
-
-    # --------------------------------------------------------------------------
-    # preallocating is clumsy and does not improve things much -----------------
-    # --------------------------------------------------------------------------    
-    # # Preallocating arrays for vec_vec
-    # prealloc_time_start = time.time()
-
-    # gpu_ptr1 = cuda.mem_alloc(phi.val.nbytes)
-    # gpu_ptr2 = cuda.mem_alloc(phi.val.nbytes)
-
-    # # treat the allocated memory as a GPUArray object
-    # gpu_arr1 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr1 )
-    # gpu_arr2 = gpuarray.empty( phi.val.shape, phi.val.dtype, gpudata=gpu_ptr2 )
-
-    # prealloc_time_end = time.time()
-    # print("Elapsed time preallocating: %2.3e s" \
-    #       %(prealloc_time_end - prealloc_time_start))
-    # --------------------------------------------------------------------------
-
 
     if verbose is True:
         write.at(__name__)
@@ -180,3 +162,99 @@ def bicgstab(a, phi, b, tol,
         rho_old = rho
 
     return x  # end of function
+
+
+# == full gpu version =========================================================
+
+    # --- Helping variable
+    # x = phi.val
+    x_gpu = gpuarray.to_gpu(phi.val.astype(np.float32))
+
+
+    # --- Initialize arrays
+    # p       = zeros(x.shape)
+    p_gpu = gpuarray.zeros(x_gpu.shape, x_gpu.dtype)
+    # p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
+    #                   verbose=False)
+    # r       = zeros(x.shape)
+    r_gpu = gpuarray.zeros_like(x_gpu)
+    # r_tilda = zeros(x.shape)
+    r_tilda_gpu = gpuarray.zeros_like(x_gpu)
+    # s       = zeros(x.shape)
+    s_gpu = gpuarray.zeros_like(x_gpu)
+    s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
+                      verbose=False)
+    # v       = zeros(x.shape)
+    v_gpu = gpuarray.zeros_like(x_gpu)
+
+    # --- r = b - A * x
+    r[:,:,:] = b[:,:,:] - mat_vec_bnd(a, phi, gpu) # FIXME
+
+    # --- Chose r~
+    # r_tilda[:,:,:] = r[:,:,:]
+    r_tilda_gpu = r_gpu.copy()
+
+    # ---------------
+    # Iteration loop
+    # ---------------
+
+    start = time.time()    
+    
+    if max_iter == -1:
+        max_iter = prod(phi.val.shape) # FIXME
+        
+    for i in range(1, max_iter):
+
+        if verbose is True:
+            print("  iteration: %3d:" % (i), end = "" )
+
+        # --- rho = r~ * r
+        # rho = vec_vec(r_tilda, r, gpu)
+        rho_gpu = vec_vec(r_tilda_gpu, r_gpu, gpu)
+
+        # If rho == 0 method fails
+        # if abs(rho) < TINY * TINY:
+        if cumath.fabs(rho_gpu) < TINY * TINY:
+            write.at(__name__)
+            print("  Fails becuase rho = %12.5e" % rho)
+            end = time.time() 
+            print("Elapsed time in bigstab %2.3e" %(end - start))
+            return x
+
+        if i == 1:
+            # p = r
+            # p[:,:,:] = r[:,:,:]
+            p_gpu = r_gpu.copy()
+
+        else:
+            # --- beta = (rho / rho_old)(alfa/omega)
+            # beta = rho / rho_old * alfa / omega
+            beta_cpu = rho_gpu / rho_old_gpu * alfa_gpu / omega_gpu
+
+            # --- p = r + beta (p - omega v)
+            # p[:,:,:] = r[:,:,:] + beta * (p[:,:,:] - omega * v[:,:,:])
+            p_gpu = r_gpu + beta_gpu * (p_gpu * v_gpu)
+
+        # --- Solve M p_hat = p
+        p_hat.val[:,:,:] = p_gpu / a.C[:,:,:] # FIXME
+
+        # --- v = A * p^
+        # v[:,:,:] = mat_vec_bnd(a, p_hat)
+        v[:,:,:] = mat_vec_bnd(a, p_hat)
+
+        # alfa = rho / (r~ * v)
+        alfa = rho / vec_vec(r_tilda, v, gpu)
+
+        # s = r - alfa v
+        s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
+
+        # Check norm of s, if small enough set x = x + alfa p_hat and stop
+        res = norm(s)
+        if res < tol:
+            if verbose is True == True:  
+                write.at(__name__)
+                print("  Fails because rho = %12.5e" % rho)
+            x[:,:,:] += alfa * p_hat.val[:,:,:]
+            end = time.time() 
+            print("Elapsed time in bigstab %2.3e" %(end - start))
+            return x
