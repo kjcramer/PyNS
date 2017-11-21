@@ -30,6 +30,6 @@ def vec_vec(x, y, gpu=False):
 	import pycuda.autoinit
 	import pycuda.gpuarray as gpuarray
         
-	return gpuarray.dot( gpuarray.to_gpu(x), gpuarray.to_gpu(y)).get()
+	return gpuarray.dot( gpuarray.to_gpu(x), gpuarray.to_gpu(y))
     
     return sum( sum( sum( multiply(x, y) ) ) )  # end of function
