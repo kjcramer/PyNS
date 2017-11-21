@@ -138,7 +138,7 @@ def bicgstab(a, phi, b, tol,
         
             # If rho == 0 method fails
             # if abs(rho) < TINY * TINY:
-            if cumath.fabs(rho_gpu) < TINY * TINY:
+            if cumath.fabs(rho_gpu).get() < TINY * TINY:
                 write.at(__name__)
                 print("  Fails because rho = %12.5e" % rho_gpu)
                 end = time.time() 
