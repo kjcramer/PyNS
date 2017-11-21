@@ -1,1 +1,3 @@
-from . import (pycuda_thinner_collocated.py)
+from .gpu_object import gpu_object
+
+

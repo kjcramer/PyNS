@@ -46,8 +46,10 @@ def mat_vec_bnd(a, phi, gpu=False):
     
         x_gpu[:1,:,:]  = phi_gpu.bnd[W].val[ :1,:,:] 
         x_gpu[1:,:,:]  = phi_gpu.val       [:-1,:,:]
-        r_gpu = r_gpu - a_gpu.W * phi_gpu
-    
+        r_gpu = r_gpu - a_gpu.W * x_gpu
+
+        print(type(phi_gpu.val[1:,:,:]), type(x_gpu[:-1,:,:]))    
+        print(shape(phi_gpu.val[1:,:,:]), shape(x_gpu[:-1,:,:]))    
         x_gpu[:-1,:,:] = phi_gpu.val[ 1:,:,:],
         x_gpu[-1:,:,:] = phi_gpu.bnd[E].val[ :1,:,:]
         r_gpu = r_gpu - a_gpu.E * x_gpu

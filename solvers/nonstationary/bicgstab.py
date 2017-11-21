@@ -54,23 +54,24 @@ def bicgstab(a, phi, b, tol,
         import pycuda.gpuarray as gpuarray
         import pycuda.cumath as cumath
         import numpy as np
-        
-        # quick'n'dirty class definition
-        class phi_gpu:
-            val        = np.zeros((1, 1, 1))
-            # FIXME make a named tuple for bnd[whatever]
+        from pyns.pycuda_dev import gpu_object
 
-        
+       
         # push input to gpu
         print(phi.val.astype(np.float32).shape)
+        phi_gpu = gpu_object(np.shape(phi.val))
         phi_gpu.val = gpuarray.to_gpu(phi.val.astype(np.float32))
-        phi_gpu.bnd[W].val = gpuarray.to_gpu(phi.bnd[W].val.astype(np.float32)) 
-        phi_gpu.bnd[E].val = gpuarray.to_gpu(phi.bnd[E].val.astype(np.float32))
-        phi_gpu.bnd[S].val = gpuarray.to_gpu(phi.bnd[S].val.astype(np.float32)) 
-        phi_gpu.bnd[N].val = gpuarray.to_gpu(phi.bnd[N].val.astype(np.float32)) 
-        phi_gpu.bnd[B].val = gpuarray.to_gpu(phi.bnd[B].val.astype(np.float32)) 
-        phi_gpu.bnd[T].val = gpuarray.to_gpu(phi.bnd[T].val.astype(np.float32)) 
+        phi_gpu.bnd[W].val[:1,:,:] = gpuarray.to_gpu(phi.bnd[W].val.astype(np.float32)) 
+        phi_gpu.bnd[E].val[:1,:,:] = gpuarray.to_gpu(phi.bnd[E].val.astype(np.float32))
+        phi_gpu.bnd[S].val[:,:1,:] = gpuarray.to_gpu(phi.bnd[S].val.astype(np.float32)) 
+        phi_gpu.bnd[N].val[:,:1,:] = gpuarray.to_gpu(phi.bnd[N].val.astype(np.float32)) 
+        phi_gpu.bnd[B].val[:,:,:1] = gpuarray.to_gpu(phi.bnd[B].val.astype(np.float32)) 
+        phi_gpu.bnd[T].val[:,:,:1] = gpuarray.to_gpu(phi.bnd[T].val.astype(np.float32)) 
         
+        # quick'n'dirty definition      
+        agpu_object = namedtuple("agpu_object", "C W E S N B T")
+
+        a_gpu = agpu_object
         a_gpu.C = gpuarray.to_gpu(a.C.astype(np.float32))
         a_gpu.W = gpuarray.to_gpu(a.W.astype(np.float32))
         a_gpu.E = gpuarray.to_gpu(a.E.astype(np.float32))
@@ -81,7 +82,7 @@ def bicgstab(a, phi, b, tol,
         
         b_gpu = gpuarray.to_gpu(b.astype(np.float32))
         
-        tol_gpu = gpuarray.to_gpu(tol.astype(np.float32))
+        tol_gpu = gpuarray.to_gpu(np.asarray(tol).astype(np.float32))
         
         # --- Helping variable
         # x = phi.val
@@ -93,14 +94,8 @@ def bicgstab(a, phi, b, tol,
         p_gpu = gpuarray.zeros(x_gpu.shape, x_gpu.dtype)
         # p_hat   = Unknown("vec_p_hat", phi.pos, x.shape, -1, per=phi.per, 
         #                   verbose=False)
-        p_hat_gpu.val = gpuarray.zeros_like(x_gpu)
-        p_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
-        p_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
-        p_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
-        p_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
-        p_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
-        p_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
-        
+        p_hat_gpu = gpu_object(np.shape(phi.val))
+ 
         # r       = zeros(x.shape)
         r_gpu = gpuarray.zeros_like(x_gpu)
         # r_tilda = zeros(x.shape)
@@ -109,13 +104,7 @@ def bicgstab(a, phi, b, tol,
         s_gpu = gpuarray.zeros_like(x_gpu)
         #s_hat   = Unknown("vec_s_hat", phi.pos, x.shape, -1, per=phi.per, 
         #                  verbose=False)
-        s_hat_gpu.val = gpuarray.zeros_like(x_gpu)
-        s_hat_gpu.bnd[W].val = gpuarray.zeros(phi.bnd[W].val.shape, x_gpu.dtype)
-        s_hat_gpu.bnd[E].val = gpuarray.zeros(phi.bnd[E].val.shape, x_gpu.dtype)
-        s_hat_gpu.bnd[S].val = gpuarray.zeros(phi.bnd[S].val.shape, x_gpu.dtype)
-        s_hat_gpu.bnd[N].val = gpuarray.zeros(phi.bnd[N].val.shape, x_gpu.dtype)
-        s_hat_gpu.bnd[B].val = gpuarray.zeros(phi.bnd[B].val.shape, x_gpu.dtype)
-        s_hat_gpu.bnd[T].val = gpuarray.zeros(phi.bnd[T].val.shape, x_gpu.dtype)
+        s_hat_gpu = gpu_object(np.shape(phi.val))
         
         # v       = zeros(x.shape)
         v_gpu = gpuarray.zeros_like(x_gpu)

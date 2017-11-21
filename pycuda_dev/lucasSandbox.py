@@ -15,6 +15,16 @@ import time
 # Standard Python modules
 import numpy as np
 
+# required by passing_arguments() in order to test mat_vec_bnd
+from pyns.solvers.mat_vec_bnd import mat_vec_bnd
+
+# ==============================================================================
+def passing_arguments(): 
+# ------------------------------------------------------------------------------
+    """
+    Debug weird behavior in gpuarrays while passing arguments
+    """
+
 # ==============================================================================
 def copy_sandbox():
 # ------------------------------------------------------------------------------
@@ -52,13 +62,23 @@ def slicing_test():
     a = curandom.rand((3, 3, 3))
     print(a)
     b = a[2,:,:]*2/2
+
+    print("--- the original matrix ---")
     print(b)
     print(type(b))
+
+    
+    print("--- replacing one value ---")
     b[0,0] = gpuarray.to_gpu( np.asarray(42).astype(np.float32) )
     print(b)
-    print(type(b))
 
+    print("--- replacing more than one value ---")
+    b[:,0] = gpuarray.to_gpu( (np.ones((3)) * 43).astype(np.float32) )
+    print(b)
 
+    print("--- replacing more than one value, more elegantly ---")
+    b[:-1,:] = gpuarray.to_gpu( (np.ones(( np.shape(b[:-1,:]) )) * 44).astype(np.float32) )
+    print(b)
 # ==============================================================================
 def gpu_norm():
 # ------------------------------------------------------------------------------
@@ -89,8 +109,8 @@ def comparisons():
     
 
 
-copy_sandbox()
+# copy_sandbox()
 # elementwise_ops()
-# slicing_test()
+slicing_test()
 # gpu_norm()
 # comparisons()
