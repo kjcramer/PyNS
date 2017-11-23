@@ -72,7 +72,9 @@ def mat_vec_bnd(a, phi, gpu=False):
     
         #stop_gpu=time.time()
         #print("GPU time: %2.3e s" %(stop_gpu-start_gpu))
-   
+       
+        #print("from mat_vec_bnd.py gpu: ")
+        #print(gpuarray.dot(r_gpu,r_gpu))
         return r_gpu
    
    
@@ -101,7 +103,11 @@ def mat_vec_bnd(a, phi, gpu=False):
 
     r[:] -= a.T[:] * cat_z( (phi.val       [:,:, 1:], 
                              phi.bnd[T].val[:,:, :1]) )
-    
+
+    # import numpy as np
+    # print("from mat_vec_bnd.py cpu: ")
+    # print(np.sum(np.sum(np.sum(np.multiply(r,r)))))
+
     #stop_cpu=time.time()
     #print("CPU time: %2.3e s" %(stop_cpu-start_cpu))
         
