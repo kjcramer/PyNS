@@ -11,7 +11,7 @@ from pyns.constants import *
 from pyns.operators import *
 
 # =============================================================================
-def isolines(phi, uvw, xyzn, dir, 
+def isolines(phi, uvw, xyzn, dir, filename = None,
              levels = 11):
 # -----------------------------------------------------------------------------
     """
@@ -70,6 +70,9 @@ def isolines(phi, uvw, xyzn, dir,
     plt.clabel(CS, inline=1, fontsize=7)
     plt.quiver(xp,yp,up,vp)
     plt.axis( [min(xn), max(xn), min(yn), max(yn)] )
+    # Save plots if needed -- FIXME
+    if filename is not None:
+        plt.savefig(filename, dpi=100, bbox_inches="tight")
     plt.show()
 
     return  # end of function
