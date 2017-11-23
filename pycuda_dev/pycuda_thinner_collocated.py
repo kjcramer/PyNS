@@ -43,7 +43,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=False, time_steps=20, plot_freq=5):
+def main(show_plot=False, time_steps=1, plot_freq=10):
 
 # =============================================================================
 #
@@ -51,10 +51,10 @@ def main(show_plot=False, time_steps=20, plot_freq=5):
 #
 # =============================================================================
 
-    # Node coordinates
-    xn = nodes(0, 1.25, 128)
-    yn = nodes(0, 0.125, 32)
-    zn = nodes(0, 0.125, 32)
+    # Node coordinates -- 128x32x32 was original mesh size
+    xn = nodes(0, 1.25, 32)
+    yn = nodes(0, 0.125, 8)
+    zn = nodes(0, 0.125, 8)
 
     # Cell coordinates
     xc = avg(xn)
@@ -200,11 +200,9 @@ def main(show_plot=False, time_steps=20, plot_freq=5):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Y)
-                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
-                plot.gmv("obst-thinner-collocated-%6.6d" % ts, 
-                         (xn,yn,zn), (uc,vc,wc,p))
-                      
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Y, "fig1_t" + str(ts) + ".pdf")
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z, "fig2_t" + str(ts) + ".pdf")
+                plot.gmv("obst-thinner-collocated-%6.6d" % ts, (xn,yn,zn), (uc,vc,wc,p))
 
 if __name__ == "__main__":
     main()
