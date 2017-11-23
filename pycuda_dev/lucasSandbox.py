@@ -16,7 +16,7 @@ import time
 import numpy as np
 
 # required by passing_arguments() in order to test mat_vec_bnd
-from pyns.solvers.mat_vec_bnd import mat_vec_bnd
+# from pyns.solvers.mat_vec_bnd import mat_vec_bnd
 
 # ==============================================================================
 def passing_arguments(): 
@@ -44,9 +44,15 @@ def elementwise_ops():
     """
     Check whether elementwise ops work in a predictable way (they do)
     """
-    a = gpuarray.arange(1, 5, 1, dtype=np.float32)
-    b = a*2
-    c = b/a
+    a_array = curandom.rand((3, 3, 3))
+    b_scalar = np.asarray(10.0)
+    b_scalar_on_gpu = gpuarray.to_gpu(np.asarray(10.0))
+    b_array = b_scalar_on_gpu * gpuarray.ones_like(a_array)
+    c = a_array * b_array
+    print(a_array)
+    print(b_scalar)
+    print(b_scalar_on_gpu)
+    print(b_array)
     print(c)
     print(type(c))
 
@@ -110,7 +116,7 @@ def comparisons():
 
 
 # copy_sandbox()
-# elementwise_ops()
-slicing_test()
+elementwise_ops()
+# slicing_test()
 # gpu_norm()
 # comparisons()
