@@ -92,16 +92,16 @@ class gpu_object:
 
         nx, ny, nz = res
         # Allocate memory space for new and old values
-        self.val = gpuarray.zeros((nx, ny, nz),dtype=np.float32)
+        self.val = gpuarray.zeros((nx, ny, nz),dtype=np.float64)
 
         # Create boundary tuple
         key = namedtuple("key", "typ val")
-        self.bnd = (key(gpuarray.zeros((1,ny,nz), dtype=int), gpuarray.zeros((1,ny,nz), dtype=np.float32)),
-                    key(gpuarray.zeros((1,ny,nz), dtype=int), gpuarray.zeros((1,ny,nz), dtype=np.float32)),
-                    key(gpuarray.zeros((nx,1,nz), dtype=int), gpuarray.zeros((nx,1,nz), dtype=np.float32)),
-                    key(gpuarray.zeros((nx,1,nz), dtype=int), gpuarray.zeros((nx,1,nz), dtype=np.float32)),
-                    key(gpuarray.zeros((nx,ny,1), dtype=int), gpuarray.zeros((nx,ny,1), dtype=np.float32)),
-                    key(gpuarray.zeros((nx,ny,1), dtype=int), gpuarray.zeros((nx,ny,1), dtype=np.float32)))
+        self.bnd = (key(gpuarray.zeros((1,ny,nz), dtype=int), gpuarray.zeros((1,ny,nz), dtype=np.float64)),
+                    key(gpuarray.zeros((1,ny,nz), dtype=int), gpuarray.zeros((1,ny,nz), dtype=np.float64)),
+                    key(gpuarray.zeros((nx,1,nz), dtype=int), gpuarray.zeros((nx,1,nz), dtype=np.float64)),
+                    key(gpuarray.zeros((nx,1,nz), dtype=int), gpuarray.zeros((nx,1,nz), dtype=np.float64)),
+                    key(gpuarray.zeros((nx,ny,1), dtype=int), gpuarray.zeros((nx,ny,1), dtype=np.float64)),
+                    key(gpuarray.zeros((nx,ny,1), dtype=int), gpuarray.zeros((nx,ny,1), dtype=np.float64)))
 
         # Prescribe default boundary conditions
         self.bnd[W].typ[0,:,:] = (np.ones((ny,nz))*NEUMANN).astype(int)
@@ -111,12 +111,12 @@ class gpu_object:
         self.bnd[B].typ[:,:,0] = (np.ones((nx,ny))*NEUMANN).astype(int)
         self.bnd[T].typ[:,:,0] = (np.ones((nx,ny))*NEUMANN).astype(int)
 
-        self.bnd[W].val[0,:,:] = (np.zeros((ny,nz))).astype(np.float32)
-        self.bnd[E].val[0,:,:] = (np.zeros((ny,nz))).astype(np.float32)
-        self.bnd[S].val[:,0,:] = (np.zeros((nx,nz))).astype(np.float32)
-        self.bnd[N].val[:,0,:] = (np.zeros((nx,nz))).astype(np.float32)
-        self.bnd[B].val[:,:,0] = (np.zeros((nx,ny))).astype(np.float32)
-        self.bnd[T].val[:,:,0] = (np.zeros((nx,ny))).astype(np.float32)
+        self.bnd[W].val[0,:,:] = (np.zeros((ny,nz))).astype(np.float64)
+        self.bnd[E].val[0,:,:] = (np.zeros((ny,nz))).astype(np.float64)
+        self.bnd[S].val[:,0,:] = (np.zeros((nx,nz))).astype(np.float64)
+        self.bnd[N].val[:,0,:] = (np.zeros((nx,nz))).astype(np.float64)
+        self.bnd[B].val[:,:,0] = (np.zeros((nx,ny))).astype(np.float64)
+        self.bnd[T].val[:,:,0] = (np.zeros((nx,ny))).astype(np.float64)
 
         if verbose is True:
             print("  Created unknown:", self.name)
