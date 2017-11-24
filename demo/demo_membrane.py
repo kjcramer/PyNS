@@ -34,9 +34,9 @@ H2O = 1
 FIL = 2
 
 u_in   = 0.12 # m/s
-t_in   = 80   # °C
+t_in   = 80   # C
 a_salt = 90.0 # g/l
-t_cold = 20   # °C
+t_cold = 20   # C
 
 # Node coordinates for both domains
 xn = (nodes(0,    0.1, 150), nodes(0,    0.1, 150), nodes(0,           0.1, 150))
@@ -200,7 +200,7 @@ for c in range(W,T):
   
   # Time-stepping parameters
 dt  =    0.0005  # time step
-ndt =    1       # number of time steps
+ndt =    10       # number of time steps
 dt_plot = ndt    # plot frequency
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL])]
@@ -324,7 +324,7 @@ for ts in range(1,ndt+1):
   q_a[AIR][:,:1,:]  = - m_out[:,:1,:] / dv[AIR][:,:1,:] 
   
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
-  for c in range(AIR,H2O):
+  for c in range(AIR,H2O+1):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
@@ -343,7 +343,7 @@ for ts in range(1,ndt+1):
   q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
   q_t[FIL][:,-1:,:] =  h_d[FIL]*m_out[:,:1,:] / dv[FIL][:,-1:,:]
   
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
@@ -452,7 +452,9 @@ for ts in range(1,ndt+1):
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
     
-    pylab.show()
+    pylab.savefig('membrane.pdf')
+
+    #pylab.show()
 
     #for c in (AIR,H2O):
     #  plot_isolines(t[c].val, (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
