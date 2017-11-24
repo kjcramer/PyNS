@@ -346,5 +346,3 @@ def bicgstab(a, phi, b, tol,
         rho_old = rho
 
     return x  # end of function
-
-

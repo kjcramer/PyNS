@@ -28,12 +28,12 @@ def mat_vec_bnd(a, phi, gpu=False):
     if gpu:
 
         import pycuda.driver as cuda
-	import pycuda.autoinit
-	import pycuda.gpuarray as gpuarray
-	from numpy import shape
-	from numpy import pad
+        import pycuda.autoinit
+        import pycuda.gpuarray as gpuarray
+        from numpy import shape
+        from numpy import pad
         
-	#start_gpu=time.time()
+        #start_gpu=time.time()
     
         # initialize and push data to gpu
         a_gpu = a

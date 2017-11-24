@@ -43,7 +43,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=5, plot_freq=20):
+def main(show_plot=True, time_steps=100, plot_freq=20):
 
 # =============================================================================
 #
@@ -155,9 +155,9 @@ def main(show_plot=True, time_steps=5, plot_freq=20):
     for ts in range(1, ndt+1):
 
         start_it = time.time()
-        
+
         write.time_step(ts)
-        
+
         # ------------------
         # Store old values
         # ------------------
@@ -168,27 +168,27 @@ def main(show_plot=True, time_steps=5, plot_freq=20):
         # -----------------------
         # Momentum conservation
         # -----------------------
-        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), 
+        calc_uvw((uc,vc,wc), (uf,vf,wf), rho, mu, dt, (dx,dy,dz),
                  obstacle = plates)
 
         # ----------
         # Pressure
         # ----------
-        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz), 
+        calc_p(p, (uf,vf,wf), rho, dt, (dx,dy,dz),
                obstacle = plates)
 
         # ---------------------
         # Velocity correction
         # ---------------------
-        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz), 
+        corr_uvw((uc,vc,wc), p, rho, dt, (dx,dy,dz),
                  obstacle = plates)
-        
-        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz), 
+
+        corr_uvw((uf,vf,wf), p, rho, dt, (dx,dy,dz),
                  obstacle = plates)
 
         # Check the CFL number too
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
-        
+
         end_tot = time.time()
         print("Elapsed time in iteration %2.3e" %(end_tot - start_it))
         print("Elapsed time in total %2.3e" %(end_tot - start_tot))
