@@ -72,7 +72,7 @@ def isolines(phi, uvw, xyzn, dir, filename = None,
     plt.axis( [min(xn), max(xn), min(yn), max(yn)] )
     # Save plots if needed -- FIXME
     if filename is not None:
-        plt.savefig(filename, dpi=100, bbox_inches="tight")
-    plt.show()
+        plt.savefig(filename, dpi=100, bbox_inches="tight");
+    # plt.show()
 
     return  # end of function

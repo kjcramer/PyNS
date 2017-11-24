@@ -44,7 +44,7 @@ def bicgstab(a, phi, b, tol,
 
     # if gpu == True, run CUDA-accelerated version of routines
     gpu = False
-    verbose = True
+    verbose = False
 
 # == full gpu version =========================================================
 
@@ -134,12 +134,6 @@ def bicgstab(a, phi, b, tol,
             # --- rho = r~ * r
             # rho = vec_vec(r_tilda, r, gpu)
             rho_gpu = vec_vec(r_tilda_gpu, r_gpu, gpu)
-            # DEBUG
-            np.savez('L138_gpu_iter_' + str(i)  + '.npz',
-                     rho_gpu = rho_gpu,
-                     r_tilda_gpu = r_tilda_gpu,
-                     r_gpu = r_gpu)
-
         
             # If rho == 0 method fails
             # if abs(rho) < TINY * TINY:
@@ -163,7 +157,6 @@ def bicgstab(a, phi, b, tol,
                 # --- p = r + beta (p - omega v)
                 # p[:,:,:] = r[:,:,:] + beta * (p[:,:,:] - omega * v[:,:,:])
                 p_gpu = r_gpu + beta_gpu.get() * (p_gpu - omega_gpu.get() * v_gpu)
-                # print('p_gpu = ', p_gpu)
 
             # --- Solve M p_hat = p
             # p_hat.val[:,:,:] = p[:,:,:] / a.C[:,:,:]
@@ -179,7 +172,6 @@ def bicgstab(a, phi, b, tol,
         
             # --- s = r - alfa v
             # s[:,:,:] = r[:,:,:] - alfa * v[:,:,:]
-            # FIXME alfa_gpu.get() is nonsensical, can we broadcast from gpu to gpu?
             s_gpu = r_gpu - alfa_gpu.get() * v_gpu
         
             # --- Check norm of s, if small enough set x = x + alfa p_hat and stop
@@ -239,8 +231,6 @@ def bicgstab(a, phi, b, tol,
 
 # == full cpu version =========================================================
 
-    # DEBUG -- np only needed to save data
-    import numpy as np
 
     if verbose is True:
         write.at(__name__)
@@ -281,11 +271,6 @@ def bicgstab(a, phi, b, tol,
 
         # rho = r~ * r
         rho = vec_vec(r_tilda, r, gpu)
-        # DEBUG
-        np.savez('L138_cpu_iter_' + str(i)  + '.npz',
-                 rho = rho,
-                 r_tilda = r_tilda,
-                 r = r)
 
         # If rho == 0 method fails
         if abs(rho) < TINY * TINY:
