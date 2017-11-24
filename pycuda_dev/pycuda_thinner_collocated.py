@@ -43,7 +43,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=5, plot_freq=20):
+def main(show_plot=True, time_steps=100, plot_freq=20):
 
 # =============================================================================
 #
