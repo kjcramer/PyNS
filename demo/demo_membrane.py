@@ -1,6 +1,10 @@
 
 #!/usr/bin/python
 
+import sys
+sys.path.append("../..")
+
+
 # Standard Python modules
 from pyns.standard import *
 
