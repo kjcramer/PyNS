@@ -98,4 +98,4 @@ def results_parser(infile):
                      time_v, iterations_v,
                      time_w, iterations_w,
                      time_p, iterations_p,
-                     timetotal_info])
+                     time_total])
