@@ -6,15 +6,15 @@ def results_parser(infile):
     Returns a 2D numpy array of shape (8, TS):
 
     * 8  is meant to contain
-         - time       elapsed by bicgstab in solving for u
-         - iterations .................................. u
-         - time       elapsed by bicgstab in solving for v
-         - iterations .................................. v
-         - time       elapsed by bicgstab in solving for w
-         - iterations .................................. w
-         - time       elapsed by bicgstab in solving for p
-         - iterations .................................. p
-    * TS is the number of time steps;
+         0 time       elapsed by bicgstab in solving for u
+         1 iterations .................................. u
+         2 time       elapsed by bicgstab in solving for v
+         3 iterations .................................. v
+         4 time       elapsed by bicgstab in solving for w
+         5 iterations .................................. w
+         6 time       elapsed by bicgstab in solving for p
+         7 iterations .................................. p
+    * TS is the total number of time steps;
 
 
     ---
