@@ -52,9 +52,9 @@ def main(show_plot=True, time_steps=160, plot_freq=20):
 # =============================================================================
 
     # Node coordinates -- 128x32x32 was original mesh size
-    xn = nodes(0, 1.25, 64)
-    yn = nodes(0, 0.125, 16)
-    zn = nodes(0, 0.125, 16)
+    xn = nodes(0, 1.25, 256)
+    yn = nodes(0, 0.125, 32)
+    zn = nodes(0, 0.125, 32)
 
     # Cell coordinates
     xc = avg(xn)
