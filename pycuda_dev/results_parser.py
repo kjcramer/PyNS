@@ -1,64 +1,89 @@
-# usage: python results_parser.py out.txt
+def results_parser(infile):
+    """
+    Parse the standard output of pycuda_thinner_collocated.py in order
+    to gather information on its performance.
 
-import numpy as np
-import sys
+    Returns a 2D numpy array of shape (8, TS):
 
-# the file to parse
+    * 8  is meant to contain
+         - time       elapsed by bicgstab in solving for u
+         - iterations .................................. u
+         - time       elapsed by bicgstab in solving for v
+         - iterations .................................. v
+         - time       elapsed by bicgstab in solving for w
+         - iterations .................................. w
+         - time       elapsed by bicgstab in solving for p
+         - iterations .................................. p
+    * TS is the number of time steps;
 
-assert len(sys.argv) == 2, "Please specify an output file!"
 
-path = str(sys.argv[1])
+    ---
+    Usage example
+    ---
+        bash> python pycuda_thinner_collocated.py > k80_tegner.out
+      python> results_parser("k80_tegner.out")
 
-# read all lines
-f = open(path,'r')
-lines = f.readlines()
-f.close()
+    """
 
-# bicgstab occurs 4 times per time step; computing u, v, w, p
-bicgstab_occurrence = 1
+    import numpy as np
+    import sys
 
-# empty list that will contain the time steps
-time_step = []
+    # read all lines
+    f = open(infile,'r')
+    lines = f.readlines()
+    f.close()
 
-# empty lists that will contain the elapsed times and iterations per variable
-time_u = []
-iterations_u = []
-time_v = []
-iterations_v = []
-time_w = []
-iterations_w = []
-time_p = []
-iterations_p = []
+    # bicgstab occurs 4 times per time step;
+    # on the first occurrence u is computed, then v, w, p
+    bicgstab_occurrence = 1
 
-for line in lines:
-    # extract time step
-    text_ts = "Time step = "
-    if text_ts in line:
-        time_step.append(int(''.join(filter(str.isdigit, line))))
+    # empty list that will contain the time steps
+    time_step = []
 
-    # extract elapsed time and number of iterations in bicgstab
-    text_bicgstab = "Elapsed time in bigstab"
-    if text_bicgstab in line:
-        # a typical line looks like
-        #   Elapsed time in bigstab 2.057e-02 --- iterations: 75
-        # so it is enough to check that the first character is a number
-        bicgstab_info = [float(s) for s in line.split() if s[0].isdigit()]
-        # reading u
-        if bicgstab_occurrence % 4 == 1:
-            time_u.append(bicgstab_info[0])
-            iterations_u.append(int(bicgstab_info[1]))
-        # reading v
-        if bicgstab_occurrence % 4 == 2:
-            time_v.append(bicgstab_info[0])
-            iterations_v.append(int(bicgstab_info[1]))
-        # reading w
-        if bicgstab_occurrence % 4 == 3:
-            time_w.append(bicgstab_info[0])
-            iterations_w.append(int(bicgstab_info[1]))
-        # reading p
-        if bicgstab_occurrence % 4 == 0:
-            time_p.append(bicgstab_info[0])
-            iterations_p.append(int(bicgstab_info[1]))
-        bicgstab_occurrence += 1
+    # empty lists that will contain the elapsed times and iterations per variable
+    time_u = []
+    iterations_u = []
+    time_v = []
+    iterations_v = []
+    time_w = []
+    iterations_w = []
+    time_p = []
+    iterations_p = []
 
-# somehow we should save/plot/put in an array/ decide what to do with all this data
+    # parse all lines of the input file
+    for line in lines:
+        # extract time step
+        text_ts = "Time step = "
+        if text_ts in line:
+            time_step.append(int(''.join(filter(str.isdigit, line))))
+
+        # extract elapsed time and number of iterations in bicgstab
+        text_bicgstab = "Elapsed time in bigstab"
+        if text_bicgstab in line:
+            # a typical line looks like
+            #   Elapsed time in bigstab 2.057e-02 --- iterations: 75
+            # so it is enough to check that the first character is a number
+            bicgstab_info = [float(s) for s in line.split() if s[0].isdigit()]
+            # reading u
+            if bicgstab_occurrence % 4 == 1:
+                time_u.append(bicgstab_info[0])
+                iterations_u.append(int(bicgstab_info[1]))
+            # reading v
+            if bicgstab_occurrence % 4 == 2:
+                time_v.append(bicgstab_info[0])
+                iterations_v.append(int(bicgstab_info[1]))
+            # reading w
+            if bicgstab_occurrence % 4 == 3:
+                time_w.append(bicgstab_info[0])
+                iterations_w.append(int(bicgstab_info[1]))
+            # reading p
+            if bicgstab_occurrence % 4 == 0:
+                time_p.append(bicgstab_info[0])
+                iterations_p.append(int(bicgstab_info[1]))
+            bicgstab_occurrence += 1
+
+    # put the gathered data into a numpy array
+    return np.array([time_u, iterations_u,
+                     time_v, iterations_v,
+                     time_w, iterations_w,
+                     time_p, iterations_p])
