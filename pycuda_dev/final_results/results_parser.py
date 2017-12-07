@@ -3,9 +3,9 @@ def results_parser(infile):
     Parse the standard output of pycuda_thinner_collocated.py in order
     to gather information on its performance.
 
-    Returns a 2D numpy array of shape (8, TS):
+    Returns a 2D numpy array of shape (9, TS):
 
-    * 8  is meant to contain
+    * 9  is meant to contain
          0 time       elapsed by bicgstab in solving for u
          1 iterations .................................. u
          2 time       elapsed by bicgstab in solving for v
@@ -14,6 +14,7 @@ def results_parser(infile):
          5 iterations .................................. w
          6 time       elapsed by bicgstab in solving for p
          7 iterations .................................. p
+         8 total time elapsed by pycuda_thinner_collocated
     * TS is the total number of time steps;
 
 
@@ -50,6 +51,9 @@ def results_parser(infile):
     time_p = []
     iterations_p = []
 
+    # empty list that will contain the elapsed total time at every time step
+    time_total = []
+
     # parse all lines of the input file
     for line in lines:
         # extract time step
@@ -82,8 +86,16 @@ def results_parser(infile):
                 iterations_p.append(int(bicgstab_info[1]))
             bicgstab_occurrence += 1
 
+        # extract elapsed total time
+        text_total = "Elapsed time in total"
+        if text_total in line:
+            timetotal_info = [float(s) for s in line.split() if s[0].isdigit()][0]
+            time_total.append(timetotal_info)
+
+
     # put the gathered data into a numpy array
     return np.array([time_u, iterations_u,
                      time_v, iterations_v,
                      time_w, iterations_w,
-                     time_p, iterations_p])
+                     time_p, iterations_p,
+                     time_total])
