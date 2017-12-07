@@ -141,7 +141,7 @@ def bicgstab(a, phi, b, tol,
                 write.at(__name__)
                 print("  Fails because rho = %12.5e" % rho_gpu.get())
                 end = time.time()
-                print("Elapsed time in bigstab %2.3e; iterations: %d" %((end - start), i))
+                print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
                 return x_gpu.get()
 
             if i == 1:
@@ -184,7 +184,7 @@ def bicgstab(a, phi, b, tol,
                     print("  Fails because rho = %12.5e" % rho_gpu.get())
                 x_gpu += alfa_gpu.get() * p_hat_gpu.val
                 end = time.time()
-                print("Elapsed time in bigstab %2.3e; iterations: %d" %((end - start), i))
+                print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
                 return x_gpu.get()
 
             # --- Solve M s^ = s
@@ -219,7 +219,7 @@ def bicgstab(a, phi, b, tol,
             # if res_gpu < tol:
             if res_gpu.get() < tol_gpu.get():
                 end = time.time()
-                print("Elapsed time in bigstab %2.3e; iterations: %d" %((end - start), i))
+                print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
                 return x_gpu.get()
 
             # --- Prepare for next iteration
@@ -277,7 +277,7 @@ def bicgstab(a, phi, b, tol,
             write.at(__name__)
             print("  Fails becuase rho = %12.5e" % rho)
             end = time.time()
-            print("Elapsed time in bigstab %2.3e; iterations: %d" %((end - start), i))
+            print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
             return x
 
         if i == 1:
@@ -312,7 +312,7 @@ def bicgstab(a, phi, b, tol,
                 print("  Fails because rho = %12.5e" % rho)
             x[:,:,:] += alfa * p_hat.val[:,:,:]
             end = time.time()
-            print("Elapsed time in bigstab %2.3e; iterations: %d" %((end - start), i))
+            print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
             return x
 
         # Solve M s^ = s
@@ -339,7 +339,7 @@ def bicgstab(a, phi, b, tol,
         # If tolerance has been reached, get out of here
         if res < tol:
             end = time.time()
-            print("Elapsed time in bigstab %2.3e; iterations: %d" %((end - start), i))
+            print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
             return x
 
         # Prepare for next iteration
