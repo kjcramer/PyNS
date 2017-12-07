@@ -43,7 +43,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=100, plot_freq=20):
+def main(show_plot=True, time_steps=160, plot_freq=20):
 
 # =============================================================================
 #
@@ -52,9 +52,9 @@ def main(show_plot=True, time_steps=100, plot_freq=20):
 # =============================================================================
 
     # Node coordinates -- 128x32x32 was original mesh size
-    xn = nodes(0, 1.25, 32)
-    yn = nodes(0, 0.125, 8)
-    zn = nodes(0, 0.125, 8)
+    xn = nodes(0, 1.25, 64)
+    yn = nodes(0, 0.125, 16)
+    zn = nodes(0, 0.125, 16)
 
     # Cell coordinates
     xc = avg(xn)
