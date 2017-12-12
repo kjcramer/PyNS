@@ -43,7 +43,7 @@ t_cold = 20   # °C
 
 # Node coordinates for both domains
 xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
-yn = (nodes(-0.004, 0,     10), nodes( 0,    0.02,  30), nodes(-0.005, -0.004,  3))
+yn = (nodes(-0.004, 0,     10), nodes( -0.02,    -0.004,  30), nodes(0, 0.005,  15))
 zn = (nodes( 0.0,   0.0006, 2), nodes( 0.0,  0.0006, 2), nodes( 0.0,    0.0006, 2))
 
 # Cell coordinates 
@@ -133,7 +133,8 @@ a     = [Unknown("concentration", C, rc[AIR], NEUMANN),  \
          Unknown("concentration", C, rc[H2O], NEUMANN),  \
          Unknown("concentration", C, rc[FIL], NEUMANN)]
 p_tot = [Unknown("pressure-tot",  C, rc[AIR], NEUMANN),  \
-         Unknown("pressure-tot",  C, rc[H2O], NEUMANN)]
+         Unknown("pressure-tot",  C, rc[H2O], NEUMANN),
+         Unknown("pressure-tot",  C, rc[FIL], NEUMANN)]
 
 # just for air
 p_v =[Unknown("vapor_pressure",C, rc[AIR], NEUMANN)]
@@ -146,39 +147,39 @@ for k in range(0,nz[H2O]):
 uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
 uf[H2O].bnd[E].val[:1,:,:] = u_in
 
-for c in range(AIR,H2O):
+for c in range(AIR,H2O+1):
   for j in (B,T):
     uf[c].bnd[j].typ[:] = NEUMANN    
     vf[c].bnd[j].typ[:] = NEUMANN     
     wf[c].bnd[j].typ[:] = NEUMANN     
   
-t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET   
-t[AIR].bnd[S].val[:,:1,:] = t_cold
-t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET  
-t[AIR].bnd[N].val[:,:1,:] = 70
+t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET   
+t[AIR].bnd[N].val[:,:1,:] = t_cold
+t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
+t[AIR].bnd[S].val[:,:1,:] = 70
 
 t[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 t[H2O].bnd[W].val[:1,:,:] = t_in
-t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET  
-t[H2O].bnd[S].val[:,:1,:] = 70
+t[H2O].bnd[N].typ[:,:1,:] = DIRICHLET  
+t[H2O].bnd[N].val[:,:1,:] = 70
  
 t[FIL].bnd[S].typ[:,:1,:] = DIRICHLET
 t[FIL].bnd[S].val[:,:1,:] = t_cold
 t[FIL].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[FIL].bnd[N].val[:,:1,:] = t_cold
 
-t_int_mem = t[H2O].bnd[S].val[:,:1,:] # temporary
+t_int_mem = t[FIL].bnd[S].val[:,:1,:] # temporary
 
 a[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 a[H2O].bnd[W].val[:1,:,:] = a_salt/rho[H2O][:1,:,:]
 
-M[AIR].bnd[S].typ[:,:1,:] = DIRICHLET
-M[AIR].bnd[S].val[:,:1,:] = M[AIR].val[:,:1,:]
+M[AIR].bnd[N].typ[:,:1,:] = DIRICHLET
+M[AIR].bnd[N].val[:,:1,:] = M[AIR].val[:,:1,:]
 
 p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
-p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
+p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[H2O].bnd[N].val[:,:,:])
 p_v[AIR].bnd[N].typ[:,:,:] = DIRICHLET
-p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[H2O].bnd[S].val[:,:,:])
+p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[FIL].bnd[S].val[:,:,:])
 
 
 t[AIR].val[:,:,:] = round((t_in+t_cold)/2,-1)
@@ -261,21 +262,24 @@ for ts in range(1,ndt+1):
   M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)  
   p_v[AIR].val[:,:,:] = a[AIR].val[:,:,:] *M[AIR].val[:,:,:]/M_H2O * (p_tot[AIR].val[:,:,:] +1E5) 
   
+  # Liquid film & AIR N bnd values 
   # Liquid film & AIR S bnd values 
+  #Ist jetzt H2O und LUFT, nicht FILM
   M[AIR].bnd[S].val[:,:,:] = np.power(((1-a[AIR].bnd[S].val[:,:,:])/M_AIR + a[AIR].bnd[S].val[:,:,:]/M_H2O),(-1))
   p_v[AIR].bnd[S].val[:,:,:] = a[AIR].bnd[S].val[:,:,:] *M[AIR].bnd[S].val[:,:,:]/M_H2O * (p_tot[AIR].val[:,:1,:] +1E5)
   
-  t_int_film = t_sat(p_v[AIR].bnd[S].val[:,:,:])
+  
+  t_int_film = t_sat(p_v[AIR].bnd[N].val[:,:,:])
   print("t_int_film = " + "%3.4f" %np.mean(t_int_film))
   
   t[AIR].bnd[S].val[:,:,:] = t_int_film
-  t[FIL].bnd[N].val[:,:,:] = t_int_film
+  t[H2O].bnd[N].val[:,:,:] = t_int_film
   
   m_out = (2* kappa[AIR][:,:1,:] / dy[AIR][:,:1,:] *    \
                    (t_int_film - t[AIR].val[:,:1,:])    \
-          + 2*kappa[FIL][:,-1:,:] / dy[FIL][:,-1:,:] *  \
-                  (t_int_film - t[FIL].val[:,-1:,:]))   \
-          * dx[AIR][:,:1,:] * dz[AIR][:,:1,:] / h_d[FIL]  # kg/s
+          + 2*kappa[H2O][:,-1:,:] / dy[H2O][:,-1:,:] *  \
+                  (t_int_film - t[H2O].val[:,-1:,:]))   \
+          * dx[AIR][:,:1,:] * dz[AIR][:,:1,:] / h_d[H2O]  # kg/s
   
   print("m_out = " + "%3.4e" %np.mean(m_out))  
   
@@ -292,7 +296,7 @@ for ts in range(1,ndt+1):
   mem.t[:,:1,:] = ((1.0+const_mem_1)*t_int_mem + t[AIR].val[:,-1:,:]) / (2.0+const_mem_1)
   
   mem.t[:,:1,:] = mem.t + 273.15;
-  mem.p[:,:1,:] = (p_tot[H2O].val[:,:1,:] + p_tot[AIR].val[:,-1:,:]) /2.0 + 1E5
+  mem.p[:,:1,:] = (p_tot[FIL].val[:,:1,:] + p_tot[AIR].val[:,-1:,:]) /2.0 + 1E5
   mem.pv[:,:1,:] = (p_v[AIR].bnd[N].val[:,:1,:] + p_v[AIR].val[:,-1:,:]) /2.0
   
   # Diffusion Coefficients
@@ -301,15 +305,15 @@ for ts in range(1,ndt+1):
   C_T = 1.0/(1.0/C_K + 1.0/C_M)
   
   # Jump condition at membrane
-  lhs_lin_mem = (2.0*kappa[H2O][:,:1,:]/dy[H2O][:,:1,:] \
+  lhs_lin_mem = (2.0*kappa[FIL][:,:1,:]/dy[FIL][:,:1,:] \
      + 1.0/(dy[AIR][:,-1:,:]/(2.0*kappa[AIR][:,-1:,:]) + mem.d/kappa_mem)) \
-     * mem.eps * dx[AIR][:,-1:,:] * dz[AIR][:,-1:,:] / h_d[H2O]
+     * mem.eps * dx[AIR][:,-1:,:] * dz[AIR][:,-1:,:] / h_d[FIL]
      
   lhs_fun_mem = C_T*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]
   
   rhs_mem = C_T*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]*p_v[AIR].val[:,-1:,:] \
-    + mem.eps*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]/h_d[H2O] \
-    * ( 2.0*kappa[H2O][:,:1,:]/dy[H2O][:,:1,:]*t[H2O].val[:,:1,:] \
+    + mem.eps*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]/h_d[FIL] \
+    * ( 2.0*kappa[FIL][:,:1,:]/dy[FIL][:,:1,:]*t[FIL].val[:,:1,:] \
       + 1.0/(dy[AIR][:,-1:,:]/(2.0*kappa[AIR][:,-1:,:])+mem.d/kappa_mem) \
       * t[AIR].val[:,-1:,:])
   
@@ -321,10 +325,10 @@ for ts in range(1,ndt+1):
   
   print("t_int_mem = " + "%3.4f" %np.mean(t_int_mem))
   
-  t[H2O].bnd[S].val[:,:1,:] = t_int_mem
+  t[FIL].bnd[S].val[:,:1,:] = t_int_mem
   const_mem_2 = 2*kappa[AIR][:,-1:,:]*mem.d/kappa_mem/dy[AIR][:,-1:,:];
   t[AIR].bnd[N].val[:,:1,:] = (t_int_mem + const_mem_2 *t[AIR].val[:,-1:,:])/(1+const_mem_2)
-  p_v[AIR].bnd[N].val[:,:,:]= p_v_sat_salt(t_int_mem, a[H2O].val[:,:1,:], M_salt)
+  p_v[AIR].bnd[N].val[:,:,:]= p_v_sat_salt(t_int_mem, a[FIL].val[:,:1,:], M_salt)
   mem.j[:,:,:] = C_T[:,:,:] *dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]*(p_v[AIR].bnd[N].val[:,:,:]-p_v[AIR].val[:,-1:,:])  
   
   #------------------------
@@ -339,7 +343,7 @@ for ts in range(1,ndt+1):
   q_a[AIR][:,:1,:]  = - m_out[:,:1,:] / dv[AIR][:,:1,:] 
   
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
-  for c in range(AIR,H2O):
+  for c in range(AIR,H2O+1):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
@@ -358,13 +362,13 @@ for ts in range(1,ndt+1):
   q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
   q_t[FIL][:,-1:,:] =  h_d[FIL]*m_out[:,:1,:] / dv[FIL][:,-1:,:]
   
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
            source = q_t[c])
 
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     t[c].val[t[c].val > t_max] = t_max
     t[c].val[t[c].val < t_min] = t_min
 
@@ -422,8 +426,8 @@ for ts in range(1,ndt+1):
     z_pos = 1
     
     xc = avg(xn[AIR])
-    yc = np.append(avg(yn[FIL]), avg(yn[AIR]),axis=0)
-    yc = np.append(yc, avg(yn[H2O]),axis=0)
+    yc = np.append(avg(yn[H2O]), avg(yn[AIR]),axis=0)
+    yc = np.append(yc, avg(yn[FIL]),axis=0)
     #ycRhoH2O = np.append(avg(yn[H2O]), axis=0)
     #xcRho = avg(xn[H2O])
     #ycRho=avg(yn[H2O])
@@ -431,17 +435,17 @@ for ts in range(1,ndt+1):
     
     
     
-    t_plot=np.append(t[FIL].val[:,:,z_pos],t[AIR].val[:,:,z_pos],axis=1)
-    t_plot=np.append(t_plot, t[H2O].val[:,:,z_pos],axis=1)
+    t_plot=np.append(t[H2O].val[:,:,z_pos],t[AIR].val[:,:,z_pos],axis=1)
+    t_plot=np.append(t_plot, t[FIL].val[:,:,z_pos],axis=1)
     t_plot=transpose(t_plot)
-    p_plot=np.append(p[FIL].val[:,:,z_pos],p[AIR].val[:,:,z_pos],axis=1)
-    p_plot=np.append(p_plot, p[H2O].val[:,:,z_pos],axis=1)
+    p_plot=np.append(p[H2O].val[:,:,z_pos],p[AIR].val[:,:,z_pos],axis=1)
+    p_plot=np.append(p_plot, p[FIL].val[:,:,z_pos],axis=1)
     p_plot=transpose(p_plot)
-    a_plot=np.append(a[FIL].val[:,:,z_pos],a[AIR].val[:,:,z_pos],axis=1)
-    a_plot=np.append(a_plot, a[H2O].val[:,:,z_pos],axis=1)
+    a_plot=np.append(a[H2O].val[:,:,z_pos],a[AIR].val[:,:,z_pos],axis=1)
+    a_plot=np.append(a_plot, a[FIL].val[:,:,z_pos],axis=1)
     a_plot=transpose(a_plot)
-    rho_plot=np.append(rho[FIL][:,:,z_pos],rho[AIR][:,:,z_pos],axis=1)
-    rho_plot=np.append(rho_plot, rho[H2O][:,:,z_pos],axis=1)
+    rho_plot=np.append(rho[H2O][:,:,z_pos],rho[AIR][:,:,z_pos],axis=1)
+    rho_plot=np.append(rho_plot, rho[FIL][:,:,z_pos],axis=1)
     rho_plot=transpose(rho_plot)
     #rho_plot=np.append(rho[FIL],rho[AIR],axis=1)
     #rho_plot=np.append(rho_plot, rho[H2O],axis=1)
