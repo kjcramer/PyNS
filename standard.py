@@ -5,8 +5,9 @@ from math                import ceil,        \
                                 factorial,   \
                                 pi,          \
                                 sqrt
-import matplotlib
-matplotlib.use('Agg')
+# the next two lines might be problematic...
+# import matplotlib
+# matplotlib.use('Agg')
 from matplotlib          import pyplot      as plt
 from matplotlib          import cm
 from random              import random
