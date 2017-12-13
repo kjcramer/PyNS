@@ -76,7 +76,7 @@ def benchmark(sz, iters):
 # array size, from 64 to 256 in 16-increments
 SZ = [16*x for x in range(4,17)]
 
-# number of iterations, in powers of 2 from 16 to 262144
+# number of iterations, in powers of 2 from 32 to 128
 ITERS = [2**x for x in range(5, 8)]
 
 times = np.empty([3, len(SZ), len(ITERS)], np.float64)

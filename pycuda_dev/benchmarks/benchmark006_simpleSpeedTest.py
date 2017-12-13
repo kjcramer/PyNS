@@ -63,7 +63,7 @@ print("Using nbr_values ==", nbr_values)
 
 # Number of iterations for the calculations,
 # 100 is very quick, 2000000 will take a while
-n_iter = 40000000
+n_iter = 100000
 print("Calculating %d iterations" % (n_iter))
 
 # create two timers so we can speed-test each approach
@@ -77,6 +77,7 @@ end = drv.Event()
 mod = SourceModule("""
 __global__ void gpusin(float *dest, float *a, int n_iter)
 {
+
   const int i = blockDim.x*blockIdx.x + threadIdx.x;
   for(int n = 0; n < n_iter; n++) {
     a[i] = sin(a[i]);
@@ -92,7 +93,6 @@ a = numpy.ones(nbr_values).astype(numpy.float32)
 # create a destination array that will receive the result
 dest = numpy.zeros_like(a)
 
-<<<<<<< HEAD
 start_time = time.time()
 start.record() # start timing
 gpusin(drv.Out(dest), drv.In(a), numpy.int32(n_iter), grid=(blocks,1), block=(block_size,1,1) )
@@ -103,7 +103,7 @@ end.synchronize()
 secs = start.time_till(end)*1e-3
 print("Our way of computing time: %2.3e" %(end_time-start_time))
 print("SourceModule time and first three results:")
-print("%fs, %s" % (secs, str(dest[-3:])))
+print("%fs, %s" % (secs, str(dest[:3])))
 
 
 # #####################
