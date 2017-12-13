@@ -43,7 +43,7 @@ def bicgstab(a, phi, b, tol,
     """
 
     # if gpu == True, run CUDA-accelerated version of routines
-    gpu = False
+    gpu = True
     verbose = False
 
 # == full gpu version =========================================================
