@@ -62,14 +62,14 @@ def benchmark(sz, iters):
     block_size = 128
     nbr_values = blocks * block_size
     
-    print("Using blocks ==", blocks)
-    print("Using block_size ==", block_size)
-    print("Using nbr_values ==", nbr_values)
+    # print("Using blocks ==", blocks)
+    # print("Using block_size ==", block_size)
+    # print("Using nbr_values ==", nbr_values)
     
     # Number of iterations for the calculations,
     # 100 is very quick, 2000000 will take a while
     n_iter = iters
-    print("Calculating %d iterations" % (n_iter))
+    # print("Calculating %d iterations" % (n_iter))
     
     # create two timers so we can speed-test each approach
     start = drv.Event()
@@ -79,17 +79,17 @@ def benchmark(sz, iters):
     # SourceModele SECTION
     # We write the C code and the indexing and we have lots of control
    
-     mod = SourceModule("""
-     __global__ void gpusin(float *dest, float *a, int n_iter)
-     {
-   
-       const int i = blockDim.x*blockIdx.x + threadIdx.x;
-       for(int n = 0; n < n_iter; n++) {
-         a[i] = sin(a[i]);
-       }  
-       dest[i] = a[i];
-     }
-     """)
+    mod = SourceModule("""
+    __global__ void gpusin(float *dest, float *a, int n_iter)
+    {
+  
+      const int i = blockDim.x*blockIdx.x + threadIdx.x; 
+      for(int n = 0; n < n_iter; n++) {
+        a[i] = sin(a[i]);
+      }  
+      dest[i] = a[i];
+    }
+    """)
  
     gpusin = mod.get_function("gpusin")
     
@@ -164,7 +164,7 @@ def benchmark(sz, iters):
     end.record() # end timing
     # calculate the run length
     end.synchronize()
-    gpuarray = start.time_till(end)*1e-3
+    garray = start.time_till(end)*1e-3
     # print("GPUArray time and first three results:")
     # print("%fs, %s" % (secs, str(a_gpu.get()[:3])))
     
@@ -187,10 +187,11 @@ def benchmark(sz, iters):
     # print("CPU time and first three results:")
     # print("%fs, %s" % (secs, str(a[:3])))
 
-    return [cputime, gpuarray, cKernel, EW_loop, EW]
+    return [cputime, garray, cKernel, EW_loop, EW]
 
 #########################################################################################
 
+import numpy as np
 
 # array size, from 64 to 256 in 16-increments
 SZ = [16*x for x in range(4,17)]
@@ -198,11 +199,11 @@ SZ = [16*x for x in range(4,17)]
 # number of iterations, in powers of 10 from 100 to 100000
 ITERS = [10**x for x in range(2, 5)]
 
-times = np.empty([3, len(SZ), len(ITERS)], np.float64)
+times = np.empty([5, len(SZ), len(ITERS)], np.float64)
 
 for (isz, sz) in enumerate(SZ):
     for (iiters, iters) in enumerate(ITERS):
-        [cpu, gpuarray, gpu_set] = benchmark(sz, iters)
-        times[:,isz,iiters] = [cpu, gpuarray, gpu_set]
+        [cputime, garray, cKernel, EW_loop, EW] = benchmark(sz, iters)
+        times[:,isz,iiters] = [cputime, garray, cKernel, EW_loop, EW]
 
-np.savez('outData.npz', size=SZ, iterations=ITERS, times=times)
+np.savez('outData_benchmark006.npz', size=SZ, iterations=ITERS, times=times)
