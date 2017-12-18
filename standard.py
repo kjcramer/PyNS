@@ -5,9 +5,9 @@ from math                import ceil,        \
                                 factorial,   \
                                 pi,          \
                                 sqrt
-# the next two lines might be problematic...
-# import matplotlib
-# matplotlib.use('Agg')
+# plotting on headless systems
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib          import pyplot      as plt
 from matplotlib          import cm
 from random              import random
