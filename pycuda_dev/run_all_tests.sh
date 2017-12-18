@@ -7,25 +7,24 @@
 # - save standard output and a final figure
 # - move all these files in the subdirectory
 
-mesh_sizes=( "128_16_16"
-             "256_64_64" )
+prefix="local_"
 
-for ii in "${mesh_sizes[@]}"
-do
-    echo "$ii"
+mesh_sizes=( "64_16_16"
+             "128_16_16" )
+             # "128_32_32"
+             # "256_32_32"
+             # "256_64_64"
+             # "512_64_64" )
+
+suffix="_run1"
+
+for mesh_size in "${mesh_sizes[@]}"; do
+    folder_name="$prefix$mesh_size$suffix"
+    mkdir "$folder_name"
+    hostname > "$folder_name"/hostname.txt
+    cat /proc/cpuinfo > "$folder_name"/cpuinfo.txt
+    echo "Now running ${mesh_size}..."
+    python pycuda_thinner_collocated.py "$mesh_size" > out.txt
+    mv fig* "$folder_name"
+    mv out.txt "$folder_name"
 done
-
-# python pycuda_thinner_collocated.py > out.txt
-# mkdir gpu_tegner_256_64_64_run1
-# mv fig* gpu_tegner_256_64_64_run1
-# mv out.txt gpu_tegner_256_64_64_run1
-
-# python pycuda_thinner_collocated.py > out.txt
-# mkdir gpu_tegner_256_64_64_run2
-# mv fig* gpu_tegner_256_64_64_run2
-# mv out.txt gpu_tegner_256_64_64_run2
-
-# python pycuda_thinner_collocated.py > out.txt
-# mkdir gpu_tegner_256_64_64_run3
-# mv fig* gpu_tegner_256_64_64_run3
-# mv out.txt gpu_tegner_256_64_64_run3

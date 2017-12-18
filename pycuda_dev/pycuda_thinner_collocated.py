@@ -32,6 +32,7 @@ from __future__ import division
 import time
 import sys
 sys.path.append("../..")
+from sys import argv
 
 # Standard Python modules
 from pyns.standard import *
@@ -51,10 +52,24 @@ def main(show_plot=True, time_steps=100, plot_freq=20):
 #
 # =============================================================================
 
-    # Node coordinates -- 128x32x32 was original mesh size
-    xn = nodes(0, 1.25, 256)
-    yn = nodes(0, 0.125, 64)
-    zn = nodes(0, 0.125, 64)
+    # Node coordinates are passed as command line arguments
+    if len(argv) == 2:
+        mesh_size_cmd = argv[1]
+        # turn a string like "256_64_64" into a list of integers
+        mesh_size_cmd = list(map(int, mesh_size_cmd.split("_")))
+        x_size = mesh_size_cmd[0]
+        y_size = mesh_size_cmd[1]
+        z_size = mesh_size_cmd[2]
+    else:
+        # if called with no argument, default to these values
+        x_size = 128
+        y_size = 32
+        z_size = 32
+
+    print("Mesh size is", [x_size, y_size, z_size])
+    xn = nodes(0, 1.25,  x_size)
+    yn = nodes(0, 0.125, y_size)
+    zn = nodes(0, 0.125, z_size)
 
     # Cell coordinates
     xc = avg(xn)
