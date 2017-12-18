@@ -56,8 +56,8 @@ def benchmark(dimension, sourceModule=False):
         end.record()
         end.synchronize()
         garray = start.time_till(end)*1e-3
-        #print("GPUArray time and result:")
-        #print("%fs, %s" % (secs, str(gpuArray_out)))
+        print("GPUArray time and result:")
+        print("%fs, %s" % (garray, str(gpuArray_out)))
     # -------------------------------------------------------------------------
     
     # ==== sourceModule =======================================================
@@ -108,8 +108,8 @@ def benchmark(dimension, sourceModule=False):
         end.record()
         end.synchronize()
         redKernel = start.time_till(end)*1e-3
-        #print("ReductionKernel time and result:")
-        #print("%fs, %s" % (secs, str(dest_reduction)))
+        print("ReductionKernel time and result:")
+        print("%fs, %s" % (redKernel, str(dest_reduction)))
     # -------------------------------------------------------------------------
     
         
@@ -121,8 +121,8 @@ def benchmark(dimension, sourceModule=False):
     end.record()
     end.synchronize()
     cpu = start.time_till(end)*1e-3
-    #print("cpu time and result:")
-    #print("%fs, %s" % (secs, str(cpu_out)))
+    print("cpu time and result:")
+    print("%fs, %s" % (cpu, str(cpu_out)))
     # -------------------------------------------------------------------------
     
     return cpu, garray, redKernel
