@@ -44,7 +44,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=100, plot_freq=20):
+def main(show_plot=True, time_steps=2, plot_freq=2):
 
 # =============================================================================
 #
@@ -52,19 +52,22 @@ def main(show_plot=True, time_steps=100, plot_freq=20):
 #
 # =============================================================================
 
-    # Node coordinates are passed as command line arguments
-    if len(argv) == 2:
+    # Node coordinates and path where to export figures are passed
+    # as command line arguments
+    if len(argv) == 3:
         mesh_size_cmd = argv[1]
         # turn a string like "256_64_64" into a list of integers
         mesh_size_cmd = list(map(int, mesh_size_cmd.split("_")))
         x_size = mesh_size_cmd[0]
         y_size = mesh_size_cmd[1]
         z_size = mesh_size_cmd[2]
+        fig_path = argv[2]
     else:
         # if called with no argument, default to these values
         x_size = 128
         y_size = 32
         z_size = 32
+        fig_path = "."
 
     print("Mesh size is", [x_size, y_size, z_size])
     xn = nodes(0, 1.25,  x_size)
@@ -215,8 +218,8 @@ def main(show_plot=True, time_steps=100, plot_freq=20):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Y, "fig1_t" + str(ts) + ".pdf")
-                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z, "fig2_t" + str(ts) + ".pdf")
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Y, fig_path + "/fig1_t" + str(ts) + ".pdf")
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z, fig_path + "/fig2_t" + str(ts) + ".pdf")
                 #plot.gmv("obst-thinner-collocated-%6.6d" % ts, (xn,yn,zn), (uc,vc,wc,p))
 
 if __name__ == "__main__":

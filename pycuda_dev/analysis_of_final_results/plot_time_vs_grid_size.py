@@ -15,7 +15,7 @@ from collections import namedtuple
 import matplotlib
 from matplotlib import pyplot as plt
 
-dataset_id = "cpu_tegner"
+dataset_id = "tegner_cpu"
 
 mesh_sizes = ["64_16_16",
               "128_16_16",
@@ -23,22 +23,23 @@ mesh_sizes = ["64_16_16",
               "256_32_32",
               "256_64_64"]
 
-# every simulation is run 3 times
-runs = range(1,4)
+# every simulation is run run_n times, then the results will be averaged
+run_n = 3
+runs = range(0, run_n)
 
 # 9 different information, 160 time steps coming from each out.txt file
 results_avgd = np.zeros((9, 160, len(mesh_sizes)))
 
 for ii, mesh_size in enumerate(mesh_sizes):
-    # 9 different information, 160 time steps and 3 runs
-    avg = np.zeros((9, 160, 3))
-    # load and compute average from 3 runs
+    # 9 different information, 160 time steps
+    avg = np.zeros((9, 160, run_n))
+    # load and compute average from all the runs
     for run in runs:
         avg[:,:,run-1] = results_parser("../" + dataset_id + "_" +
                                         str(mesh_size) +
                                         "_run" + str(run) +
                                         "/out.txt")
-    avg = np.sum(avg, axis=2) / 3
+    avg = np.sum(avg, axis=2) / run_n
 
     results_avgd[:,:,ii] = avg
 
