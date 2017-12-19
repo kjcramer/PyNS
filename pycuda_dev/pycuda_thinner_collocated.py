@@ -44,7 +44,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=2, plot_freq=2):
+def main(show_plot=True, time_steps=200, plot_freq=200):
 
 # =============================================================================
 #
@@ -88,7 +88,7 @@ def main(show_plot=True, time_steps=2, plot_freq=2):
     rho, mu, cap, kappa = properties.air(rc)
 
     # Time-stepping parameters
-    dt  = 0.005      # time step
+    dt  = 0.001      # time step
     ndt = time_steps # number of time steps
 
     # Create unknowns; names, positions and sizes
