@@ -6,14 +6,17 @@
 # - save hostname and cpuinfo of the machine in the subdir
 # - save standard output and a final figure in the subdir
 
-dataset_id="local_cpu"
+dataset_id="tegner_cpu"
 
-mesh_sizes=( "64_16_16"
-             "128_16_16" )
-             # "128_32_32"
-             # "256_32_32"
-             # "256_64_64"
-             # "512_64_64" )
+# mesh_sizes=( "64_16_16"
+#              "128_16_16"
+#              "128_32_32"
+#              "256_32_32"
+#              "256_64_64"
+#              "512_64_64"
+#              "512_128_128" )
+
+mesh_sizes=( "512_128_128" )
 
 suffix="run"${1}
 

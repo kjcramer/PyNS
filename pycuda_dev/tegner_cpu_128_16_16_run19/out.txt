@@ -1,0 +1,3609 @@
+Mesh size is [128, 16, 16]
++====================+
+|                    |
+| Time step =      1 |
+|                    |
++====================+
+Elapsed time in bigstab 2.459e-03 --- iterations: 1
+=---> pyns.solvers.nonstationary.bicgstab
+  Fails becuase rho =  0.00000e+00
+Elapsed time in bigstab 3.834e-04 --- iterations: 1
+=---> pyns.solvers.nonstationary.bicgstab
+  Fails becuase rho =  0.00000e+00
+Elapsed time in bigstab 3.400e-04 --- iterations: 1
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.36231e-05
+  Volume imbalance before correction :  2.16840e-19
+Elapsed time in bigstab 1.413e+00 --- iterations: 270
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.24505e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.02977e-02
+Elapsed time in iteration 1.557e+00
+Elapsed time in total 1.557e+00
++====================+
+|                    |
+| Time step =      2 |
+|                    |
++====================+
+Elapsed time in bigstab 8.189e-03 --- iterations: 2
+Elapsed time in bigstab 8.040e-03 --- iterations: 2
+Elapsed time in bigstab 8.251e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  3.92712e-06
+  Volume imbalance before correction : -2.48604e-19
+Elapsed time in bigstab 1.413e+00 --- iterations: 269
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.28083e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10927e-02
+Elapsed time in iteration 1.576e+00
+Elapsed time in total 3.134e+00
++====================+
+|                    |
+| Time step =      3 |
+|                    |
++====================+
+Elapsed time in bigstab 8.008e-03 --- iterations: 2
+Elapsed time in bigstab 7.813e-03 --- iterations: 2
+Elapsed time in bigstab 8.071e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  3.13427e-06
+  Volume imbalance before correction :  1.25229e-19
+Elapsed time in bigstab 1.168e+00 --- iterations: 224
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.74431e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11730e-02
+Elapsed time in iteration 1.329e+00
+Elapsed time in total 4.463e+00
++====================+
+|                    |
+| Time step =      4 |
+|                    |
++====================+
+Elapsed time in bigstab 8.034e-03 --- iterations: 2
+Elapsed time in bigstab 7.968e-03 --- iterations: 2
+Elapsed time in bigstab 8.173e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  2.68436e-06
+  Volume imbalance before correction :  1.03867e-19
+Elapsed time in bigstab 8.079e-01 --- iterations: 154
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.04136e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11261e-02
+Elapsed time in iteration 9.706e-01
+Elapsed time in total 5.434e+00
++====================+
+|                    |
+| Time step =      5 |
+|                    |
++====================+
+Elapsed time in bigstab 8.628e-03 --- iterations: 2
+Elapsed time in bigstab 8.169e-03 --- iterations: 2
+Elapsed time in bigstab 7.833e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  2.41399e-06
+  Volume imbalance before correction :  3.47284e-20
+Elapsed time in bigstab 2.958e-01 --- iterations: 57
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.18009e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10390e-02
+Elapsed time in iteration 4.570e-01
+Elapsed time in total 5.891e+00
++====================+
+|                    |
+| Time step =      6 |
+|                    |
++====================+
+Elapsed time in bigstab 7.789e-03 --- iterations: 2
+Elapsed time in bigstab 7.953e-03 --- iterations: 2
+Elapsed time in bigstab 7.986e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  2.24431e-06
+  Volume imbalance before correction : -1.69407e-21
+Elapsed time in bigstab 5.155e-01 --- iterations: 93
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.09307e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09546e-02
+Elapsed time in iteration 6.756e-01
+Elapsed time in total 6.566e+00
++====================+
+|                    |
+| Time step =      7 |
+|                    |
++====================+
+Elapsed time in bigstab 7.765e-03 --- iterations: 2
+Elapsed time in bigstab 8.170e-03 --- iterations: 2
+Elapsed time in bigstab 8.041e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  2.12574e-06
+  Volume imbalance before correction : -3.36272e-19
+Elapsed time in bigstab 1.912e-01 --- iterations: 36
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.54230e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08641e-02
+Elapsed time in iteration 3.526e-01
+Elapsed time in total 6.919e+00
++====================+
+|                    |
+| Time step =      8 |
+|                    |
++====================+
+Elapsed time in bigstab 8.068e-03 --- iterations: 2
+Elapsed time in bigstab 7.994e-03 --- iterations: 2
+Elapsed time in bigstab 7.869e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  2.03992e-06
+  Volume imbalance before correction :  6.43745e-20
+Elapsed time in bigstab 3.788e-01 --- iterations: 72
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.19134e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.07576e-02
+Elapsed time in iteration 5.432e-01
+Elapsed time in total 7.462e+00
++====================+
+|                    |
+| Time step =      9 |
+|                    |
++====================+
+Elapsed time in bigstab 8.019e-03 --- iterations: 2
+Elapsed time in bigstab 8.111e-03 --- iterations: 2
+Elapsed time in bigstab 8.119e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.97458e-06
+  Volume imbalance before correction :  6.52083e-20
+Elapsed time in bigstab 4.547e-01 --- iterations: 80
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.19295e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.06526e-02
+Elapsed time in iteration 6.149e-01
+Elapsed time in total 8.077e+00
++====================+
+|                    |
+| Time step =     10 |
+|                    |
++====================+
+Elapsed time in bigstab 8.154e-03 --- iterations: 2
+Elapsed time in bigstab 8.017e-03 --- iterations: 2
+Elapsed time in bigstab 8.103e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.92529e-06
+  Volume imbalance before correction :  9.06325e-20
+Elapsed time in bigstab 9.123e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.30831e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.05449e-02
+Elapsed time in iteration 2.531e-01
+Elapsed time in total 8.330e+00
++====================+
+|                    |
+| Time step =     11 |
+|                    |
++====================+
+Elapsed time in bigstab 7.987e-03 --- iterations: 2
+Elapsed time in bigstab 7.847e-03 --- iterations: 2
+Elapsed time in bigstab 7.997e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.88688e-06
+  Volume imbalance before correction : -1.94818e-19
+Elapsed time in bigstab 1.280e-01 --- iterations: 24
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.19026e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.04348e-02
+Elapsed time in iteration 2.905e-01
+Elapsed time in total 8.621e+00
++====================+
+|                    |
+| Time step =     12 |
+|                    |
++====================+
+Elapsed time in bigstab 7.884e-03 --- iterations: 2
+Elapsed time in bigstab 8.105e-03 --- iterations: 2
+Elapsed time in bigstab 8.011e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.85655e-06
+  Volume imbalance before correction : -1.52466e-20
+Elapsed time in bigstab 1.023e-01 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.11915e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.03223e-02
+Elapsed time in iteration 2.652e-01
+Elapsed time in total 8.886e+00
++====================+
+|                    |
+| Time step =     13 |
+|                    |
++====================+
+Elapsed time in bigstab 8.111e-03 --- iterations: 2
+Elapsed time in bigstab 7.971e-03 --- iterations: 2
+Elapsed time in bigstab 8.092e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.83243e-06
+  Volume imbalance before correction :  1.07547e-19
+Elapsed time in bigstab 1.620e-01 --- iterations: 30
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.99427e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.02084e-02
+Elapsed time in iteration 3.270e-01
+Elapsed time in total 9.213e+00
++====================+
+|                    |
+| Time step =     14 |
+|                    |
++====================+
+Elapsed time in bigstab 7.743e-03 --- iterations: 2
+Elapsed time in bigstab 8.178e-03 --- iterations: 2
+Elapsed time in bigstab 7.964e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.81325e-06
+  Volume imbalance before correction :  3.47019e-20
+Elapsed time in bigstab 9.221e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.51368e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.00927e-02
+Elapsed time in iteration 2.554e-01
+Elapsed time in total 9.468e+00
++====================+
+|                    |
+| Time step =     15 |
+|                    |
++====================+
+Elapsed time in bigstab 8.126e-03 --- iterations: 2
+Elapsed time in bigstab 8.122e-03 --- iterations: 2
+Elapsed time in bigstab 7.661e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.79753e-06
+  Volume imbalance before correction : -3.13402e-20
+Elapsed time in bigstab 9.093e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.18891e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  2.99751e-02
+Elapsed time in iteration 2.543e-01
+Elapsed time in total 9.723e+00
++====================+
+|                    |
+| Time step =     16 |
+|                    |
++====================+
+Elapsed time in bigstab 7.851e-03 --- iterations: 2
+Elapsed time in bigstab 7.811e-03 --- iterations: 2
+Elapsed time in bigstab 8.106e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.78490e-06
+  Volume imbalance before correction : -3.38482e-20
+Elapsed time in bigstab 4.546e-01 --- iterations: 87
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.27568e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  2.98624e-02
+Elapsed time in iteration 6.151e-01
+Elapsed time in total 1.034e+01
++====================+
+|                    |
+| Time step =     17 |
+|                    |
++====================+
+Elapsed time in bigstab 7.865e-03 --- iterations: 2
+Elapsed time in bigstab 8.050e-03 --- iterations: 2
+Elapsed time in bigstab 7.952e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.77280e-06
+  Volume imbalance before correction : -6.77626e-20
+Elapsed time in bigstab 4.504e-01 --- iterations: 87
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.15939e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  2.98848e-02
+Elapsed time in iteration 6.113e-01
+Elapsed time in total 1.095e+01
++====================+
+|                    |
+| Time step =     18 |
+|                    |
++====================+
+Elapsed time in bigstab 7.983e-03 --- iterations: 2
+Elapsed time in bigstab 7.943e-03 --- iterations: 2
+Elapsed time in bigstab 8.073e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.76466e-06
+  Volume imbalance before correction : -8.04681e-20
+Elapsed time in bigstab 3.138e-01 --- iterations: 60
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.53874e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  2.99556e-02
+Elapsed time in iteration 4.750e-01
+Elapsed time in total 1.142e+01
++====================+
+|                    |
+| Time step =     19 |
+|                    |
++====================+
+Elapsed time in bigstab 7.902e-03 --- iterations: 2
+Elapsed time in bigstab 8.463e-03 --- iterations: 2
+Elapsed time in bigstab 8.257e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.75765e-06
+  Volume imbalance before correction : -2.54110e-20
+Elapsed time in bigstab 8.795e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.01626e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.00215e-02
+Elapsed time in iteration 2.502e-01
+Elapsed time in total 1.167e+01
++====================+
+|                    |
+| Time step =     20 |
+|                    |
++====================+
+Elapsed time in bigstab 7.701e-03 --- iterations: 2
+Elapsed time in bigstab 8.034e-03 --- iterations: 2
+Elapsed time in bigstab 7.950e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.75202e-06
+  Volume imbalance before correction : -2.58345e-19
+Elapsed time in bigstab 5.637e-01 --- iterations: 107
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.45081e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.00877e-02
+Elapsed time in iteration 7.252e-01
+Elapsed time in total 1.240e+01
++====================+
+|                    |
+| Time step =     21 |
+|                    |
++====================+
+Elapsed time in bigstab 8.153e-03 --- iterations: 2
+Elapsed time in bigstab 7.953e-03 --- iterations: 2
+Elapsed time in bigstab 8.186e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.74794e-06
+  Volume imbalance before correction :  2.01594e-19
+Elapsed time in bigstab 1.924e-01 --- iterations: 37
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.09455e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.01486e-02
+Elapsed time in iteration 3.556e-01
+Elapsed time in total 1.276e+01
++====================+
+|                    |
+| Time step =     22 |
+|                    |
++====================+
+Elapsed time in bigstab 7.774e-03 --- iterations: 2
+Elapsed time in bigstab 8.138e-03 --- iterations: 2
+Elapsed time in bigstab 7.967e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.74462e-06
+  Volume imbalance before correction : -1.35525e-20
+Elapsed time in bigstab 2.380e-01 --- iterations: 45
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.93369e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.02054e-02
+Elapsed time in iteration 4.013e-01
+Elapsed time in total 1.316e+01
++====================+
+|                    |
+| Time step =     23 |
+|                    |
++====================+
+Elapsed time in bigstab 8.014e-03 --- iterations: 2
+Elapsed time in bigstab 7.959e-03 --- iterations: 2
+Elapsed time in bigstab 7.938e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.74162e-06
+  Volume imbalance before correction :  1.02491e-19
+Elapsed time in bigstab 1.491e-01 --- iterations: 28
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.14097e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.02590e-02
+Elapsed time in iteration 3.123e-01
+Elapsed time in total 1.347e+01
++====================+
+|                    |
+| Time step =     24 |
+|                    |
++====================+
+Elapsed time in bigstab 8.018e-03 --- iterations: 2
+Elapsed time in bigstab 7.912e-03 --- iterations: 2
+Elapsed time in bigstab 8.024e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.73913e-06
+  Volume imbalance before correction :  8.80914e-20
+Elapsed time in bigstab 1.937e-01 --- iterations: 37
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.36117e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.03102e-02
+Elapsed time in iteration 3.565e-01
+Elapsed time in total 1.383e+01
++====================+
+|                    |
+| Time step =     25 |
+|                    |
++====================+
+Elapsed time in bigstab 7.921e-03 --- iterations: 2
+Elapsed time in bigstab 7.952e-03 --- iterations: 2
+Elapsed time in bigstab 7.975e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.73748e-06
+  Volume imbalance before correction :  4.99749e-20
+Elapsed time in bigstab 4.349e-01 --- iterations: 80
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  2.12537e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.03532e-02
+Elapsed time in iteration 5.979e-01
+Elapsed time in total 1.442e+01
++====================+
+|                    |
+| Time step =     26 |
+|                    |
++====================+
+Elapsed time in bigstab 7.853e-03 --- iterations: 2
+Elapsed time in bigstab 8.133e-03 --- iterations: 2
+Elapsed time in bigstab 8.018e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.73587e-06
+  Volume imbalance before correction : -9.39942e-20
+Elapsed time in bigstab 1.778e-01 --- iterations: 34
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.76904e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.03925e-02
+Elapsed time in iteration 3.409e-01
+Elapsed time in total 1.476e+01
++====================+
+|                    |
+| Time step =     27 |
+|                    |
++====================+
+Elapsed time in bigstab 8.301e-03 --- iterations: 2
+Elapsed time in bigstab 8.090e-03 --- iterations: 2
+Elapsed time in bigstab 8.371e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.73413e-06
+  Volume imbalance before correction : -4.31987e-20
+Elapsed time in bigstab 9.433e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.56767e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.04292e-02
+Elapsed time in iteration 2.606e-01
+Elapsed time in total 1.502e+01
++====================+
+|                    |
+| Time step =     28 |
+|                    |
++====================+
+Elapsed time in bigstab 7.985e-03 --- iterations: 2
+Elapsed time in bigstab 8.053e-03 --- iterations: 2
+Elapsed time in bigstab 7.881e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.73274e-06
+  Volume imbalance before correction : -1.83806e-19
+Elapsed time in bigstab 2.054e-01 --- iterations: 39
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.70503e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.04646e-02
+Elapsed time in iteration 3.695e-01
+Elapsed time in total 1.539e+01
++====================+
+|                    |
+| Time step =     29 |
+|                    |
++====================+
+Elapsed time in bigstab 8.350e-03 --- iterations: 2
+Elapsed time in bigstab 8.123e-03 --- iterations: 2
+Elapsed time in bigstab 8.275e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.73155e-06
+  Volume imbalance before correction : -3.38813e-20
+Elapsed time in bigstab 8.573e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.56911e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.04980e-02
+Elapsed time in iteration 2.520e-01
+Elapsed time in total 1.565e+01
++====================+
+|                    |
+| Time step =     30 |
+|                    |
++====================+
+Elapsed time in bigstab 8.106e-03 --- iterations: 2
+Elapsed time in bigstab 8.365e-03 --- iterations: 2
+Elapsed time in bigstab 8.073e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.73041e-06
+  Volume imbalance before correction :  9.91029e-20
+Elapsed time in bigstab 8.616e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.22891e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.05294e-02
+Elapsed time in iteration 2.527e-01
+Elapsed time in total 1.590e+01
++====================+
+|                    |
+| Time step =     31 |
+|                    |
++====================+
+Elapsed time in bigstab 8.450e-03 --- iterations: 2
+Elapsed time in bigstab 7.845e-03 --- iterations: 2
+Elapsed time in bigstab 8.329e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72935e-06
+  Volume imbalance before correction : -1.60936e-20
+Elapsed time in bigstab 8.241e-02 --- iterations: 16
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.95605e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.05587e-02
+Elapsed time in iteration 2.481e-01
+Elapsed time in total 1.615e+01
++====================+
+|                    |
+| Time step =     32 |
+|                    |
++====================+
+Elapsed time in bigstab 8.160e-03 --- iterations: 2
+Elapsed time in bigstab 8.227e-03 --- iterations: 2
+Elapsed time in bigstab 8.470e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72839e-06
+  Volume imbalance before correction : -6.42686e-20
+Elapsed time in bigstab 8.830e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.84367e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.05861e-02
+Elapsed time in iteration 2.533e-01
+Elapsed time in total 1.640e+01
++====================+
+|                    |
+| Time step =     33 |
+|                    |
++====================+
+Elapsed time in bigstab 8.150e-03 --- iterations: 2
+Elapsed time in bigstab 8.251e-03 --- iterations: 2
+Elapsed time in bigstab 8.576e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72749e-06
+  Volume imbalance before correction : -3.93023e-19
+Elapsed time in bigstab 9.104e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.09498e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.06117e-02
+Elapsed time in iteration 2.566e-01
+Elapsed time in total 1.666e+01
++====================+
+|                    |
+| Time step =     34 |
+|                    |
++====================+
+Elapsed time in bigstab 7.890e-03 --- iterations: 2
+Elapsed time in bigstab 7.851e-03 --- iterations: 2
+Elapsed time in bigstab 7.992e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72663e-06
+  Volume imbalance before correction : -2.26158e-19
+Elapsed time in bigstab 2.721e-01 --- iterations: 51
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.71804e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.06353e-02
+Elapsed time in iteration 4.358e-01
+Elapsed time in total 1.709e+01
++====================+
+|                    |
+| Time step =     35 |
+|                    |
++====================+
+Elapsed time in bigstab 8.022e-03 --- iterations: 2
+Elapsed time in bigstab 7.785e-03 --- iterations: 2
+Elapsed time in bigstab 8.116e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72576e-06
+  Volume imbalance before correction :  8.55503e-20
+Elapsed time in bigstab 3.356e-01 --- iterations: 64
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.01120e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.06583e-02
+Elapsed time in iteration 5.002e-01
+Elapsed time in total 1.759e+01
++====================+
+|                    |
+| Time step =     36 |
+|                    |
++====================+
+Elapsed time in bigstab 8.108e-03 --- iterations: 2
+Elapsed time in bigstab 8.426e-03 --- iterations: 2
+Elapsed time in bigstab 7.940e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72503e-06
+  Volume imbalance before correction : -1.04185e-19
+Elapsed time in bigstab 9.431e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.52925e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.06799e-02
+Elapsed time in iteration 2.590e-01
+Elapsed time in total 1.785e+01
++====================+
+|                    |
+| Time step =     37 |
+|                    |
++====================+
+Elapsed time in bigstab 8.424e-03 --- iterations: 2
+Elapsed time in bigstab 7.921e-03 --- iterations: 2
+Elapsed time in bigstab 8.184e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72427e-06
+  Volume imbalance before correction : -2.41404e-19
+Elapsed time in bigstab 8.801e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.01731e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.07001e-02
+Elapsed time in iteration 2.552e-01
+Elapsed time in total 1.811e+01
++====================+
+|                    |
+| Time step =     38 |
+|                    |
++====================+
+Elapsed time in bigstab 7.961e-03 --- iterations: 2
+Elapsed time in bigstab 7.861e-03 --- iterations: 2
+Elapsed time in bigstab 7.899e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72351e-06
+  Volume imbalance before correction : -3.14249e-19
+Elapsed time in bigstab 9.136e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.03912e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.07192e-02
+Elapsed time in iteration 2.560e-01
+Elapsed time in total 1.836e+01
++====================+
+|                    |
+| Time step =     39 |
+|                    |
++====================+
+Elapsed time in bigstab 7.823e-03 --- iterations: 2
+Elapsed time in bigstab 7.664e-03 --- iterations: 2
+Elapsed time in bigstab 7.658e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72273e-06
+  Volume imbalance before correction : -1.10114e-19
+Elapsed time in bigstab 8.984e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.95383e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.07371e-02
+Elapsed time in iteration 2.539e-01
+Elapsed time in total 1.862e+01
++====================+
+|                    |
+| Time step =     40 |
+|                    |
++====================+
+Elapsed time in bigstab 7.958e-03 --- iterations: 2
+Elapsed time in bigstab 8.173e-03 --- iterations: 2
+Elapsed time in bigstab 7.979e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72193e-06
+  Volume imbalance before correction :  2.05723e-19
+Elapsed time in bigstab 3.659e-01 --- iterations: 69
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.18138e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.07586e-02
+Elapsed time in iteration 5.280e-01
+Elapsed time in total 1.915e+01
++====================+
+|                    |
+| Time step =     41 |
+|                    |
++====================+
+Elapsed time in bigstab 7.793e-03 --- iterations: 2
+Elapsed time in bigstab 7.791e-03 --- iterations: 2
+Elapsed time in bigstab 7.823e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72191e-06
+  Volume imbalance before correction :  5.92923e-21
+Elapsed time in bigstab 8.512e-02 --- iterations: 16
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.90880e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.07793e-02
+Elapsed time in iteration 2.496e-01
+Elapsed time in total 1.940e+01
++====================+
+|                    |
+| Time step =     42 |
+|                    |
++====================+
+Elapsed time in bigstab 8.820e-03 --- iterations: 2
+Elapsed time in bigstab 8.665e-03 --- iterations: 2
+Elapsed time in bigstab 8.721e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72170e-06
+  Volume imbalance before correction : -8.38563e-20
+Elapsed time in bigstab 8.922e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.07552e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.07992e-02
+Elapsed time in iteration 2.589e-01
+Elapsed time in total 1.965e+01
++====================+
+|                    |
+| Time step =     43 |
+|                    |
++====================+
+Elapsed time in bigstab 7.915e-03 --- iterations: 2
+Elapsed time in bigstab 7.983e-03 --- iterations: 2
+Elapsed time in bigstab 8.047e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.72134e-06
+  Volume imbalance before correction : -7.11508e-20
+Elapsed time in bigstab 2.458e-01 --- iterations: 46
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.63340e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08144e-02
+Elapsed time in iteration 4.090e-01
+Elapsed time in total 2.006e+01
++====================+
+|                    |
+| Time step =     44 |
+|                    |
++====================+
+Elapsed time in bigstab 8.090e-03 --- iterations: 2
+Elapsed time in bigstab 7.856e-03 --- iterations: 2
+Elapsed time in bigstab 7.885e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71992e-06
+  Volume imbalance before correction : -3.89900e-20
+Elapsed time in bigstab 2.331e-01 --- iterations: 44
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.36538e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08286e-02
+Elapsed time in iteration 3.949e-01
+Elapsed time in total 2.046e+01
++====================+
+|                    |
+| Time step =     45 |
+|                    |
++====================+
+Elapsed time in bigstab 7.910e-03 --- iterations: 2
+Elapsed time in bigstab 7.816e-03 --- iterations: 2
+Elapsed time in bigstab 7.940e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71903e-06
+  Volume imbalance before correction :  5.84453e-20
+Elapsed time in bigstab 1.069e-01 --- iterations: 21
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.25739e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08422e-02
+Elapsed time in iteration 2.702e-01
+Elapsed time in total 2.073e+01
++====================+
+|                    |
+| Time step =     46 |
+|                    |
++====================+
+Elapsed time in bigstab 8.061e-03 --- iterations: 2
+Elapsed time in bigstab 7.926e-03 --- iterations: 2
+Elapsed time in bigstab 7.890e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71802e-06
+  Volume imbalance before correction : -1.98312e-19
+Elapsed time in bigstab 6.045e-01 --- iterations: 115
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.95119e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08418e-02
+Elapsed time in iteration 7.665e-01
+Elapsed time in total 2.149e+01
++====================+
+|                    |
+| Time step =     47 |
+|                    |
++====================+
+Elapsed time in bigstab 7.949e-03 --- iterations: 2
+Elapsed time in bigstab 7.972e-03 --- iterations: 2
+Elapsed time in bigstab 8.028e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71536e-06
+  Volume imbalance before correction :  2.41404e-19
+Elapsed time in bigstab 5.351e-01 --- iterations: 102
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.19857e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08480e-02
+Elapsed time in iteration 6.973e-01
+Elapsed time in total 2.219e+01
++====================+
+|                    |
+| Time step =     48 |
+|                    |
++====================+
+Elapsed time in bigstab 7.998e-03 --- iterations: 2
+Elapsed time in bigstab 7.839e-03 --- iterations: 2
+Elapsed time in bigstab 7.723e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71306e-06
+  Volume imbalance before correction : -1.70465e-20
+Elapsed time in bigstab 4.760e-01 --- iterations: 89
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.51247e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08676e-02
+Elapsed time in iteration 6.378e-01
+Elapsed time in total 2.283e+01
++====================+
+|                    |
+| Time step =     49 |
+|                    |
++====================+
+Elapsed time in bigstab 7.916e-03 --- iterations: 2
+Elapsed time in bigstab 7.902e-03 --- iterations: 2
+Elapsed time in bigstab 7.822e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71312e-06
+  Volume imbalance before correction :  1.16044e-19
+Elapsed time in bigstab 5.391e-01 --- iterations: 102
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  2.12489e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08805e-02
+Elapsed time in iteration 7.014e-01
+Elapsed time in total 2.353e+01
++====================+
+|                    |
+| Time step =     50 |
+|                    |
++====================+
+Elapsed time in bigstab 8.064e-03 --- iterations: 2
+Elapsed time in bigstab 8.048e-03 --- iterations: 2
+Elapsed time in bigstab 7.804e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71178e-06
+  Volume imbalance before correction : -3.41301e-19
+Elapsed time in bigstab 4.327e-01 --- iterations: 82
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.12261e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08897e-02
+Elapsed time in iteration 5.946e-01
+Elapsed time in total 2.413e+01
++====================+
+|                    |
+| Time step =     51 |
+|                    |
++====================+
+Elapsed time in bigstab 7.974e-03 --- iterations: 2
+Elapsed time in bigstab 7.860e-03 --- iterations: 2
+Elapsed time in bigstab 8.058e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.71083e-06
+  Volume imbalance before correction : -7.53198e-20
+Elapsed time in bigstab 3.821e-01 --- iterations: 73
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.45461e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.08968e-02
+Elapsed time in iteration 5.452e-01
+Elapsed time in total 2.467e+01
++====================+
+|                    |
+| Time step =     52 |
+|                    |
++====================+
+Elapsed time in bigstab 7.968e-03 --- iterations: 2
+Elapsed time in bigstab 7.821e-03 --- iterations: 2
+Elapsed time in bigstab 7.997e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.70922e-06
+  Volume imbalance before correction :  4.04035e-19
+Elapsed time in bigstab 2.904e-01 --- iterations: 55
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.26670e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09069e-02
+Elapsed time in iteration 4.544e-01
+Elapsed time in total 2.513e+01
++====================+
+|                    |
+| Time step =     53 |
+|                    |
++====================+
+Elapsed time in bigstab 8.078e-03 --- iterations: 2
+Elapsed time in bigstab 8.100e-03 --- iterations: 2
+Elapsed time in bigstab 7.807e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.70700e-06
+  Volume imbalance before correction : -3.05845e-19
+Elapsed time in bigstab 2.392e-01 --- iterations: 46
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.92939e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09124e-02
+Elapsed time in iteration 4.030e-01
+Elapsed time in total 2.553e+01
++====================+
+|                    |
+| Time step =     54 |
+|                    |
++====================+
+Elapsed time in bigstab 8.160e-03 --- iterations: 2
+Elapsed time in bigstab 7.843e-03 --- iterations: 2
+Elapsed time in bigstab 7.803e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.70533e-06
+  Volume imbalance before correction : -1.23627e-19
+Elapsed time in bigstab 9.392e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.47063e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09177e-02
+Elapsed time in iteration 2.569e-01
+Elapsed time in total 2.579e+01
++====================+
+|                    |
+| Time step =     55 |
+|                    |
++====================+
+Elapsed time in bigstab 8.636e-03 --- iterations: 2
+Elapsed time in bigstab 7.871e-03 --- iterations: 2
+Elapsed time in bigstab 7.715e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.70359e-06
+  Volume imbalance before correction :  2.36640e-20
+Elapsed time in bigstab 9.300e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.52693e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09229e-02
+Elapsed time in iteration 2.557e-01
+Elapsed time in total 2.604e+01
++====================+
+|                    |
+| Time step =     56 |
+|                    |
++====================+
+Elapsed time in bigstab 7.960e-03 --- iterations: 2
+Elapsed time in bigstab 8.030e-03 --- iterations: 2
+Elapsed time in bigstab 7.774e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.70178e-06
+  Volume imbalance before correction : -2.96409e-19
+Elapsed time in bigstab 9.061e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.05946e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09280e-02
+Elapsed time in iteration 2.528e-01
+Elapsed time in total 2.629e+01
++====================+
+|                    |
+| Time step =     57 |
+|                    |
++====================+
+Elapsed time in bigstab 7.834e-03 --- iterations: 2
+Elapsed time in bigstab 7.969e-03 --- iterations: 2
+Elapsed time in bigstab 7.841e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.69990e-06
+  Volume imbalance before correction :  5.50571e-20
+Elapsed time in bigstab 9.948e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.38678e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09329e-02
+Elapsed time in iteration 2.625e-01
+Elapsed time in total 2.656e+01
++====================+
+|                    |
+| Time step =     58 |
+|                    |
++====================+
+Elapsed time in bigstab 8.227e-03 --- iterations: 2
+Elapsed time in bigstab 8.476e-03 --- iterations: 2
+Elapsed time in bigstab 8.036e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.69792e-06
+  Volume imbalance before correction : -2.91379e-19
+Elapsed time in bigstab 1.761e-01 --- iterations: 34
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.87713e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09407e-02
+Elapsed time in iteration 3.407e-01
+Elapsed time in total 2.690e+01
++====================+
+|                    |
+| Time step =     59 |
+|                    |
++====================+
+Elapsed time in bigstab 8.852e-03 --- iterations: 2
+Elapsed time in bigstab 8.753e-03 --- iterations: 2
+Elapsed time in bigstab 8.203e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.69546e-06
+  Volume imbalance before correction :  1.42407e-19
+Elapsed time in bigstab 1.378e-01 --- iterations: 26
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.33189e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09477e-02
+Elapsed time in iteration 3.047e-01
+Elapsed time in total 2.720e+01
++====================+
+|                    |
+| Time step =     60 |
+|                    |
++====================+
+Elapsed time in bigstab 8.001e-03 --- iterations: 2
+Elapsed time in bigstab 7.719e-03 --- iterations: 2
+Elapsed time in bigstab 7.854e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.69327e-06
+  Volume imbalance before correction :  8.13152e-20
+Elapsed time in bigstab 1.362e-01 --- iterations: 26
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.27394e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09533e-02
+Elapsed time in iteration 3.008e-01
+Elapsed time in total 2.750e+01
++====================+
+|                    |
+| Time step =     61 |
+|                    |
++====================+
+Elapsed time in bigstab 8.075e-03 --- iterations: 2
+Elapsed time in bigstab 8.000e-03 --- iterations: 2
+Elapsed time in bigstab 7.863e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.69105e-06
+  Volume imbalance before correction :  3.26955e-19
+Elapsed time in bigstab 1.039e-01 --- iterations: 20
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.11584e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09583e-02
+Elapsed time in iteration 2.675e-01
+Elapsed time in total 2.777e+01
++====================+
+|                    |
+| Time step =     62 |
+|                    |
++====================+
+Elapsed time in bigstab 8.087e-03 --- iterations: 2
+Elapsed time in bigstab 8.072e-03 --- iterations: 2
+Elapsed time in bigstab 7.931e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.68878e-06
+  Volume imbalance before correction :  6.77626e-20
+Elapsed time in bigstab 1.503e-01 --- iterations: 29
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.17621e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09592e-02
+Elapsed time in iteration 3.150e-01
+Elapsed time in total 2.809e+01
++====================+
+|                    |
+| Time step =     63 |
+|                    |
++====================+
+Elapsed time in bigstab 8.597e-03 --- iterations: 2
+Elapsed time in bigstab 8.106e-03 --- iterations: 2
+Elapsed time in bigstab 8.127e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.68670e-06
+  Volume imbalance before correction :  2.10911e-19
+Elapsed time in bigstab 2.895e-01 --- iterations: 55
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.29153e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09671e-02
+Elapsed time in iteration 4.527e-01
+Elapsed time in total 2.854e+01
++====================+
+|                    |
+| Time step =     64 |
+|                    |
++====================+
+Elapsed time in bigstab 7.802e-03 --- iterations: 2
+Elapsed time in bigstab 7.857e-03 --- iterations: 2
+Elapsed time in bigstab 8.141e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.68422e-06
+  Volume imbalance before correction : -1.87141e-19
+Elapsed time in bigstab 3.783e-01 --- iterations: 71
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.09591e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09726e-02
+Elapsed time in iteration 5.411e-01
+Elapsed time in total 2.908e+01
++====================+
+|                    |
+| Time step =     65 |
+|                    |
++====================+
+Elapsed time in bigstab 8.148e-03 --- iterations: 2
+Elapsed time in bigstab 7.982e-03 --- iterations: 2
+Elapsed time in bigstab 7.831e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.68231e-06
+  Volume imbalance before correction : -2.54639e-20
+Elapsed time in bigstab 1.014e-01 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.15861e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09780e-02
+Elapsed time in iteration 2.632e-01
+Elapsed time in total 2.934e+01
++====================+
+|                    |
+| Time step =     66 |
+|                    |
++====================+
+Elapsed time in bigstab 7.937e-03 --- iterations: 2
+Elapsed time in bigstab 7.897e-03 --- iterations: 2
+Elapsed time in bigstab 7.904e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.68026e-06
+  Volume imbalance before correction : -5.85512e-20
+Elapsed time in bigstab 4.389e-01 --- iterations: 82
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.00135e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09813e-02
+Elapsed time in iteration 6.007e-01
+Elapsed time in total 2.994e+01
++====================+
+|                    |
+| Time step =     67 |
+|                    |
++====================+
+Elapsed time in bigstab 8.051e-03 --- iterations: 2
+Elapsed time in bigstab 8.065e-03 --- iterations: 2
+Elapsed time in bigstab 8.026e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.67756e-06
+  Volume imbalance before correction :  1.02491e-19
+Elapsed time in bigstab 9.392e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.18067e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09848e-02
+Elapsed time in iteration 2.583e-01
+Elapsed time in total 3.020e+01
++====================+
+|                    |
+| Time step =     68 |
+|                    |
++====================+
+Elapsed time in bigstab 7.783e-03 --- iterations: 2
+Elapsed time in bigstab 8.300e-03 --- iterations: 2
+Elapsed time in bigstab 8.425e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.67485e-06
+  Volume imbalance before correction : -1.56701e-19
+Elapsed time in bigstab 2.607e-01 --- iterations: 48
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.53070e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09909e-02
+Elapsed time in iteration 4.267e-01
+Elapsed time in total 3.063e+01
++====================+
+|                    |
+| Time step =     69 |
+|                    |
++====================+
+Elapsed time in bigstab 8.400e-03 --- iterations: 2
+Elapsed time in bigstab 7.935e-03 --- iterations: 2
+Elapsed time in bigstab 7.896e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.67206e-06
+  Volume imbalance before correction : -1.64338e-19
+Elapsed time in bigstab 2.077e-01 --- iterations: 39
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.73736e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09948e-02
+Elapsed time in iteration 3.721e-01
+Elapsed time in total 3.100e+01
++====================+
+|                    |
+| Time step =     70 |
+|                    |
++====================+
+Elapsed time in bigstab 7.616e-03 --- iterations: 2
+Elapsed time in bigstab 7.536e-03 --- iterations: 2
+Elapsed time in bigstab 7.787e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.66953e-06
+  Volume imbalance before correction : -5.50571e-20
+Elapsed time in bigstab 1.775e-01 --- iterations: 34
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.18699e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09986e-02
+Elapsed time in iteration 3.415e-01
+Elapsed time in total 3.134e+01
++====================+
+|                    |
+| Time step =     71 |
+|                    |
++====================+
+Elapsed time in bigstab 8.124e-03 --- iterations: 2
+Elapsed time in bigstab 8.454e-03 --- iterations: 2
+Elapsed time in bigstab 8.012e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.66755e-06
+  Volume imbalance before correction : -1.91429e-19
+Elapsed time in bigstab 2.532e-01 --- iterations: 47
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.39958e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10031e-02
+Elapsed time in iteration 4.187e-01
+Elapsed time in total 3.176e+01
++====================+
+|                    |
+| Time step =     72 |
+|                    |
++====================+
+Elapsed time in bigstab 8.086e-03 --- iterations: 2
+Elapsed time in bigstab 7.807e-03 --- iterations: 2
+Elapsed time in bigstab 7.845e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.66506e-06
+  Volume imbalance before correction : -5.34954e-20
+Elapsed time in bigstab 1.674e-01 --- iterations: 32
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  2.47484e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10051e-02
+Elapsed time in iteration 3.321e-01
+Elapsed time in total 3.209e+01
++====================+
+|                    |
+| Time step =     73 |
+|                    |
++====================+
+Elapsed time in bigstab 8.298e-03 --- iterations: 2
+Elapsed time in bigstab 8.091e-03 --- iterations: 2
+Elapsed time in bigstab 7.864e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.66292e-06
+  Volume imbalance before correction : -1.74542e-19
+Elapsed time in bigstab 1.842e-01 --- iterations: 35
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  2.33824e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10078e-02
+Elapsed time in iteration 3.474e-01
+Elapsed time in total 3.244e+01
++====================+
+|                    |
+| Time step =     74 |
+|                    |
++====================+
+Elapsed time in bigstab 7.799e-03 --- iterations: 2
+Elapsed time in bigstab 8.267e-03 --- iterations: 2
+Elapsed time in bigstab 7.937e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.66077e-06
+  Volume imbalance before correction : -1.87168e-19
+Elapsed time in bigstab 9.461e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.18668e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10104e-02
+Elapsed time in iteration 2.574e-01
+Elapsed time in total 3.270e+01
++====================+
+|                    |
+| Time step =     75 |
+|                    |
++====================+
+Elapsed time in bigstab 8.160e-03 --- iterations: 2
+Elapsed time in bigstab 8.117e-03 --- iterations: 2
+Elapsed time in bigstab 8.155e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.65860e-06
+  Volume imbalance before correction :  1.16970e-19
+Elapsed time in bigstab 9.142e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.91487e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10131e-02
+Elapsed time in iteration 2.544e-01
+Elapsed time in total 3.295e+01
++====================+
+|                    |
+| Time step =     76 |
+|                    |
++====================+
+Elapsed time in bigstab 7.793e-03 --- iterations: 2
+Elapsed time in bigstab 8.595e-03 --- iterations: 2
+Elapsed time in bigstab 8.257e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.65639e-06
+  Volume imbalance before correction : -2.55063e-19
+Elapsed time in bigstab 9.086e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.24368e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10159e-02
+Elapsed time in iteration 2.542e-01
+Elapsed time in total 3.321e+01
++====================+
+|                    |
+| Time step =     77 |
+|                    |
++====================+
+Elapsed time in bigstab 7.882e-03 --- iterations: 2
+Elapsed time in bigstab 7.918e-03 --- iterations: 2
+Elapsed time in bigstab 8.277e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.65411e-06
+  Volume imbalance before correction : -1.72054e-19
+Elapsed time in bigstab 9.391e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.92083e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10188e-02
+Elapsed time in iteration 2.573e-01
+Elapsed time in total 3.346e+01
++====================+
+|                    |
+| Time step =     78 |
+|                    |
++====================+
+Elapsed time in bigstab 8.011e-03 --- iterations: 2
+Elapsed time in bigstab 8.068e-03 --- iterations: 2
+Elapsed time in bigstab 8.188e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.65178e-06
+  Volume imbalance before correction : -1.15144e-19
+Elapsed time in bigstab 9.090e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.73502e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10217e-02
+Elapsed time in iteration 2.556e-01
+Elapsed time in total 3.372e+01
++====================+
+|                    |
+| Time step =     79 |
+|                    |
++====================+
+Elapsed time in bigstab 7.705e-03 --- iterations: 2
+Elapsed time in bigstab 8.412e-03 --- iterations: 2
+Elapsed time in bigstab 8.271e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.64940e-06
+  Volume imbalance before correction :  4.65868e-20
+Elapsed time in bigstab 8.983e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.41327e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10248e-02
+Elapsed time in iteration 2.532e-01
+Elapsed time in total 3.397e+01
++====================+
+|                    |
+| Time step =     80 |
+|                    |
++====================+
+Elapsed time in bigstab 7.916e-03 --- iterations: 2
+Elapsed time in bigstab 8.491e-03 --- iterations: 2
+Elapsed time in bigstab 8.093e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.64698e-06
+  Volume imbalance before correction : -2.10329e-19
+Elapsed time in bigstab 9.093e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.86543e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10280e-02
+Elapsed time in iteration 2.554e-01
+Elapsed time in total 3.423e+01
++====================+
+|                    |
+| Time step =     81 |
+|                    |
++====================+
+Elapsed time in bigstab 7.690e-03 --- iterations: 2
+Elapsed time in bigstab 8.464e-03 --- iterations: 2
+Elapsed time in bigstab 8.206e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.64453e-06
+  Volume imbalance before correction : -6.77362e-20
+Elapsed time in bigstab 9.331e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.56931e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10312e-02
+Elapsed time in iteration 2.572e-01
+Elapsed time in total 3.448e+01
++====================+
+|                    |
+| Time step =     82 |
+|                    |
++====================+
+Elapsed time in bigstab 7.833e-03 --- iterations: 2
+Elapsed time in bigstab 8.309e-03 --- iterations: 2
+Elapsed time in bigstab 8.095e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.64197e-06
+  Volume imbalance before correction : -1.86162e-19
+Elapsed time in bigstab 9.324e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.04630e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10344e-02
+Elapsed time in iteration 2.575e-01
+Elapsed time in total 3.474e+01
++====================+
+|                    |
+| Time step =     83 |
+|                    |
++====================+
+Elapsed time in bigstab 7.687e-03 --- iterations: 2
+Elapsed time in bigstab 8.320e-03 --- iterations: 2
+Elapsed time in bigstab 8.034e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.63934e-06
+  Volume imbalance before correction : -1.01617e-19
+Elapsed time in bigstab 9.318e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  3.66642e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10376e-02
+Elapsed time in iteration 2.568e-01
+Elapsed time in total 3.500e+01
++====================+
+|                    |
+| Time step =     84 |
+|                    |
++====================+
+Elapsed time in bigstab 7.951e-03 --- iterations: 2
+Elapsed time in bigstab 7.859e-03 --- iterations: 2
+Elapsed time in bigstab 8.117e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.63665e-06
+  Volume imbalance before correction : -8.30622e-20
+Elapsed time in bigstab 9.618e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  3.94268e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10409e-02
+Elapsed time in iteration 2.601e-01
+Elapsed time in total 3.526e+01
++====================+
+|                    |
+| Time step =     85 |
+|                    |
++====================+
+Elapsed time in bigstab 7.787e-03 --- iterations: 2
+Elapsed time in bigstab 7.793e-03 --- iterations: 2
+Elapsed time in bigstab 7.874e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.63390e-06
+  Volume imbalance before correction : -2.20176e-19
+Elapsed time in bigstab 2.533e-01 --- iterations: 48
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.32776e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10402e-02
+Elapsed time in iteration 4.173e-01
+Elapsed time in total 3.568e+01
++====================+
+|                    |
+| Time step =     86 |
+|                    |
++====================+
+Elapsed time in bigstab 7.828e-03 --- iterations: 2
+Elapsed time in bigstab 7.823e-03 --- iterations: 2
+Elapsed time in bigstab 7.746e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.63120e-06
+  Volume imbalance before correction : -1.24514e-19
+Elapsed time in bigstab 2.501e-01 --- iterations: 47
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.32511e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10451e-02
+Elapsed time in iteration 4.134e-01
+Elapsed time in total 3.609e+01
++====================+
+|                    |
+| Time step =     87 |
+|                    |
++====================+
+Elapsed time in bigstab 8.121e-03 --- iterations: 2
+Elapsed time in bigstab 8.004e-03 --- iterations: 2
+Elapsed time in bigstab 7.929e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.62779e-06
+  Volume imbalance before correction : -1.48244e-19
+Elapsed time in bigstab 9.507e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  2.10338e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10495e-02
+Elapsed time in iteration 2.586e-01
+Elapsed time in total 3.635e+01
++====================+
+|                    |
+| Time step =     88 |
+|                    |
++====================+
+Elapsed time in bigstab 7.850e-03 --- iterations: 2
+Elapsed time in bigstab 7.982e-03 --- iterations: 2
+Elapsed time in bigstab 7.728e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.62466e-06
+  Volume imbalance before correction : -4.88685e-19
+Elapsed time in bigstab 3.904e-01 --- iterations: 74
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.84366e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10489e-02
+Elapsed time in iteration 5.540e-01
+Elapsed time in total 3.690e+01
++====================+
+|                    |
+| Time step =     89 |
+|                    |
++====================+
+Elapsed time in bigstab 8.074e-03 --- iterations: 2
+Elapsed time in bigstab 7.977e-03 --- iterations: 2
+Elapsed time in bigstab 8.109e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.62253e-06
+  Volume imbalance before correction :  4.66927e-20
+Elapsed time in bigstab 1.850e-01 --- iterations: 35
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  2.02600e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10544e-02
+Elapsed time in iteration 3.486e-01
+Elapsed time in total 3.725e+01
++====================+
+|                    |
+| Time step =     90 |
+|                    |
++====================+
+Elapsed time in bigstab 7.720e-03 --- iterations: 2
+Elapsed time in bigstab 8.351e-03 --- iterations: 2
+Elapsed time in bigstab 8.143e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.61912e-06
+  Volume imbalance before correction : -1.17049e-19
+Elapsed time in bigstab 3.812e-01 --- iterations: 72
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.65500e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10546e-02
+Elapsed time in iteration 5.441e-01
+Elapsed time in total 3.780e+01
++====================+
+|                    |
+| Time step =     91 |
+|                    |
++====================+
+Elapsed time in bigstab 7.818e-03 --- iterations: 2
+Elapsed time in bigstab 8.046e-03 --- iterations: 2
+Elapsed time in bigstab 7.960e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.61668e-06
+  Volume imbalance before correction : -3.22402e-20
+Elapsed time in bigstab 4.600e-01 --- iterations: 88
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.43476e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10556e-02
+Elapsed time in iteration 6.228e-01
+Elapsed time in total 3.842e+01
++====================+
+|                    |
+| Time step =     92 |
+|                    |
++====================+
+Elapsed time in bigstab 8.137e-03 --- iterations: 2
+Elapsed time in bigstab 7.897e-03 --- iterations: 2
+Elapsed time in bigstab 8.488e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.61404e-06
+  Volume imbalance before correction : -2.10170e-19
+Elapsed time in bigstab 3.373e-01 --- iterations: 64
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.54663e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10602e-02
+Elapsed time in iteration 5.023e-01
+Elapsed time in total 3.892e+01
++====================+
+|                    |
+| Time step =     93 |
+|                    |
++====================+
+Elapsed time in bigstab 8.051e-03 --- iterations: 2
+Elapsed time in bigstab 8.156e-03 --- iterations: 2
+Elapsed time in bigstab 8.040e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.61095e-06
+  Volume imbalance before correction : -2.18535e-19
+Elapsed time in bigstab 1.036e-01 --- iterations: 20
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.08157e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10648e-02
+Elapsed time in iteration 2.674e-01
+Elapsed time in total 3.919e+01
++====================+
+|                    |
+| Time step =     94 |
+|                    |
++====================+
+Elapsed time in bigstab 8.071e-03 --- iterations: 2
+Elapsed time in bigstab 7.831e-03 --- iterations: 2
+Elapsed time in bigstab 7.761e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.60792e-06
+  Volume imbalance before correction : -2.65227e-19
+Elapsed time in bigstab 4.702e-01 --- iterations: 89
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.24785e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10671e-02
+Elapsed time in iteration 6.335e-01
+Elapsed time in total 3.982e+01
++====================+
+|                    |
+| Time step =     95 |
+|                    |
++====================+
+Elapsed time in bigstab 8.030e-03 --- iterations: 2
+Elapsed time in bigstab 7.903e-03 --- iterations: 2
+Elapsed time in bigstab 8.187e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.60486e-06
+  Volume imbalance before correction : -6.53274e-20
+=---> pyns.solvers.nonstationary.bicgstab
+  Fails becuase rho =  7.41124e-25
+Elapsed time in bigstab 1.514e-01 --- iterations: 30
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.34199e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10706e-02
+Elapsed time in iteration 3.146e-01
+Elapsed time in total 4.014e+01
++====================+
+|                    |
+| Time step =     96 |
+|                    |
++====================+
+Elapsed time in bigstab 7.496e-03 --- iterations: 2
+Elapsed time in bigstab 8.107e-03 --- iterations: 2
+Elapsed time in bigstab 7.850e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.60155e-06
+  Volume imbalance before correction :  6.93508e-21
+Elapsed time in bigstab 2.538e-01 --- iterations: 48
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.56091e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10716e-02
+Elapsed time in iteration 4.158e-01
+Elapsed time in total 4.055e+01
++====================+
+|                    |
+| Time step =     97 |
+|                    |
++====================+
+Elapsed time in bigstab 8.310e-03 --- iterations: 2
+Elapsed time in bigstab 8.139e-03 --- iterations: 2
+Elapsed time in bigstab 8.229e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.59893e-06
+  Volume imbalance before correction : -1.03391e-19
+Elapsed time in bigstab 3.216e-01 --- iterations: 61
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.47834e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10749e-02
+Elapsed time in iteration 4.852e-01
+Elapsed time in total 4.104e+01
++====================+
+|                    |
+| Time step =     98 |
+|                    |
++====================+
+Elapsed time in bigstab 7.789e-03 --- iterations: 2
+Elapsed time in bigstab 8.150e-03 --- iterations: 2
+Elapsed time in bigstab 8.037e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.59601e-06
+  Volume imbalance before correction :  3.41460e-21
+Elapsed time in bigstab 1.001e-01 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.55759e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10783e-02
+Elapsed time in iteration 2.635e-01
+Elapsed time in total 4.130e+01
++====================+
+|                    |
+| Time step =     99 |
+|                    |
++====================+
+Elapsed time in bigstab 8.247e-03 --- iterations: 2
+Elapsed time in bigstab 8.476e-03 --- iterations: 2
+Elapsed time in bigstab 8.031e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.59310e-06
+  Volume imbalance before correction : -8.55503e-20
+Elapsed time in bigstab 3.717e-01 --- iterations: 70
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.31871e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10822e-02
+Elapsed time in iteration 5.362e-01
+Elapsed time in total 4.184e+01
++====================+
+|                    |
+| Time step =    100 |
+|                    |
++====================+
+Elapsed time in bigstab 8.452e-03 --- iterations: 2
+Elapsed time in bigstab 8.056e-03 --- iterations: 2
+Elapsed time in bigstab 7.968e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.58988e-06
+  Volume imbalance before correction : -3.63695e-20
+Elapsed time in bigstab 9.103e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.67228e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10861e-02
+Elapsed time in iteration 2.567e-01
+Elapsed time in total 4.209e+01
++====================+
+|                    |
+| Time step =    101 |
+|                    |
++====================+
+Elapsed time in bigstab 8.450e-03 --- iterations: 2
+Elapsed time in bigstab 8.254e-03 --- iterations: 2
+Elapsed time in bigstab 8.645e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.58673e-06
+  Volume imbalance before correction :  1.69671e-20
+Elapsed time in bigstab 8.841e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.58406e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10901e-02
+Elapsed time in iteration 2.545e-01
+Elapsed time in total 4.235e+01
++====================+
+|                    |
+| Time step =    102 |
+|                    |
++====================+
+Elapsed time in bigstab 8.425e-03 --- iterations: 2
+Elapsed time in bigstab 8.189e-03 --- iterations: 2
+Elapsed time in bigstab 8.235e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.58361e-06
+  Volume imbalance before correction : -3.78783e-19
+Elapsed time in bigstab 9.249e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.03472e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10941e-02
+Elapsed time in iteration 2.564e-01
+Elapsed time in total 4.260e+01
++====================+
+|                    |
+| Time step =    103 |
+|                    |
++====================+
+Elapsed time in bigstab 7.840e-03 --- iterations: 2
+Elapsed time in bigstab 8.245e-03 --- iterations: 2
+Elapsed time in bigstab 8.199e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.58051e-06
+  Volume imbalance before correction :  1.74489e-19
+Elapsed time in bigstab 9.150e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.26627e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10980e-02
+Elapsed time in iteration 2.569e-01
+Elapsed time in total 4.286e+01
++====================+
+|                    |
+| Time step =    104 |
+|                    |
++====================+
+Elapsed time in bigstab 8.073e-03 --- iterations: 2
+Elapsed time in bigstab 7.943e-03 --- iterations: 2
+Elapsed time in bigstab 8.026e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.57743e-06
+  Volume imbalance before correction : -5.83394e-20
+Elapsed time in bigstab 1.499e-01 --- iterations: 28
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.65312e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10998e-02
+Elapsed time in iteration 3.126e-01
+Elapsed time in total 4.317e+01
++====================+
+|                    |
+| Time step =    105 |
+|                    |
++====================+
+Elapsed time in bigstab 8.051e-03 --- iterations: 2
+Elapsed time in bigstab 8.041e-03 --- iterations: 2
+Elapsed time in bigstab 8.238e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.57456e-06
+  Volume imbalance before correction :  9.81764e-20
+Elapsed time in bigstab 2.211e-01 --- iterations: 42
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.49784e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11019e-02
+Elapsed time in iteration 3.842e-01
+Elapsed time in total 4.356e+01
++====================+
+|                    |
+| Time step =    106 |
+|                    |
++====================+
+Elapsed time in bigstab 7.912e-03 --- iterations: 2
+Elapsed time in bigstab 7.886e-03 --- iterations: 2
+Elapsed time in bigstab 8.178e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.57165e-06
+  Volume imbalance before correction : -1.19643e-20
+Elapsed time in bigstab 2.911e-01 --- iterations: 55
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.96151e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11079e-02
+Elapsed time in iteration 4.551e-01
+Elapsed time in total 4.401e+01
++====================+
+|                    |
+| Time step =    107 |
+|                    |
++====================+
+Elapsed time in bigstab 7.801e-03 --- iterations: 2
+Elapsed time in bigstab 7.912e-03 --- iterations: 2
+Elapsed time in bigstab 8.136e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.56867e-06
+  Volume imbalance before correction : -3.31666e-20
+Elapsed time in bigstab 3.057e-01 --- iterations: 58
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.50795e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11095e-02
+Elapsed time in iteration 4.677e-01
+Elapsed time in total 4.448e+01
++====================+
+|                    |
+| Time step =    108 |
+|                    |
++====================+
+Elapsed time in bigstab 8.132e-03 --- iterations: 2
+Elapsed time in bigstab 7.685e-03 --- iterations: 2
+Elapsed time in bigstab 8.351e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.56601e-06
+  Volume imbalance before correction : -2.38122e-19
+Elapsed time in bigstab 4.026e-01 --- iterations: 76
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  2.29291e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11158e-02
+Elapsed time in iteration 5.657e-01
+Elapsed time in total 4.505e+01
++====================+
+|                    |
+| Time step =    109 |
+|                    |
++====================+
+Elapsed time in bigstab 8.230e-03 --- iterations: 2
+Elapsed time in bigstab 8.233e-03 --- iterations: 2
+Elapsed time in bigstab 8.585e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.56259e-06
+  Volume imbalance before correction :  5.33631e-20
+Elapsed time in bigstab 1.670e-01 --- iterations: 32
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.55662e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11193e-02
+Elapsed time in iteration 3.336e-01
+Elapsed time in total 4.538e+01
++====================+
+|                    |
+| Time step =    110 |
+|                    |
++====================+
+Elapsed time in bigstab 7.801e-03 --- iterations: 2
+Elapsed time in bigstab 7.622e-03 --- iterations: 2
+Elapsed time in bigstab 7.875e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.55945e-06
+  Volume imbalance before correction : -1.29649e-19
+Elapsed time in bigstab 9.967e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.57971e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11226e-02
+Elapsed time in iteration 2.645e-01
+Elapsed time in total 4.564e+01
++====================+
+|                    |
+| Time step =    111 |
+|                    |
++====================+
+Elapsed time in bigstab 7.411e-03 --- iterations: 2
+Elapsed time in bigstab 7.739e-03 --- iterations: 2
+Elapsed time in bigstab 7.913e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.55643e-06
+  Volume imbalance before correction :  1.87088e-19
+Elapsed time in bigstab 9.242e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.28539e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11255e-02
+Elapsed time in iteration 2.572e-01
+Elapsed time in total 4.590e+01
++====================+
+|                    |
+| Time step =    112 |
+|                    |
++====================+
+Elapsed time in bigstab 7.855e-03 --- iterations: 2
+Elapsed time in bigstab 7.901e-03 --- iterations: 2
+Elapsed time in bigstab 7.925e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.55345e-06
+  Volume imbalance before correction :  2.12552e-20
+Elapsed time in bigstab 9.211e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.28875e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11278e-02
+Elapsed time in iteration 2.556e-01
+Elapsed time in total 4.616e+01
++====================+
+|                    |
+| Time step =    113 |
+|                    |
++====================+
+Elapsed time in bigstab 7.683e-03 --- iterations: 2
+Elapsed time in bigstab 7.711e-03 --- iterations: 2
+Elapsed time in bigstab 7.806e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.55046e-06
+  Volume imbalance before correction :  7.79138e-20
+Elapsed time in bigstab 3.846e-01 --- iterations: 73
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.38093e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11294e-02
+Elapsed time in iteration 5.478e-01
+Elapsed time in total 4.671e+01
++====================+
+|                    |
+| Time step =    114 |
+|                    |
++====================+
+Elapsed time in bigstab 8.098e-03 --- iterations: 2
+Elapsed time in bigstab 8.064e-03 --- iterations: 2
+Elapsed time in bigstab 7.874e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.54788e-06
+  Volume imbalance before correction : -2.13346e-20
+Elapsed time in bigstab 3.311e-01 --- iterations: 62
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.20411e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11321e-02
+Elapsed time in iteration 4.942e-01
+Elapsed time in total 4.720e+01
++====================+
+|                    |
+| Time step =    115 |
+|                    |
++====================+
+Elapsed time in bigstab 7.907e-03 --- iterations: 2
+Elapsed time in bigstab 7.997e-03 --- iterations: 2
+Elapsed time in bigstab 7.964e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.54473e-06
+  Volume imbalance before correction :  4.98955e-20
+Elapsed time in bigstab 2.924e-01 --- iterations: 56
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.16955e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11331e-02
+Elapsed time in iteration 4.542e-01
+Elapsed time in total 4.765e+01
++====================+
+|                    |
+| Time step =    116 |
+|                    |
++====================+
+Elapsed time in bigstab 7.728e-03 --- iterations: 2
+Elapsed time in bigstab 7.548e-03 --- iterations: 2
+Elapsed time in bigstab 7.418e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.54167e-06
+  Volume imbalance before correction : -1.22105e-19
+Elapsed time in bigstab 4.042e-01 --- iterations: 76
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.66768e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11331e-02
+Elapsed time in iteration 5.692e-01
+Elapsed time in total 4.822e+01
++====================+
+|                    |
+| Time step =    117 |
+|                    |
++====================+
+Elapsed time in bigstab 8.124e-03 --- iterations: 2
+Elapsed time in bigstab 8.104e-03 --- iterations: 2
+Elapsed time in bigstab 7.765e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.53905e-06
+  Volume imbalance before correction : -2.68549e-19
+Elapsed time in bigstab 9.205e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.15422e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11332e-02
+Elapsed time in iteration 2.555e-01
+Elapsed time in total 4.848e+01
++====================+
+|                    |
+| Time step =    118 |
+|                    |
++====================+
+Elapsed time in bigstab 8.076e-03 --- iterations: 2
+Elapsed time in bigstab 8.122e-03 --- iterations: 2
+Elapsed time in bigstab 7.934e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.53628e-06
+  Volume imbalance before correction :  1.29596e-19
+Elapsed time in bigstab 9.754e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.14295e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11332e-02
+Elapsed time in iteration 2.630e-01
+Elapsed time in total 4.874e+01
++====================+
+|                    |
+| Time step =    119 |
+|                    |
++====================+
+Elapsed time in bigstab 7.454e-03 --- iterations: 2
+Elapsed time in bigstab 7.518e-03 --- iterations: 2
+Elapsed time in bigstab 7.567e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.53339e-06
+  Volume imbalance before correction : -2.89791e-19
+Elapsed time in bigstab 4.286e-01 --- iterations: 80
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.73049e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11333e-02
+Elapsed time in iteration 5.929e-01
+Elapsed time in total 4.933e+01
++====================+
+|                    |
+| Time step =    120 |
+|                    |
++====================+
+Elapsed time in bigstab 8.002e-03 --- iterations: 2
+Elapsed time in bigstab 8.015e-03 --- iterations: 2
+Elapsed time in bigstab 7.894e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.53002e-06
+  Volume imbalance before correction : -1.34678e-19
+Elapsed time in bigstab 1.471e-01 --- iterations: 28
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.08912e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11353e-02
+Elapsed time in iteration 3.122e-01
+Elapsed time in total 4.965e+01
++====================+
+|                    |
+| Time step =    121 |
+|                    |
++====================+
+Elapsed time in bigstab 7.514e-03 --- iterations: 2
+Elapsed time in bigstab 8.014e-03 --- iterations: 2
+Elapsed time in bigstab 7.883e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.52650e-06
+  Volume imbalance before correction : -9.48677e-20
+Elapsed time in bigstab 4.117e-01 --- iterations: 78
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.16406e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11363e-02
+Elapsed time in iteration 5.770e-01
+Elapsed time in total 5.022e+01
++====================+
+|                    |
+| Time step =    122 |
+|                    |
++====================+
+Elapsed time in bigstab 8.101e-03 --- iterations: 2
+Elapsed time in bigstab 7.836e-03 --- iterations: 2
+Elapsed time in bigstab 8.002e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.52324e-06
+  Volume imbalance before correction :  1.37259e-19
+Elapsed time in bigstab 9.900e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.42957e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11368e-02
+Elapsed time in iteration 2.642e-01
+Elapsed time in total 5.049e+01
++====================+
+|                    |
+| Time step =    123 |
+|                    |
++====================+
+Elapsed time in bigstab 8.000e-03 --- iterations: 2
+Elapsed time in bigstab 8.081e-03 --- iterations: 2
+Elapsed time in bigstab 7.982e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.51998e-06
+  Volume imbalance before correction : -2.71051e-20
+Elapsed time in bigstab 3.122e-01 --- iterations: 59
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.28418e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11310e-02
+Elapsed time in iteration 4.781e-01
+Elapsed time in total 5.097e+01
++====================+
+|                    |
+| Time step =    124 |
+|                    |
++====================+
+Elapsed time in bigstab 7.880e-03 --- iterations: 2
+Elapsed time in bigstab 8.143e-03 --- iterations: 2
+Elapsed time in bigstab 8.096e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.51723e-06
+  Volume imbalance before correction : -5.25160e-20
+Elapsed time in bigstab 1.409e-01 --- iterations: 26
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.26428e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11299e-02
+Elapsed time in iteration 3.041e-01
+Elapsed time in total 5.127e+01
++====================+
+|                    |
+| Time step =    125 |
+|                    |
++====================+
+Elapsed time in bigstab 8.094e-03 --- iterations: 2
+Elapsed time in bigstab 7.970e-03 --- iterations: 2
+Elapsed time in bigstab 8.116e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.51372e-06
+  Volume imbalance before correction : -1.12708e-19
+Elapsed time in bigstab 9.170e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.66502e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11288e-02
+Elapsed time in iteration 2.585e-01
+Elapsed time in total 5.153e+01
++====================+
+|                    |
+| Time step =    126 |
+|                    |
++====================+
+Elapsed time in bigstab 7.872e-03 --- iterations: 2
+Elapsed time in bigstab 7.896e-03 --- iterations: 2
+Elapsed time in bigstab 8.260e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.51028e-06
+  Volume imbalance before correction : -2.07523e-19
+Elapsed time in bigstab 8.810e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.09702e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11276e-02
+Elapsed time in iteration 2.542e-01
+Elapsed time in total 5.178e+01
++====================+
+|                    |
+| Time step =    127 |
+|                    |
++====================+
+Elapsed time in bigstab 8.382e-03 --- iterations: 2
+Elapsed time in bigstab 8.166e-03 --- iterations: 2
+Elapsed time in bigstab 7.975e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.50688e-06
+  Volume imbalance before correction : -1.36478e-19
+Elapsed time in bigstab 8.763e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.81667e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11264e-02
+Elapsed time in iteration 2.527e-01
+Elapsed time in total 5.204e+01
++====================+
+|                    |
+| Time step =    128 |
+|                    |
++====================+
+Elapsed time in bigstab 7.981e-03 --- iterations: 2
+Elapsed time in bigstab 8.229e-03 --- iterations: 2
+Elapsed time in bigstab 8.181e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.50347e-06
+  Volume imbalance before correction : -2.17661e-19
+Elapsed time in bigstab 8.918e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.00216e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11250e-02
+Elapsed time in iteration 2.550e-01
+Elapsed time in total 5.229e+01
++====================+
+|                    |
+| Time step =    129 |
+|                    |
++====================+
+Elapsed time in bigstab 8.254e-03 --- iterations: 2
+Elapsed time in bigstab 8.118e-03 --- iterations: 2
+Elapsed time in bigstab 8.042e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.50004e-06
+  Volume imbalance before correction : -1.25652e-19
+Elapsed time in bigstab 8.855e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.21505e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11233e-02
+Elapsed time in iteration 2.548e-01
+Elapsed time in total 5.255e+01
++====================+
+|                    |
+| Time step =    130 |
+|                    |
++====================+
+Elapsed time in bigstab 8.250e-03 --- iterations: 2
+Elapsed time in bigstab 7.921e-03 --- iterations: 2
+Elapsed time in bigstab 8.303e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.49660e-06
+  Volume imbalance before correction : -2.60992e-19
+Elapsed time in bigstab 8.727e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.48804e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11214e-02
+Elapsed time in iteration 2.549e-01
+Elapsed time in total 5.280e+01
++====================+
+|                    |
+| Time step =    131 |
+|                    |
++====================+
+Elapsed time in bigstab 8.097e-03 --- iterations: 2
+Elapsed time in bigstab 8.271e-03 --- iterations: 2
+Elapsed time in bigstab 8.138e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.49314e-06
+  Volume imbalance before correction : -1.37113e-20
+Elapsed time in bigstab 8.826e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.01574e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11192e-02
+Elapsed time in iteration 2.552e-01
+Elapsed time in total 5.306e+01
++====================+
+|                    |
+| Time step =    132 |
+|                    |
++====================+
+Elapsed time in bigstab 8.065e-03 --- iterations: 2
+Elapsed time in bigstab 8.233e-03 --- iterations: 2
+Elapsed time in bigstab 8.415e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.48967e-06
+  Volume imbalance before correction :  1.42990e-19
+Elapsed time in bigstab 8.783e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.87242e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11167e-02
+Elapsed time in iteration 2.565e-01
+Elapsed time in total 5.331e+01
++====================+
+|                    |
+| Time step =    133 |
+|                    |
++====================+
+Elapsed time in bigstab 8.282e-03 --- iterations: 2
+Elapsed time in bigstab 7.848e-03 --- iterations: 2
+Elapsed time in bigstab 8.310e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.48617e-06
+  Volume imbalance before correction :  5.90276e-21
+Elapsed time in bigstab 8.729e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.86432e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11140e-02
+Elapsed time in iteration 2.533e-01
+Elapsed time in total 5.357e+01
++====================+
+|                    |
+| Time step =    134 |
+|                    |
++====================+
+Elapsed time in bigstab 8.218e-03 --- iterations: 2
+Elapsed time in bigstab 7.925e-03 --- iterations: 2
+Elapsed time in bigstab 8.276e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.48267e-06
+  Volume imbalance before correction : -2.07444e-19
+Elapsed time in bigstab 8.649e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.81248e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11111e-02
+Elapsed time in iteration 2.529e-01
+Elapsed time in total 5.382e+01
++====================+
+|                    |
+| Time step =    135 |
+|                    |
++====================+
+Elapsed time in bigstab 8.262e-03 --- iterations: 2
+Elapsed time in bigstab 7.873e-03 --- iterations: 2
+Elapsed time in bigstab 8.397e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.47913e-06
+  Volume imbalance before correction : -2.67636e-19
+Elapsed time in bigstab 9.010e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.20394e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11080e-02
+Elapsed time in iteration 2.562e-01
+Elapsed time in total 5.407e+01
++====================+
+|                    |
+| Time step =    136 |
+|                    |
++====================+
+Elapsed time in bigstab 7.977e-03 --- iterations: 2
+Elapsed time in bigstab 8.306e-03 --- iterations: 2
+Elapsed time in bigstab 8.360e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.47558e-06
+  Volume imbalance before correction : -2.89050e-20
+Elapsed time in bigstab 9.301e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  3.55444e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11047e-02
+Elapsed time in iteration 2.597e-01
+Elapsed time in total 5.433e+01
++====================+
+|                    |
+| Time step =    137 |
+|                    |
++====================+
+Elapsed time in bigstab 8.112e-03 --- iterations: 2
+Elapsed time in bigstab 8.156e-03 --- iterations: 2
+Elapsed time in bigstab 8.125e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.47200e-06
+  Volume imbalance before correction :  1.62736e-19
+Elapsed time in bigstab 9.262e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.39120e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11014e-02
+Elapsed time in iteration 2.589e-01
+Elapsed time in total 5.459e+01
++====================+
+|                    |
+| Time step =    138 |
+|                    |
++====================+
+Elapsed time in bigstab 8.017e-03 --- iterations: 2
+Elapsed time in bigstab 7.877e-03 --- iterations: 2
+Elapsed time in bigstab 8.306e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.46838e-06
+  Volume imbalance before correction : -1.21020e-19
+Elapsed time in bigstab 1.003e-01 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.23554e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10980e-02
+Elapsed time in iteration 2.669e-01
+Elapsed time in total 5.486e+01
++====================+
+|                    |
+| Time step =    139 |
+|                    |
++====================+
+Elapsed time in bigstab 7.851e-03 --- iterations: 2
+Elapsed time in bigstab 7.770e-03 --- iterations: 2
+Elapsed time in bigstab 7.972e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.46474e-06
+  Volume imbalance before correction : -2.63110e-20
+Elapsed time in bigstab 1.078e-01 --- iterations: 20
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.55902e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10946e-02
+Elapsed time in iteration 2.714e-01
+Elapsed time in total 5.513e+01
++====================+
+|                    |
+| Time step =    140 |
+|                    |
++====================+
+Elapsed time in bigstab 7.776e-03 --- iterations: 2
+Elapsed time in bigstab 8.391e-03 --- iterations: 2
+Elapsed time in bigstab 7.982e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.46107e-06
+  Volume imbalance before correction :  3.21873e-19
+Elapsed time in bigstab 1.074e-01 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.53525e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10911e-02
+Elapsed time in iteration 2.699e-01
+Elapsed time in total 5.540e+01
++====================+
+|                    |
+| Time step =    141 |
+|                    |
++====================+
+Elapsed time in bigstab 8.130e-03 --- iterations: 2
+Elapsed time in bigstab 8.364e-03 --- iterations: 2
+Elapsed time in bigstab 8.090e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.45737e-06
+  Volume imbalance before correction :  1.06885e-19
+Elapsed time in bigstab 2.092e-01 --- iterations: 40
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.27838e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10890e-02
+Elapsed time in iteration 3.756e-01
+Elapsed time in total 5.578e+01
++====================+
+|                    |
+| Time step =    142 |
+|                    |
++====================+
+Elapsed time in bigstab 7.935e-03 --- iterations: 2
+Elapsed time in bigstab 8.291e-03 --- iterations: 2
+Elapsed time in bigstab 8.075e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.45307e-06
+  Volume imbalance before correction :  2.99029e-19
+Elapsed time in bigstab 2.435e-01 --- iterations: 46
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.02450e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10840e-02
+Elapsed time in iteration 4.066e-01
+Elapsed time in total 5.618e+01
++====================+
+|                    |
+| Time step =    143 |
+|                    |
++====================+
+Elapsed time in bigstab 8.081e-03 --- iterations: 2
+Elapsed time in bigstab 8.251e-03 --- iterations: 2
+Elapsed time in bigstab 8.005e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.44941e-06
+  Volume imbalance before correction : -1.91959e-19
+Elapsed time in bigstab 8.742e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.08836e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10788e-02
+Elapsed time in iteration 2.540e-01
+Elapsed time in total 5.644e+01
++====================+
+|                    |
+| Time step =    144 |
+|                    |
++====================+
+Elapsed time in bigstab 7.958e-03 --- iterations: 2
+Elapsed time in bigstab 7.945e-03 --- iterations: 2
+Elapsed time in bigstab 8.347e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.44573e-06
+  Volume imbalance before correction : -1.27928e-19
+Elapsed time in bigstab 8.730e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.19238e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10736e-02
+Elapsed time in iteration 2.526e-01
+Elapsed time in total 5.669e+01
++====================+
+|                    |
+| Time step =    145 |
+|                    |
++====================+
+Elapsed time in bigstab 7.973e-03 --- iterations: 2
+Elapsed time in bigstab 7.944e-03 --- iterations: 2
+Elapsed time in bigstab 7.896e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.44205e-06
+  Volume imbalance before correction : -2.52442e-19
+Elapsed time in bigstab 1.486e-01 --- iterations: 28
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.71889e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10707e-02
+Elapsed time in iteration 3.120e-01
+Elapsed time in total 5.700e+01
++====================+
+|                    |
+| Time step =    146 |
+|                    |
++====================+
+Elapsed time in bigstab 8.112e-03 --- iterations: 2
+Elapsed time in bigstab 8.001e-03 --- iterations: 2
+Elapsed time in bigstab 7.800e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.43839e-06
+  Volume imbalance before correction :  1.19485e-19
+Elapsed time in bigstab 1.009e-01 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.76250e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10673e-02
+Elapsed time in iteration 2.634e-01
+Elapsed time in total 5.727e+01
++====================+
+|                    |
+| Time step =    147 |
+|                    |
++====================+
+Elapsed time in bigstab 7.988e-03 --- iterations: 2
+Elapsed time in bigstab 8.375e-03 --- iterations: 2
+Elapsed time in bigstab 8.201e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.43475e-06
+  Volume imbalance before correction :  1.08473e-19
+Elapsed time in bigstab 2.374e-01 --- iterations: 45
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.20735e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10584e-02
+Elapsed time in iteration 4.017e-01
+Elapsed time in total 5.767e+01
++====================+
+|                    |
+| Time step =    148 |
+|                    |
++====================+
+Elapsed time in bigstab 8.018e-03 --- iterations: 2
+Elapsed time in bigstab 7.932e-03 --- iterations: 2
+Elapsed time in bigstab 7.975e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.43120e-06
+  Volume imbalance before correction : -6.08805e-21
+Elapsed time in bigstab 1.453e-01 --- iterations: 27
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.52693e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10534e-02
+Elapsed time in iteration 3.073e-01
+Elapsed time in total 5.797e+01
++====================+
+|                    |
+| Time step =    149 |
+|                    |
++====================+
+Elapsed time in bigstab 7.947e-03 --- iterations: 2
+Elapsed time in bigstab 7.932e-03 --- iterations: 2
+Elapsed time in bigstab 8.160e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.42750e-06
+  Volume imbalance before correction : -1.77771e-19
+Elapsed time in bigstab 1.784e-01 --- iterations: 34
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.13077e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10509e-02
+Elapsed time in iteration 3.421e-01
+Elapsed time in total 5.832e+01
++====================+
+|                    |
+| Time step =    150 |
+|                    |
++====================+
+Elapsed time in bigstab 8.021e-03 --- iterations: 2
+Elapsed time in bigstab 7.944e-03 --- iterations: 2
+Elapsed time in bigstab 7.883e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.42344e-06
+  Volume imbalance before correction : -2.85609e-19
+Elapsed time in bigstab 1.370e-01 --- iterations: 26
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.16804e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10468e-02
+Elapsed time in iteration 3.002e-01
+Elapsed time in total 5.862e+01
++====================+
+|                    |
+| Time step =    151 |
+|                    |
++====================+
+Elapsed time in bigstab 7.825e-03 --- iterations: 2
+Elapsed time in bigstab 7.987e-03 --- iterations: 2
+Elapsed time in bigstab 8.069e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.42000e-06
+  Volume imbalance before correction : -9.06325e-20
+Elapsed time in bigstab 1.076e-01 --- iterations: 20
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.46006e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10428e-02
+Elapsed time in iteration 2.705e-01
+Elapsed time in total 5.889e+01
++====================+
+|                    |
+| Time step =    152 |
+|                    |
++====================+
+Elapsed time in bigstab 7.992e-03 --- iterations: 2
+Elapsed time in bigstab 8.090e-03 --- iterations: 2
+Elapsed time in bigstab 7.805e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.41638e-06
+  Volume imbalance before correction : -1.84653e-19
+Elapsed time in bigstab 2.134e-01 --- iterations: 40
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.47139e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10359e-02
+Elapsed time in iteration 3.766e-01
+Elapsed time in total 5.926e+01
++====================+
+|                    |
+| Time step =    153 |
+|                    |
++====================+
+Elapsed time in bigstab 7.959e-03 --- iterations: 2
+Elapsed time in bigstab 7.909e-03 --- iterations: 2
+Elapsed time in bigstab 7.986e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.41274e-06
+  Volume imbalance before correction :  7.62859e-20
+Elapsed time in bigstab 1.721e-01 --- iterations: 33
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.68621e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10314e-02
+Elapsed time in iteration 3.352e-01
+Elapsed time in total 5.960e+01
++====================+
+|                    |
+| Time step =    154 |
+|                    |
++====================+
+Elapsed time in bigstab 8.369e-03 --- iterations: 2
+Elapsed time in bigstab 8.454e-03 --- iterations: 2
+Elapsed time in bigstab 7.915e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.40885e-06
+  Volume imbalance before correction :  3.29813e-20
+Elapsed time in bigstab 1.716e-01 --- iterations: 33
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.26231e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10272e-02
+Elapsed time in iteration 3.379e-01
+Elapsed time in total 5.994e+01
++====================+
+|                    |
+| Time step =    155 |
+|                    |
++====================+
+Elapsed time in bigstab 8.372e-03 --- iterations: 2
+Elapsed time in bigstab 8.289e-03 --- iterations: 2
+Elapsed time in bigstab 8.713e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.40499e-06
+  Volume imbalance before correction : -1.07573e-19
+Elapsed time in bigstab 8.995e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.26688e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10229e-02
+Elapsed time in iteration 2.554e-01
+Elapsed time in total 6.019e+01
++====================+
+|                    |
+| Time step =    156 |
+|                    |
++====================+
+Elapsed time in bigstab 8.292e-03 --- iterations: 2
+Elapsed time in bigstab 7.937e-03 --- iterations: 2
+Elapsed time in bigstab 8.382e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.40124e-06
+  Volume imbalance before correction :  6.09864e-20
+Elapsed time in bigstab 8.994e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.05839e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10186e-02
+Elapsed time in iteration 2.544e-01
+Elapsed time in total 6.045e+01
++====================+
+|                    |
+| Time step =    157 |
+|                    |
++====================+
+Elapsed time in bigstab 8.422e-03 --- iterations: 2
+Elapsed time in bigstab 8.128e-03 --- iterations: 2
+Elapsed time in bigstab 8.303e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.39759e-06
+  Volume imbalance before correction :  4.37810e-20
+Elapsed time in bigstab 1.391e-01 --- iterations: 26
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.66602e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10131e-02
+Elapsed time in iteration 3.047e-01
+Elapsed time in total 6.075e+01
++====================+
+|                    |
+| Time step =    158 |
+|                    |
++====================+
+Elapsed time in bigstab 7.860e-03 --- iterations: 2
+Elapsed time in bigstab 7.721e-03 --- iterations: 2
+Elapsed time in bigstab 7.947e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.39406e-06
+  Volume imbalance before correction :  2.06676e-19
+Elapsed time in bigstab 9.316e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.19706e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10076e-02
+Elapsed time in iteration 2.575e-01
+Elapsed time in total 6.101e+01
++====================+
+|                    |
+| Time step =    159 |
+|                    |
++====================+
+Elapsed time in bigstab 8.351e-03 --- iterations: 2
+Elapsed time in bigstab 8.221e-03 --- iterations: 2
+Elapsed time in bigstab 8.067e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.39042e-06
+  Volume imbalance before correction : -2.24728e-20
+Elapsed time in bigstab 1.307e-01 --- iterations: 25
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.07627e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10029e-02
+Elapsed time in iteration 2.968e-01
+Elapsed time in total 6.131e+01
++====================+
+|                    |
+| Time step =    160 |
+|                    |
++====================+
+Elapsed time in bigstab 8.042e-03 --- iterations: 2
+Elapsed time in bigstab 8.145e-03 --- iterations: 2
+Elapsed time in bigstab 8.297e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.38657e-06
+  Volume imbalance before correction :  4.65339e-20
+Elapsed time in bigstab 8.940e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.31498e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09983e-02
+Elapsed time in iteration 2.542e-01
+Elapsed time in total 6.156e+01
++====================+
+|                    |
+| Time step =    161 |
+|                    |
++====================+
+Elapsed time in bigstab 8.235e-03 --- iterations: 2
+Elapsed time in bigstab 8.449e-03 --- iterations: 2
+Elapsed time in bigstab 8.065e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.38274e-06
+  Volume imbalance before correction : -9.24325e-20
+Elapsed time in bigstab 1.387e-01 --- iterations: 27
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.21951e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09944e-02
+Elapsed time in iteration 3.038e-01
+Elapsed time in total 6.186e+01
++====================+
+|                    |
+| Time step =    162 |
+|                    |
++====================+
+Elapsed time in bigstab 7.981e-03 --- iterations: 2
+Elapsed time in bigstab 8.322e-03 --- iterations: 2
+Elapsed time in bigstab 8.386e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.37916e-06
+  Volume imbalance before correction : -1.49025e-19
+Elapsed time in bigstab 1.276e-01 --- iterations: 24
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.21296e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09900e-02
+Elapsed time in iteration 2.930e-01
+Elapsed time in total 6.216e+01
++====================+
+|                    |
+| Time step =    163 |
+|                    |
++====================+
+Elapsed time in bigstab 8.109e-03 --- iterations: 2
+Elapsed time in bigstab 8.270e-03 --- iterations: 2
+Elapsed time in bigstab 8.219e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.37557e-06
+  Volume imbalance before correction : -1.84600e-19
+Elapsed time in bigstab 1.032e-01 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.27249e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09855e-02
+Elapsed time in iteration 2.682e-01
+Elapsed time in total 6.243e+01
++====================+
+|                    |
+| Time step =    164 |
+|                    |
++====================+
+Elapsed time in bigstab 7.969e-03 --- iterations: 2
+Elapsed time in bigstab 8.432e-03 --- iterations: 2
+Elapsed time in bigstab 8.104e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.37207e-06
+  Volume imbalance before correction : -1.63398e-19
+Elapsed time in bigstab 1.413e-01 --- iterations: 27
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.17511e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09805e-02
+Elapsed time in iteration 3.057e-01
+Elapsed time in total 6.273e+01
++====================+
+|                    |
+| Time step =    165 |
+|                    |
++====================+
+Elapsed time in bigstab 8.284e-03 --- iterations: 2
+Elapsed time in bigstab 7.992e-03 --- iterations: 2
+Elapsed time in bigstab 7.820e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.36879e-06
+  Volume imbalance before correction :  3.98635e-20
+Elapsed time in bigstab 1.327e-01 --- iterations: 24
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.04070e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09754e-02
+Elapsed time in iteration 2.973e-01
+Elapsed time in total 6.303e+01
++====================+
+|                    |
+| Time step =    166 |
+|                    |
++====================+
+Elapsed time in bigstab 7.863e-03 --- iterations: 2
+Elapsed time in bigstab 8.349e-03 --- iterations: 2
+Elapsed time in bigstab 7.977e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.36562e-06
+  Volume imbalance before correction : -1.54213e-19
+Elapsed time in bigstab 8.808e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.13113e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09758e-02
+Elapsed time in iteration 2.508e-01
+Elapsed time in total 6.328e+01
++====================+
+|                    |
+| Time step =    167 |
+|                    |
++====================+
+Elapsed time in bigstab 8.776e-03 --- iterations: 2
+Elapsed time in bigstab 8.686e-03 --- iterations: 2
+Elapsed time in bigstab 8.681e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.36236e-06
+  Volume imbalance before correction : -2.10170e-19
+Elapsed time in bigstab 9.810e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.56567e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09813e-02
+Elapsed time in iteration 2.680e-01
+Elapsed time in total 6.355e+01
++====================+
+|                    |
+| Time step =    168 |
+|                    |
++====================+
+Elapsed time in bigstab 8.053e-03 --- iterations: 2
+Elapsed time in bigstab 7.972e-03 --- iterations: 2
+Elapsed time in bigstab 7.797e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.35908e-06
+  Volume imbalance before correction : -3.54960e-20
+Elapsed time in bigstab 9.856e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  3.94618e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09868e-02
+Elapsed time in iteration 2.636e-01
+Elapsed time in total 6.381e+01
++====================+
+|                    |
+| Time step =    169 |
+|                    |
++====================+
+Elapsed time in bigstab 7.806e-03 --- iterations: 2
+Elapsed time in bigstab 7.891e-03 --- iterations: 2
+Elapsed time in bigstab 8.000e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.35584e-06
+  Volume imbalance before correction : -2.38916e-19
+Elapsed time in bigstab 1.493e-01 --- iterations: 28
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.80323e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09931e-02
+Elapsed time in iteration 3.122e-01
+Elapsed time in total 6.412e+01
++====================+
+|                    |
+| Time step =    170 |
+|                    |
++====================+
+Elapsed time in bigstab 8.195e-03 --- iterations: 2
+Elapsed time in bigstab 7.823e-03 --- iterations: 2
+Elapsed time in bigstab 7.916e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.35269e-06
+  Volume imbalance before correction :  1.65171e-19
+Elapsed time in bigstab 1.199e-01 --- iterations: 23
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.45224e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.09993e-02
+Elapsed time in iteration 2.841e-01
+Elapsed time in total 6.441e+01
++====================+
+|                    |
+| Time step =    171 |
+|                    |
++====================+
+Elapsed time in bigstab 7.991e-03 --- iterations: 2
+Elapsed time in bigstab 8.068e-03 --- iterations: 2
+Elapsed time in bigstab 8.260e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.34940e-06
+  Volume imbalance before correction : -1.73006e-19
+Elapsed time in bigstab 2.175e-01 --- iterations: 41
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.15334e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10049e-02
+Elapsed time in iteration 3.824e-01
+Elapsed time in total 6.479e+01
++====================+
+|                    |
+| Time step =    172 |
+|                    |
++====================+
+Elapsed time in bigstab 8.125e-03 --- iterations: 2
+Elapsed time in bigstab 7.867e-03 --- iterations: 2
+Elapsed time in bigstab 8.011e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.34620e-06
+  Volume imbalance before correction : -3.85453e-19
+Elapsed time in bigstab 9.872e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.45113e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10102e-02
+Elapsed time in iteration 2.623e-01
+Elapsed time in total 6.505e+01
++====================+
+|                    |
+| Time step =    173 |
+|                    |
++====================+
+Elapsed time in bigstab 8.031e-03 --- iterations: 2
+Elapsed time in bigstab 7.802e-03 --- iterations: 2
+Elapsed time in bigstab 8.325e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.34308e-06
+  Volume imbalance before correction : -1.12655e-19
+Elapsed time in bigstab 9.568e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.69567e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10152e-02
+Elapsed time in iteration 2.596e-01
+Elapsed time in total 6.531e+01
++====================+
+|                    |
+| Time step =    174 |
+|                    |
++====================+
+Elapsed time in bigstab 8.134e-03 --- iterations: 2
+Elapsed time in bigstab 7.926e-03 --- iterations: 2
+Elapsed time in bigstab 8.016e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.34003e-06
+  Volume imbalance before correction : -2.15093e-19
+Elapsed time in bigstab 9.585e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  9.48279e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10202e-02
+Elapsed time in iteration 2.597e-01
+Elapsed time in total 6.557e+01
++====================+
+|                    |
+| Time step =    175 |
+|                    |
++====================+
+Elapsed time in bigstab 7.863e-03 --- iterations: 2
+Elapsed time in bigstab 8.015e-03 --- iterations: 2
+Elapsed time in bigstab 7.889e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.33705e-06
+  Volume imbalance before correction : -5.94247e-20
+Elapsed time in bigstab 9.992e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.90047e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10250e-02
+Elapsed time in iteration 2.635e-01
+Elapsed time in total 6.583e+01
++====================+
+|                    |
+| Time step =    176 |
+|                    |
++====================+
+Elapsed time in bigstab 7.940e-03 --- iterations: 2
+Elapsed time in bigstab 8.057e-03 --- iterations: 2
+Elapsed time in bigstab 7.915e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.33411e-06
+  Volume imbalance before correction :  2.70256e-20
+Elapsed time in bigstab 9.594e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.62453e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10297e-02
+Elapsed time in iteration 2.596e-01
+Elapsed time in total 6.609e+01
++====================+
+|                    |
+| Time step =    177 |
+|                    |
++====================+
+Elapsed time in bigstab 8.041e-03 --- iterations: 2
+Elapsed time in bigstab 8.035e-03 --- iterations: 2
+Elapsed time in bigstab 7.782e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.33123e-06
+  Volume imbalance before correction : -1.27981e-19
+Elapsed time in bigstab 9.614e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.40093e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10345e-02
+Elapsed time in iteration 2.592e-01
+Elapsed time in total 6.635e+01
++====================+
+|                    |
+| Time step =    178 |
+|                    |
++====================+
+Elapsed time in bigstab 7.985e-03 --- iterations: 2
+Elapsed time in bigstab 7.754e-03 --- iterations: 2
+Elapsed time in bigstab 8.156e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.32842e-06
+  Volume imbalance before correction :  7.27654e-20
+Elapsed time in bigstab 9.450e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.52516e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10394e-02
+Elapsed time in iteration 2.579e-01
+Elapsed time in total 6.661e+01
++====================+
+|                    |
+| Time step =    179 |
+|                    |
++====================+
+Elapsed time in bigstab 8.024e-03 --- iterations: 2
+Elapsed time in bigstab 8.139e-03 --- iterations: 2
+Elapsed time in bigstab 8.006e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.32562e-06
+  Volume imbalance before correction : -1.80550e-19
+Elapsed time in bigstab 9.377e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.71693e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10444e-02
+Elapsed time in iteration 2.565e-01
+Elapsed time in total 6.687e+01
++====================+
+|                    |
+| Time step =    180 |
+|                    |
++====================+
+Elapsed time in bigstab 8.029e-03 --- iterations: 2
+Elapsed time in bigstab 7.887e-03 --- iterations: 2
+Elapsed time in bigstab 7.971e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.32284e-06
+  Volume imbalance before correction : -3.90429e-20
+Elapsed time in bigstab 9.171e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.41781e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10494e-02
+Elapsed time in iteration 2.530e-01
+Elapsed time in total 6.712e+01
++====================+
+|                    |
+| Time step =    181 |
+|                    |
++====================+
+Elapsed time in bigstab 7.971e-03 --- iterations: 2
+Elapsed time in bigstab 7.876e-03 --- iterations: 2
+Elapsed time in bigstab 8.043e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.32006e-06
+  Volume imbalance before correction :  9.34383e-21
+Elapsed time in bigstab 9.187e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.58432e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10546e-02
+Elapsed time in iteration 2.543e-01
+Elapsed time in total 6.738e+01
++====================+
+|                    |
+| Time step =    182 |
+|                    |
++====================+
+Elapsed time in bigstab 7.928e-03 --- iterations: 2
+Elapsed time in bigstab 8.052e-03 --- iterations: 2
+Elapsed time in bigstab 7.961e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.31730e-06
+  Volume imbalance before correction : -6.78685e-20
+Elapsed time in bigstab 8.898e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.36599e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10599e-02
+Elapsed time in iteration 2.507e-01
+Elapsed time in total 6.763e+01
++====================+
+|                    |
+| Time step =    183 |
+|                    |
++====================+
+Elapsed time in bigstab 8.118e-03 --- iterations: 2
+Elapsed time in bigstab 7.864e-03 --- iterations: 2
+Elapsed time in bigstab 7.902e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.31454e-06
+  Volume imbalance before correction : -2.37434e-20
+Elapsed time in bigstab 8.869e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.98353e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10654e-02
+Elapsed time in iteration 2.509e-01
+Elapsed time in total 6.788e+01
++====================+
+|                    |
+| Time step =    184 |
+|                    |
++====================+
+Elapsed time in bigstab 8.038e-03 --- iterations: 2
+Elapsed time in bigstab 7.881e-03 --- iterations: 2
+Elapsed time in bigstab 7.946e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.31180e-06
+  Volume imbalance before correction : -2.30340e-19
+Elapsed time in bigstab 8.932e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  7.01072e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10708e-02
+Elapsed time in iteration 2.511e-01
+Elapsed time in total 6.813e+01
++====================+
+|                    |
+| Time step =    185 |
+|                    |
++====================+
+Elapsed time in bigstab 7.997e-03 --- iterations: 2
+Elapsed time in bigstab 8.017e-03 --- iterations: 2
+Elapsed time in bigstab 8.046e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.30908e-06
+  Volume imbalance before correction : -6.25216e-20
+Elapsed time in bigstab 8.870e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.66936e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10763e-02
+Elapsed time in iteration 2.504e-01
+Elapsed time in total 6.838e+01
++====================+
+|                    |
+| Time step =    186 |
+|                    |
++====================+
+Elapsed time in bigstab 7.800e-03 --- iterations: 2
+Elapsed time in bigstab 7.929e-03 --- iterations: 2
+Elapsed time in bigstab 8.106e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.30638e-06
+  Volume imbalance before correction :  9.57941e-20
+Elapsed time in bigstab 8.906e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.47256e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10818e-02
+Elapsed time in iteration 2.511e-01
+Elapsed time in total 6.863e+01
++====================+
+|                    |
+| Time step =    187 |
+|                    |
++====================+
+Elapsed time in bigstab 8.003e-03 --- iterations: 2
+Elapsed time in bigstab 7.933e-03 --- iterations: 2
+Elapsed time in bigstab 7.857e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.30371e-06
+  Volume imbalance before correction : -5.93717e-20
+Elapsed time in bigstab 9.131e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.48833e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10873e-02
+Elapsed time in iteration 2.535e-01
+Elapsed time in total 6.888e+01
++====================+
+|                    |
+| Time step =    188 |
+|                    |
++====================+
+Elapsed time in bigstab 7.906e-03 --- iterations: 2
+Elapsed time in bigstab 8.086e-03 --- iterations: 2
+Elapsed time in bigstab 8.088e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.30107e-06
+  Volume imbalance before correction : -2.54851e-19
+Elapsed time in bigstab 9.178e-02 --- iterations: 17
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.85928e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10927e-02
+Elapsed time in iteration 2.537e-01
+Elapsed time in total 6.914e+01
++====================+
+|                    |
+| Time step =    189 |
+|                    |
++====================+
+Elapsed time in bigstab 7.999e-03 --- iterations: 2
+Elapsed time in bigstab 7.785e-03 --- iterations: 2
+Elapsed time in bigstab 8.330e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.29846e-06
+  Volume imbalance before correction : -2.20348e-19
+Elapsed time in bigstab 9.390e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.64484e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.10981e-02
+Elapsed time in iteration 2.557e-01
+Elapsed time in total 6.939e+01
++====================+
+|                    |
+| Time step =    190 |
+|                    |
++====================+
+Elapsed time in bigstab 8.476e-03 --- iterations: 2
+Elapsed time in bigstab 8.100e-03 --- iterations: 2
+Elapsed time in bigstab 7.947e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.29589e-06
+  Volume imbalance before correction : -6.35672e-20
+Elapsed time in bigstab 9.300e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  5.84702e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11034e-02
+Elapsed time in iteration 2.571e-01
+Elapsed time in total 6.965e+01
++====================+
+|                    |
+| Time step =    191 |
+|                    |
++====================+
+Elapsed time in bigstab 8.120e-03 --- iterations: 2
+Elapsed time in bigstab 7.908e-03 --- iterations: 2
+Elapsed time in bigstab 8.040e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.29337e-06
+  Volume imbalance before correction : -1.60195e-19
+Elapsed time in bigstab 9.270e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  4.52155e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11086e-02
+Elapsed time in iteration 2.554e-01
+Elapsed time in total 6.991e+01
++====================+
+|                    |
+| Time step =    192 |
+|                    |
++====================+
+Elapsed time in bigstab 7.604e-03 --- iterations: 2
+Elapsed time in bigstab 8.084e-03 --- iterations: 2
+Elapsed time in bigstab 8.707e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.29126e-06
+  Volume imbalance before correction : -1.95876e-20
+Elapsed time in bigstab 9.397e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  3.88367e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11138e-02
+Elapsed time in iteration 2.597e-01
+Elapsed time in total 7.016e+01
++====================+
+|                    |
+| Time step =    193 |
+|                    |
++====================+
+Elapsed time in bigstab 8.259e-03 --- iterations: 2
+Elapsed time in bigstab 8.016e-03 --- iterations: 2
+Elapsed time in bigstab 7.900e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.29013e-06
+  Volume imbalance before correction : -2.62554e-19
+Elapsed time in bigstab 9.911e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.48503e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11190e-02
+Elapsed time in iteration 2.604e-01
+Elapsed time in total 7.043e+01
++====================+
+|                    |
+| Time step =    194 |
+|                    |
++====================+
+Elapsed time in bigstab 7.635e-03 --- iterations: 2
+Elapsed time in bigstab 7.907e-03 --- iterations: 2
+Elapsed time in bigstab 7.998e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.28901e-06
+  Volume imbalance before correction : -3.66686e-19
+Elapsed time in bigstab 1.537e-01 --- iterations: 29
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.46026e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11287e-02
+Elapsed time in iteration 3.101e-01
+Elapsed time in total 7.074e+01
++====================+
+|                    |
+| Time step =    195 |
+|                    |
++====================+
+Elapsed time in bigstab 7.978e-03 --- iterations: 2
+Elapsed time in bigstab 7.870e-03 --- iterations: 2
+Elapsed time in bigstab 7.793e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.28787e-06
+  Volume imbalance before correction : -2.75312e-19
+Elapsed time in bigstab 9.247e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.19276e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11459e-02
+Elapsed time in iteration 2.507e-01
+Elapsed time in total 7.099e+01
++====================+
+|                    |
+| Time step =    196 |
+|                    |
++====================+
+Elapsed time in bigstab 8.124e-03 --- iterations: 2
+Elapsed time in bigstab 7.597e-03 --- iterations: 2
+Elapsed time in bigstab 7.627e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.28682e-06
+  Volume imbalance before correction : -1.91456e-19
+Elapsed time in bigstab 9.506e-02 --- iterations: 18
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.59227e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11632e-02
+Elapsed time in iteration 2.556e-01
+Elapsed time in total 7.124e+01
++====================+
+|                    |
+| Time step =    197 |
+|                    |
++====================+
+Elapsed time in bigstab 7.864e-03 --- iterations: 2
+Elapsed time in bigstab 7.735e-03 --- iterations: 2
+Elapsed time in bigstab 7.690e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.28577e-06
+  Volume imbalance before correction :  5.68836e-20
+Elapsed time in bigstab 9.734e-02 --- iterations: 19
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.67618e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11805e-02
+Elapsed time in iteration 2.555e-01
+Elapsed time in total 7.150e+01
++====================+
+|                    |
+| Time step =    198 |
+|                    |
++====================+
+Elapsed time in bigstab 7.580e-03 --- iterations: 2
+Elapsed time in bigstab 7.519e-03 --- iterations: 2
+Elapsed time in bigstab 7.501e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.28470e-06
+  Volume imbalance before correction : -1.88015e-19
+=---> pyns.solvers.nonstationary.bicgstab
+  Fails becuase rho = -9.88604e-25
+Elapsed time in bigstab 1.978e-01 --- iterations: 40
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  6.65761e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.11989e-02
+Elapsed time in iteration 3.512e-01
+Elapsed time in total 7.185e+01
++====================+
+|                    |
+| Time step =    199 |
+|                    |
++====================+
+Elapsed time in bigstab 7.606e-03 --- iterations: 2
+Elapsed time in bigstab 7.508e-03 --- iterations: 2
+Elapsed time in bigstab 7.464e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.28377e-06
+  Volume imbalance before correction : -6.31569e-20
+Elapsed time in bigstab 4.114e-01 --- iterations: 108
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  1.38551e-10
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.12108e-02
+Elapsed time in iteration 5.597e-01
+Elapsed time in total 7.241e+01
++====================+
+|                    |
+| Time step =    200 |
+|                    |
++====================+
+Elapsed time in bigstab 5.485e-03 --- iterations: 2
+Elapsed time in bigstab 5.148e-03 --- iterations: 2
+Elapsed time in bigstab 5.359e-03 --- iterations: 2
+=---> pyns.discretization.calc_p
+  Volume error before correction     :  1.28169e-06
+  Volume imbalance before correction :  1.54134e-19
+Elapsed time in bigstab 8.367e-02 --- iterations: 23
+=---> pyns.discretization.corr_uvw
+  Maximum volume error after correction:  8.88620e-11
+=---> pyns.discretization.cfl_max
+  Maximum CFL number:  3.12236e-02
+Elapsed time in iteration 1.915e-01
+Elapsed time in total 7.260e+01
