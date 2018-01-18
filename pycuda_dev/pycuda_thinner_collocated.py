@@ -43,7 +43,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=False, time_steps=5, plot_freq=5):
+def main(show_plot=False, time_steps=20, plot_freq=5):
 
 # =============================================================================
 #
@@ -52,9 +52,9 @@ def main(show_plot=False, time_steps=5, plot_freq=5):
 # =============================================================================
 
     # Node coordinates
-    xn = nodes(0, 1.25, 256)
-    yn = nodes(0, 0.125, 32)
-    zn = nodes(0, 0.125, 32)
+    xn = nodes(0, 1.25, 128)
+    yn = nodes(0, 0.125, 64)
+    zn = nodes(0, 0.125, 64)
 
     # Cell coordinates
     xc = avg(xn)
@@ -145,6 +145,8 @@ def main(show_plot=False, time_steps=5, plot_freq=5):
 #
 # =============================================================================
 
+    start_tot = time.time()
+
     # -----------
     #
     # Time loop
@@ -152,10 +154,10 @@ def main(show_plot=False, time_steps=5, plot_freq=5):
     # -----------
     for ts in range(1, ndt+1):
 
+        start_it = time.time()
+        
         write.time_step(ts)
         
-        start_tot = time.time()
-
         # ------------------
         # Store old values
         # ------------------
@@ -188,6 +190,7 @@ def main(show_plot=False, time_steps=5, plot_freq=5):
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
         
         end_tot = time.time()
+        print("Elapsed time in iteration %2.3e" %(end_tot - start_it))
         print("Elapsed time in total %2.3e" %(end_tot - start_tot))
 
 # =============================================================================
