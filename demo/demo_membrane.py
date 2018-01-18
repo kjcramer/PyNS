@@ -1,6 +1,9 @@
 
 #!/usr/bin/python
 
+import sys
+sys.path.append("../..")
+
 # Standard Python modules
 from pyns.standard import *
 
@@ -19,7 +22,7 @@ from pyns.physical.constants import G
 
 # membrane aux functions
 from p_v_sat import *
-# from latent_heat import *
+from latent_heat import *
 
 plt.close("all")
 
@@ -33,15 +36,15 @@ AIR = 0
 H2O = 1
 FIL = 2
 
-u_in   = 0.12 # m/s
-t_in   = 80   # °C
-a_salt = 90.0 # g/l
+u_in   = 0.05 # m/s
+t_in   = 70   # °C
+a_salt = 35.0 # g/l seawater
 t_cold = 20   # °C
 
 # Node coordinates for both domains
-xn = (nodes(0,    0.1, 150), nodes(0,    0.1, 150), nodes(0,           0.1, 150))
-yn = (nodes(-0.009, 0, 30),  nodes(0,  0.004, 12),  nodes(-0.01,    -0.009,  3))
-zn = (nodes(0,    0.05, 75), nodes(0,    0.05, 75), nodes(0,           0.05, 75))
+xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
+yn = (nodes(-0.004, 0,     10), nodes( 0,    0.02,  30), nodes(-0.005, -0.004,  3))
+zn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]))
@@ -65,14 +68,14 @@ rc,ru,rv,rw =        (cell[AIR][6], cell[H2O][6], cell[FIL][6]),  \
                      (cell[AIR][9], cell[H2O][9], cell[FIL][9])
 
 # Set physical properties					 
-prop = [properties.air(rc[AIR]),    \
-        properties.water(rc[H2O]),  \
-        properties.water(rc[FIL])]
+#prop = [properties.air(rc[AIR]),    \
+#        properties.water(rc[H2O]),  \
+#        properties.water(rc[FIL])]
 					 
 # Set physical properties temperature dependent:
-#prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]), \
-#        properties.water(t_in,rc[H2O]),                    \
-#        properties.water(t_cold,rc[FIL])]
+prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]), \
+        properties.water(t_in,rc[H2O]),                    \
+        properties.water(t_cold,rc[FIL])]
 
 rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0]),  \
                       (prop[AIR][1], prop[H2O][1], prop[FIL][1]),  \
@@ -81,8 +84,8 @@ rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0]),  \
                       
 diff = (ones(rc[AIR])*4.0E-4, ones(rc[H2O])*1.99E-09)
 
-#h_d = [ 0.0, latent_heat(t_in), latent_heat(t_cold) ]
-h_d = [ 0.0, 2359E3, 2359E3]
+h_d = [ 0.0, latent_heat(t_in), latent_heat(t_cold) ]
+#h_d = [ 0.0, 2359E3, 2359E3]
 
 M_H2O  = 18E-3      # kg/mol
 M_AIR  = 28E-3      # kg/mol
@@ -97,9 +100,10 @@ membrane = namedtuple("membrane", "d kap eps tau r p t pv j t_old")
   # eps is porosity, tau is tortuosity
   # r is pore radius
 
-mem = membrane(166E-6,   \
+# FGLP
+mem = membrane(65E-6,   \
                  0.2,    \
-                 0.687,  \
+                 0.85,  \
                  2,      \
                  0.1E-6, \
                  zeros((nx[AIR],1,nz[AIR])), \
@@ -136,8 +140,8 @@ M  = [Unknown("molar mass",    C, rc[AIR], NEUMANN)]
 
 # Specify boundary conditions
 
-for k in range(0,nz[H2O]):
-  uf[H2O].bnd[W].val[:1,:,k] = par(u_in, yn[H2O])
+
+uf[H2O].bnd[W].val[:1,:,:] = par2d(u_in, yn[H2O], zn[H2O])
 uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
 uf[H2O].bnd[E].val[:1,:,:] = u_in
 
@@ -199,9 +203,10 @@ for c in range(W,T):
   t_min = np.amin([t_min, np.amin(t[FIL].bnd[c].val)]) 
   
   # Time-stepping parameters
-dt  =    0.0005  # time step
-ndt =    1       # number of time steps
+dt  =    0.0002  # time step
+ndt =    100000       # number of time steps
 dt_plot = ndt    # plot frequency
+dt_save = 100
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL])]
 
@@ -280,9 +285,9 @@ for ts in range(1,ndt+1):
   mem.p[:,:1,:] = (p_tot[H2O].val[:,:1,:] + p_tot[AIR].val[:,-1:,:]) /2.0 + 1E5
   mem.pv[:,:1,:] = (p_v[AIR].bnd[N].val[:,:1,:] + p_v[AIR].val[:,-1:,:]) /2.0
   
-  # Diffusion Coefficients
+  # Diffusion Coefficients  kg/(m^2*s*Pa)
   C_K = 2.0*mem.eps*mem.r/(3.0*mem.tau*mem.d)*np.power(8.0*M_H2O/(mem.t*R*pi),0.5)
-  C_M = mem.eps*mem.p*diff[AIR][:,-1:,:]/(mem.tau*R*mem.t*(mem.p-mem.pv))
+  C_M = mem.eps*mem.p*diff[AIR][:,-1:,:]/(mem.d*mem.tau*R*mem.t*(mem.p-mem.pv))
   C_T = 1.0/(1.0/C_K + 1.0/C_M)
   
   # Jump condition at membrane
@@ -324,7 +329,7 @@ for ts in range(1,ndt+1):
   q_a[AIR][:,:1,:]  = - m_out[:,:1,:] / dv[AIR][:,:1,:] 
   
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
-  for c in range(AIR,H2O):
+  for c in range(AIR,H2O+1):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
@@ -343,59 +348,57 @@ for ts in range(1,ndt+1):
   q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
   q_t[FIL][:,-1:,:] =  h_d[FIL]*m_out[:,:1,:] / dv[FIL][:,-1:,:]
   
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
            source = q_t[c])
 
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     t[c].val[t[c].val > t_max] = t_max
     t[c].val[t[c].val < t_min] = t_min
 
   #-----------------------
   # Momentum conservation
   #-----------------------
-  for c in (AIR,H2O):
-    g_v = -G * avg(Y, rho[c])
+  g_v = -G * avg(Y, rho[H2O])
+
+  ef = zeros(ru[H2O]), g_v, zeros(rw[H2O])
   
-    ef = zeros(ru[c]), g_v, zeros(rw[c])
-    
-    calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
-             dt, (dx[c],dy[c],dz[c]), 
-             obstacle = obst[c],
-             pressure = p_tot[c],
-             force = ef)
+  calc_uvw((uf[H2O],vf[H2O],wf[H2O]), (uf[H2O],vf[H2O],wf[H2O]), rho[H2O], mu[H2O],  \
+           dt, (dx[H2O],dy[H2O],dz[H2O]), 
+           obstacle = obst[H2O],
+           pressure = p_tot[H2O],
+           force = ef)
   
   #----------
   # Pressure
   #----------
-  for c in (AIR,H2O):
-    calc_p(p[c], (uf[c],vf[c],wf[c]), rho[c],  \
-           dt, (dx[c],dy[c],dz[c]), 
-           obstacle = obst[c])
-  
-    p_tot[c].val = p_tot[c].val + p[c].val
+  calc_p(p[H2O], (uf[H2O],vf[H2O],wf[H2O]), rho[H2O],  \
+         dt, (dx[H2O],dy[H2O],dz[H2O]), 
+         obstacle = obst[H2O])
+
+  p_tot[H2O].val = p_tot[H2O].val + p[H2O].val
   
   #---------------------
   # Velocity correction
   #---------------------
-  for c in (AIR,H2O):
-    corr_uvw((uf[c],vf[c],wf[c]), p[c], rho[c],  \
-             dt, (dx[c],dy[c],dz[c]), 
-             obstacle = obst[c])
+  corr_uvw((uf[H2O],vf[H2O],wf[H2O]), p[H2O], rho[H2O],  \
+           dt, (dx[H2O],dy[H2O],dz[H2O]), 
+           obstacle = obst[H2O])
  
   # Compute volume balance for checking 
-  for c in (AIR,H2O):
-    err = vol_balance((uf[c],vf[c],wf[c]),  \
-                      (dx[c],dy[c],dz[c]), 
-                      obstacle = obst[c])
-    print("Maximum volume error after correction: %12.5e" % abs(err).max())
+  err = vol_balance((uf[H2O],vf[H2O],wf[H2O]),  \
+                    (dx[H2O],dy[H2O],dz[H2O]), 
+                    obstacle = obst[H2O])
+  print("Maximum volume error after correction: %12.5e" % abs(err).max())
 
   # Check the CFL number too 
-  for c in (AIR,H2O):
-    cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
-    print("Maximum CFL number: %12.5e" % cfl)
+  cfl = cfl_max((uf[H2O],vf[H2O],wf[H2O]), dt, (dx[H2O],dy[H2O],dz[H2O]))
+  print("Maximum CFL number: %12.5e" % cfl)
+
+  if ts % dt_save == 0:
+      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,t_int_mem, t_int_film,m_out, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val  )
 
 #==========================================================================
 #

@@ -70,7 +70,7 @@ def p_v_sat_salt(t,a,M_salt):
   
   p_v=p_v_sat(t)
   
-  p_v = p_v *np.exp(-1.17444*np.power(a/M_salt,0.5) / (1+np.power(a/M_salt,0.5)))
+  p_v = p_v * 1
   
   return p_v # end of function
  
