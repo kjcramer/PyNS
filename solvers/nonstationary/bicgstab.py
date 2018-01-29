@@ -137,7 +137,7 @@ def bicgstab(a, phi, b, tol,
 
             # If rho == 0 method fails
             # if abs(rho) < TINY * TINY:
-            if cumath.fabs(rho_gpu).get() < TINY * TINY:
+            if cumath.fabs(rho_gpu).get() < TINY * TINY: #to be tested: if gpuarray.if_positive(TINY*TINY - cumath.fabs(rho_gpu), True, False):
                 write.at(__name__)
                 print("  Fails because rho = %12.5e" % rho_gpu.get())
                 end = time.time()
@@ -178,7 +178,7 @@ def bicgstab(a, phi, b, tol,
             # res = norm(s)
             res_gpu = cumath.sqrt( gpuarray.dot(s_gpu, s_gpu))
             # if res < tol:
-            if res_gpu.get() < tol_gpu.get():
+            if res_gpu.get() < tol_gpu.get(): # to be tested: if gpuarray.if_positive(tol_gpu - res_gpu, True, False):
                 if verbose is True == True:
                     write.at(__name__)
                     print("  Fails because rho = %12.5e" % rho_gpu.get())
@@ -217,7 +217,7 @@ def bicgstab(a, phi, b, tol,
 
             # If tolerance has been reached, get out of here
             # if res_gpu < tol:
-            if res_gpu.get() < tol_gpu.get():
+            if res_gpu.get() < tol_gpu.get(): # to be tested: if gpuarray.if_positive(tol_gpu - res_gpu, True, False):
                 end = time.time()
                 print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
                 return x_gpu.get()

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 # .......... The PARALLEL-O-MATIC-6000 (TM) ..........
 # A bash creation by Kerstin and Luca
 #
