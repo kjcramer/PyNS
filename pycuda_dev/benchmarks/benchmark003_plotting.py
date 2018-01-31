@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 
-data = np.load('benchmark007_outData_gaia_k80.npz')
-fig_name = 'benchmark007_outData_gaia_K80.eps'
+data = np.load('benchmark003_outData_gaia_k80.npz')
+fig_name = 'benchmark003_outData_gaia_K80.eps'
 
 
 times = data['times']

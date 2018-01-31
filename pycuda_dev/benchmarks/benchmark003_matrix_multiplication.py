@@ -144,4 +144,4 @@ for (isz, sz) in enumerate(SZ):
         [cpu, garray, redKernel] = benchmark(sz,False)
         times[:,isz,iiters] = [cpu, garray, redKernel]
 
-np.savez('benchmark007_outData.npz', size=SZ, iterations=ITERS, times=times)
+np.savez('benchmark003_outData.npz', size=SZ, iterations=ITERS, times=times)
