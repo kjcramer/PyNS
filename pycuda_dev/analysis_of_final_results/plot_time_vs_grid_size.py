@@ -29,7 +29,7 @@ mesh_sizes = ["64_16_16",
 ts = 200
 
 # every simulation is run run_n times, then the results will be averaged
-run_n = 3
+run_n = 24
 runs = range(0, run_n)
 
 # 9 different information, ts time steps coming from each out.txt file
@@ -40,13 +40,15 @@ for ii, mesh_size in enumerate(mesh_sizes):
     avg = np.zeros((9, ts, run_n))
     # load and compute average from all the runs
     for run in runs:
-        avg[:,:,run-1] = results_parser("../" + dataset_id + "_" +
+        avg[:,:,run-1] = results_parser("../" + dataset_id + "/" + dataset_id + "_" +
                                         str(mesh_size) +
                                         "_run" + str(run) +
                                         "/out.txt")
     avg = np.sum(avg, axis=2) / run_n
 
     results_avgd[:,:,ii] = avg
+    
+np.savez(('%s.npz'%(dataset_id)),mesh_sizes=mesh_sizes,results_avgd=results_avgd)
 
 np.savez(('%s.npz'%(dataset_id)),mesh_sizes=mesh_sizes,results_avgd=results_avgd)
 
@@ -59,4 +61,4 @@ plt.plot(results_avgd_sum[6,:]/results_avgd_sum[7,:])
 plt.xticks(range(len(mesh_sizes)), [x.replace("_","x") for x in mesh_sizes])
 plt.xlabel("Mesh size")
 plt.ylabel("Average time per iteration [s]")
-plt.savefig(('%s.png'%(dataset_id)),bbox_inches='tight')
+#plt.savefig(('%s.png'%(dataset_id)),bbox_inches='tight')

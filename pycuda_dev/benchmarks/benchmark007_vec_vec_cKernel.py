@@ -133,7 +133,7 @@ def benchmark(dimension, sourceModule=False):
 import numpy as np
 
 # array size, from 64 to 512 in 16-increments
-SZ = [16*x for x in range(4,33)]
+SZ = [16*x for x in range(4,16)]
 print(SZ)
 ITERS = [ 1 ]
 
