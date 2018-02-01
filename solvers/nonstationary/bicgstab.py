@@ -55,7 +55,7 @@ def bicgstab(a, phi, b, tol,
         import pycuda.gpuarray as gpuarray
         import pycuda.cumath as cumath
         import numpy as np
-        from pyns.pycuda_dev import gpu_object
+        from pyns.pycuda import gpu_object
 
         # push input to gpu
         phi_gpu = gpu_object(np.shape(phi.val))
