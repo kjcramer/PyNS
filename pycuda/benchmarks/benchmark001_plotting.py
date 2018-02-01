@@ -30,7 +30,7 @@ ax1.legend(loc=2,fontsize=14)
 ax1.set_xlabel('Matrix Size',fontsize=14)
 ##plt.ylim([0,0.03]);
 ax1.set_ylabel('Elapsed Time [s]' , fontsize=14)
-ax1.set_title('Iteration = ' + str(iters[iteration]), fontsize= 14)
+ax1.set_title('Iterations = ' + str(iters[iteration]), fontsize= 14)
 ax1.tick_params(axis='both', which='major', labelsize=14)
 ##plt.figtext(0,1,title,fontsize='11', bbox=dict(facecolor='none', edgecolor='black', pad=10.0));
 ##plt.figtext(0,1.1, Mass_Flux_str,fontsize='9', bbox=dict(facecolor='none', edgecolor='black', pad=10.0));
