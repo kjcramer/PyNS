@@ -205,7 +205,7 @@ for c in range(W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =    10       # number of time steps
+ndt =    20       # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
 
@@ -249,8 +249,8 @@ for ts in range(1,ndt+1):
   #calculate rho H2O
   t_min_rhoH2O = 20
   t_max_rhoH2O = 80
-  rhoH2O_min = 0.998207
-  rhoH2O_max = 0.97179
+  rhoH2O_min = 998.21
+  rhoH2O_max = 971.79
   rho[H2O][:,:,:] = (t[H2O].val[:,:,:] - t_min_rhoH2O)/(t_max_rhoH2O - t_min_rhoH2O) * \
                      (rhoH2O_max - rhoH2O_min) + rhoH2O_min
     
@@ -301,7 +301,7 @@ for ts in range(1,ndt+1):
   
   # Diffusion Coefficients
   C_K = 2.0*mem.eps*mem.r/(3.0*mem.tau*mem.d)*np.power(8.0*M_H2O/(mem.t*R*pi),0.5)
-  C_M = mem.eps*mem.p*diff[AIR][:,-1:,:]/(mem.tau*R*mem.t*(mem.p-mem.pv))
+  C_M = mem.eps*mem.p*diff[AIR][:,-1:,:]/(mem.d*mem.tau*R*mem.t*(mem.p-mem.pv))
   C_T = 1.0/(1.0/C_K + 1.0/C_M)
   
   # Jump condition at membrane
@@ -431,7 +431,7 @@ for ts in range(1,ndt+1):
     #ycRhoH2O = np.append(avg(yn[H2O]), axis=0)
     #xcRho = avg(xn[H2O])
     #ycRho=avg(yn[H2O])
-    #ycA=avg(yn[AIR])
+    #ycA = avg(yn[FIL])
     
     
     
@@ -450,7 +450,7 @@ for ts in range(1,ndt+1):
     #rho_plot=np.append(rho[FIL],rho[AIR],axis=1)
     #rho_plot=np.append(rho_plot, rho[H2O],axis=1)
     #rho_plot=transpose(rho_plot)
-    #rho_plot=np.transpose(rho[AIR][:,:,z_pos])
+    #rho_plot=np.transpose(rho[FIL][:,:,z_pos])
     
     plt.figure
     plt.subplot(2,2,1)
