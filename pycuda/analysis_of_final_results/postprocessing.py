@@ -29,7 +29,7 @@ mesh_sizes = ["64_16_16",
 ts = 200
 
 # every simulation is run run_n times, then the results will be averaged
-run_n = 24
+run_n = 3
 runs = range(0, run_n)
 
 # 9 different information, ts time steps coming from each out.txt file
