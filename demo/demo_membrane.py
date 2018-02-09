@@ -189,7 +189,7 @@ a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
 a[H2O].val[:,:,:] = a_salt/rho[H2O][:,:,:]
  
-for c in range(AIR,FIL):
+for c in range(AIR,FIL+1):
   adj_n_bnds(p[c])
   adj_n_bnds(t[c])
   adj_n_bnds(a[c])
@@ -455,7 +455,9 @@ for ts in range(1,ndt+1):
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
     
-    pylab.show()
+    pylab.savefig('membrane.pdf')
+
+    #pylab.show()
 
     #for c in (AIR,H2O):
     #  plot_isolines(t[c].val, (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
