@@ -189,7 +189,7 @@ a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
 a[H2O].val[:,:,:] = a_salt/rho[H2O][:,:,:]
  
-for c in range(AIR,FIL):
+for c in range(AIR,FIL+1):
   adj_n_bnds(p[c])
   adj_n_bnds(t[c])
   adj_n_bnds(a[c])
@@ -228,7 +228,7 @@ for ts in range(1,ndt+1):
   #------------------
   # Store old values
   #------------------
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     a[c].old[:]  = a[c].val
     t[c].old[:]  = t[c].val
     uf[c].old[:] = uf[c].val
@@ -329,7 +329,7 @@ for ts in range(1,ndt+1):
   q_a[AIR][:,:1,:]  = - m_out[:,:1,:] / dv[AIR][:,:1,:] 
   
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
-  for c in range(AIR,H2O):
+  for c in range(AIR,H2O+1):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
@@ -348,13 +348,13 @@ for ts in range(1,ndt+1):
   q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
   q_t[FIL][:,-1:,:] =  h_d[FIL]*m_out[:,:1,:] / dv[FIL][:,-1:,:]
   
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
            source = q_t[c])
 
-  for c in range(AIR,FIL):
+  for c in range(AIR,FIL+1):
     t[c].val[t[c].val > t_max] = t_max
     t[c].val[t[c].val < t_min] = t_min
 
