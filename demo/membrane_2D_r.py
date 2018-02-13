@@ -190,7 +190,7 @@ a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
 a[H2O].val[:,:,:] = a_salt/rho[H2O][:,:,:]
  
-for c in range(AIR,FIL):
+for c in range(AIR,FIL+1):
   adj_n_bnds(p[c])
   adj_n_bnds(t[c])
   adj_n_bnds(a[c])
@@ -205,7 +205,7 @@ for c in range(W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =    20       # number of time steps
+ndt =    50       # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
 
