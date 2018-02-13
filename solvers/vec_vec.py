@@ -23,12 +23,12 @@ def vec_vec(x, y, gpu=False):
     """
 
     if gpu:
-	
-	# Specific Python modules
-	import pycuda.driver as cuda
-	import pycuda.autoinit
-	import pycuda.gpuarray as gpuarray
         
-	return gpuarray.dot( gpuarray.to_gpu(x), gpuarray.to_gpu(y)).get()
+        # Specific Python modules
+        import pycuda.driver as cuda
+        import pycuda.autoinit
+        import pycuda.gpuarray as gpuarray
+      
+        return gpuarray.dot(x, y)
     
     return sum( sum( sum( multiply(x, y) ) ) )  # end of function
