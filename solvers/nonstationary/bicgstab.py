@@ -7,9 +7,6 @@ Source:
 
 from __future__ import print_function
 
-# Specific Python modules
-import time
-
 # Standard Python modules
 from pyns.standard import *
 
@@ -120,8 +117,6 @@ def bicgstab(a, phi, b, tol,
         # Iteration loop
         # ---------------
 
-        start = time.time()
-
         if max_iter == -1:
             # max_iter = prod(phi.val.shape)
             max_iter = prod(phi_gpu.val.shape)
@@ -218,8 +213,6 @@ def bicgstab(a, phi, b, tol,
             # If tolerance has been reached, get out of here
             # if res_gpu < tol:
             if res_gpu.get() < tol_gpu.get(): # to be tested: if gpuarray.if_positive(tol_gpu - res_gpu, True, False):
-                end = time.time()
-                print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
                 return x_gpu.get()
 
             # --- Prepare for next iteration
@@ -258,8 +251,6 @@ def bicgstab(a, phi, b, tol,
     # ---------------
     # Iteration loop
     # ---------------
-
-    start = time.time()
 
     if max_iter == -1:
         max_iter = prod(phi.val.shape)
@@ -338,8 +329,6 @@ def bicgstab(a, phi, b, tol,
 
         # If tolerance has been reached, get out of here
         if res < tol:
-            end = time.time()
-            print("Elapsed time in bigstab %2.3e --- iterations: %d" %((end - start), i))
             return x
 
         # Prepare for next iteration
