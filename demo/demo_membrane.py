@@ -23,6 +23,7 @@ from pyns.physical.constants import G
 
 # membrane aux functions
 from p_v_sat import *
+from calc_interface import *
 # from latent_heat import *
 
 plt.close("all")
