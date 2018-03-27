@@ -102,10 +102,10 @@ membrane = namedtuple("membrane", "d kap eps tau r p t t_int pv j t_old t_int_ol
   # eps is porosity, tau is tortuosity
   # r is pore radius
 
-mem = membrane(166E-6,   \
+mem = membrane(65E-6,   \
                  0.2,    \
-                 0.687,  \
-                 2,      \
+                 0.85,  \
+                 1.5,      \
                  0.1E-6, \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
@@ -185,7 +185,7 @@ p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
 t[AIR].val[:,:,:] = round((t_in+t_cold)/2,-1)
-t[H2O].val[:,:,:] = 70
+t[H2O].val[:,:,:] = 80
 t[FIL].val[:,:,:] = t_cold
 
 a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
@@ -206,9 +206,9 @@ for c in range(W,T):
   t_min = np.amin([t_min, np.amin(t[FIL].bnd[c].val)]) 
   
   # Time-stepping parameters
-dt  =    0.0005  # time step
-ndt =   10       # number of time steps
-dt_plot = ndt    # plot frequency
+dt  =    0.0002  # time step
+ndt =   5000      # number of time steps
+dt_plot = ndt+1    # plot frequency
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL])]
 
@@ -268,7 +268,8 @@ for ts in range(1,ndt+1):
   # Membrane
   #------------------------   
   
-  mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
+  #mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
+  mem, t, p_v, t_mem_ptfe_top, q_x = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
                     
   #------------------------
@@ -370,6 +371,25 @@ for ts in range(1,ndt+1):
 # Visualisation
 #
 #==========================================================================
+#%%
+  if ts % ndt == 0:
+    x_plot_air=[np.mean(t[H2O].val[:,:1,:]),np.mean(mem.t_int),np.mean(mem.t),np.mean(t[AIR].bnd[N].val[:,:1,:]),np.mean(t[AIR].val[:,-1:,:])]
+    x_plot_ptfe=[np.mean(t[H2O].val[:,:1,:]),np.mean(t_mem_ptfe_top),np.mean(mem.t),np.mean(t[AIR].bnd[N].val[:,:1,:]),np.mean(t[AIR].val[:,-1:,:])]
+    x_plot_mem=[68,78]
+    y_plot_air=[dy[AIR][1,-1:,1]/2+mem.d+dy[H2O][1,:1,1]/2,dy[AIR][1,-1:,1]/2+mem.d,dy[AIR][1,-1:,1]/2+mem.d/2,dy[AIR][1,-1:,1]/2,0]
+    y_plot_mem_1=[dy[AIR][1,-1:,1]/2+mem.d,dy[AIR][1,-1:,1]/2+mem.d]
+    y_plot_mem_2=[dy[AIR][1,-1:,1]/2,dy[AIR][1,-1:,1]/2]
+    plt.figure
+    plt.plot(x_plot_air,y_plot_air,'b',linewidth=1.2,label='Air')
+    plt.plot(x_plot_ptfe,y_plot_air,'g',linewidth=1.2, label='PTFE')
+    plt.plot(x_plot_mem,y_plot_mem_1,'k:')
+    plt.plot(x_plot_mem,y_plot_mem_2,'k:')
+    plt.xlim([68,78])
+    plt.xlabel('Temperature [C]')
+    plt.ylabel('Vertical [m]')
+    plt.legend(loc=2)
+    
+
 #%%
   if ts % dt_plot == 0:
     plt.close("all")

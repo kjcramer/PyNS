@@ -97,6 +97,8 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
       t_int: .. Array of interface temperature
       t: ...... Object of the type "Unknown", holding the temperature.
       p_v: .... Object of the type "Unknown", holding the partial vapour pressure in air.
+      t_mem_ptfe_top: PTFE top temperature
+      q_x: .... HEat flux from PTFE to air in membrane
     """
     
     # define identifier for liquid & vapor phase
@@ -109,8 +111,6 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
     # Unpack tuple(s)
     dx, dy, dz = dxyz 
     M_AIR, M_H2O, M_salt = M_input
-
-    kappa_mem = mem.kap*(1-mem.eps) + kappa[dom[VAP]][:,-1:,:]*mem.eps
     
     # Compute new fluid variables in the membrane
     mem.t[:,:1,:] = mem.t + 273.15;
@@ -130,19 +130,29 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
          
     C_T = 1.0/(1.0/C_K + 1.0/C_M)
     
-    # Jump condition at membrane -> calculation of membrane interface temperature
-    lhs_lin_mem = (2.0*kappa[dom[LIQ]][:,:1,:]/dy[dom[LIQ]][:,:1,:] \
-       + 1.0/(dy[dom[VAP]][:,-1:,:]/(2.0*kappa[dom[VAP]][:,-1:,:]) + mem.d/kappa_mem)) \
-       * mem.eps * dx[dom[VAP]][:,-1:,:] * dz[dom[VAP]][:,-1:,:] / h_d[dom[LIQ]]
-       
-    lhs_fun_mem = C_T*dx[dom[VAP]][:,-1:,:]*dz[dom[VAP]][:,-1:,:]
+    # denominator from membrane temperature
+    denom = (1-mem.eps)/(dy[dom[LIQ]][:,:1,:]/kappa[dom[LIQ]][:,:1,:]+mem.d/mem.kap) \
+    + (1-mem.eps)/(mem.d/mem.kap+dy[dom[VAP]][:,-1:,:]/kappa[dom[VAP]][:,-1:,:]) \
+    + mem.eps*kappa[dom[VAP]][:,-1:,:]/mem.d  \
+    + mem.eps*kappa[dom[VAP]][:,-1:,:]/(mem.d+dy[dom[VAP]][:,-1:,:])
     
-    rhs_mem = C_T*dx[dom[VAP]][:,-1:,:]*dz[dom[VAP]][:,-1:,:]*p_v[dom[VAP]].val[:,-1:,:] \
-      + mem.eps*dx[dom[VAP]][:,-1:,:]*dz[dom[VAP]][:,-1:,:]/h_d[dom[LIQ]] \
-      * ( 2.0*kappa[dom[LIQ]][:,:1,:]/dy[dom[LIQ]][:,:1,:]*t[dom[LIQ]].val[:,:1,:] \
-        + 1.0/(dy[dom[VAP]][:,-1:,:]/(2.0*kappa[dom[VAP]][:,-1:,:])+mem.d/kappa_mem) \
-        * t[dom[VAP]].val[:,-1:,:])
+    # Jump condition at membrane -> calculation of membrane interface temperature
+    lhs_lin_mem = (kappa[dom[LIQ]][:,:1,:]/dy[dom[LIQ]][:,:1,:] \
+       + kappa[dom[VAP]][:,-1:,:]/mem.d*(1-mem.eps*kappa[dom[VAP]][:,-1:,:]/(mem.d*denom))) \
+       * mem.eps *2.0 / h_d[dom[LIQ]]
+       
+    lhs_fun_mem = C_T
+    
+    rhs_mem = C_T*p_v[dom[VAP]].val[:,-1:,:] + 2.0*mem.eps/h_d[dom[LIQ]] \
+      *( (kappa[dom[LIQ]][:,:1,:]/dy[dom[LIQ]][:,:1,:] \
+        + (1.0-mem.eps)*kappa[dom[VAP]][:,-1:,:]/(mem.d*denom \
+        *(dy[dom[LIQ]][:,:1,:]/kappa[dom[LIQ]][:,:1,:]+mem.d/mem.kap)))*t[dom[LIQ]].val[:,:1,:] \
         
+        +(kappa[dom[VAP]][:,-1:,:]/(mem.d*denom)*((1-mem.eps)/(mem.d/mem.kap+ \
+        dy[dom[VAP]][:,-1:,:]/kappa[dom[VAP]][:,-1:,:])+ \
+        mem.eps*kappa[dom[VAP]][:,-1:,:]/(mem.d+dy[dom[VAP]][:,-1:,:])))*t[dom[VAP]].val[:,-1:,:])
+        
+       
     [nx,ny,nz] = t[dom[VAP]].val.shape
     
     for ii in range(0,nx):
@@ -153,20 +163,27 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
     
     print("mem.t_int = " + "%3.4f" %np.mean(mem.t_int))
     
+    # calculate membrane temperature
+    mem.t[:,:,:] = (mem.eps*kappa[dom[VAP]][:,-1:,:]/mem.d * mem.t_int \
+    + (1-mem.eps)/(dy[dom[LIQ]][:,:1,:]/kappa[dom[LIQ]][:,:1,:]+mem.d/mem.kap) *t[dom[LIQ]].val[:,:1,:] \
+    + ((1-mem.eps)/(mem.d/mem.kap+dy[dom[VAP]][:,-1:,:]/kappa[dom[VAP]][:,-1:,:]) \
+    + mem.eps*kappa[dom[VAP]][:,-1:,:]/(mem.d+dy[dom[VAP]][:,-1:,:]))*t[dom[VAP]].val[:,-1:,:]) \
+    / denom
+    
     
     # update boundary conditions & membrane flux
     # Liquid domain boundary condition
-    t[dom[LIQ]].bnd[S].val[:,:1,:] = mem.t_int
-                  
-    # Vapor domain boundary condition    
-    const_mem_2 = 2*kappa[dom[VAP]][:,-1:,:]*mem.d  \
-                  /kappa_mem/dy[dom[VAP]][:,-1:,:];
-              
-    t[dom[VAP]].bnd[N].val[:,:1,:] = (mem.t_int + const_mem_2 \
-                                    *t[dom[VAP]].val[:,-1:,:])/(1+const_mem_2)
+    const_mem_top = mem.kap*dy[dom[LIQ]][:,:1,:] / (kappa[dom[LIQ]][:,-1:,:]*mem.d)
+    t_mem_ptfe_top = (t[dom[LIQ]].val[:,-1:,:] + const_mem_top*mem.t) \
+      /(1+const_mem_top)
+    t[dom[LIQ]].bnd[S].val[:,:1,:] = mem.eps*mem.t_int + (1-mem.eps)*t_mem_ptfe_top
     
-    # membrane temperature                                
-    mem.t[:,:1,:] = (t[dom[VAP]].bnd[N].val[:,:1,:] + mem.t_int)/2.0
+    # Vapor domain boundary condition
+    const_mem_bot = kappa[dom[VAP]][:,-1:,:]*mem.d  \
+                  /mem.kap/dy[dom[VAP]][:,-1:,:];
+                  
+    t[dom[VAP]].bnd[N].val[:,:1,:] = (mem.t_int + const_mem_bot \
+                                    *t[dom[VAP]].val[:,-1:,:])/(1+const_mem_bot)
     
     # saturated vapor pressure at liquid domain boundary                             
     p_v[dom[VAP]].bnd[N].val[:,:,:]= p_v_sat_salt(mem.t_int, \
@@ -176,4 +193,11 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
     mem.j[:,:,:] = C_T[:,:,:] *dx[dom[VAP]][:,-1:,:]*dz[dom[VAP]][:,-1:,:]  \
                    *(p_v[dom[VAP]].bnd[N].val[:,:,:]-p_v[dom[VAP]].val[:,-1:,:])  
 
-    return mem, t, p_v # end of function
+    # inner membrane heat flux
+    q_x = - (2.0*mem.eps*kappa[dom[VAP]][:,-1:,:]/mem.d * (mem.t_int-mem.t) \
+      + 2.0*mem.eps*kappa[dom[VAP]][:,-1:,:]/(mem.d+dy[dom[VAP]][:,-1:,:]) \
+      * (t[dom[VAP]].val[:,-1:,:]-mem.t))
+      
+    print("q_x = " + "%3.2e" %np.mean(q_x))
+
+    return mem, t, p_v, t_mem_ptfe_top, q_x # end of function
