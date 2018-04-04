@@ -23,6 +23,7 @@ from pyns.physical.constants import G
 
 # membrane aux functions
 from p_v_sat import *
+from calc_interface import *
 # from latent_heat import *
 
 plt.close("all")
@@ -314,7 +315,7 @@ for ts in range(1,ndt+1):
   #-----------------------
   # Momentum conservation
   #-----------------------
-  for c in (AIR,H2O):
+  for c in range(AIR,H2O+1):
     g_v = -G * avg(Y, rho[c])
   
     ef = zeros(ru[c]), g_v, zeros(rw[c])
@@ -328,7 +329,7 @@ for ts in range(1,ndt+1):
   #----------
   # Pressure
   #----------
-  for c in (AIR,H2O):
+  for c in range(AIR,H2O+1):
     calc_p(p[c], (uf[c],vf[c],wf[c]), rho[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c])
@@ -338,20 +339,18 @@ for ts in range(1,ndt+1):
   #---------------------
   # Velocity correction
   #---------------------
-  for c in (AIR,H2O):
+  for c in range(AIR,H2O+1):
     corr_uvw((uf[c],vf[c],wf[c]), p[c], rho[c],  \
              dt, (dx[c],dy[c],dz[c]), 
              obstacle = obst[c])
- 
-  # Compute volume balance for checking 
-  for c in (AIR,H2O):
+   
+    # Compute volume balance for checking 
     err = vol_balance((uf[c],vf[c],wf[c]),  \
                       (dx[c],dy[c],dz[c]), 
                       obstacle = obst[c])
     print("Maximum volume error after correction: %12.5e" % abs(err).max())
-
-  # Check the CFL number too 
-  for c in (AIR,H2O):
+  
+    # Check the CFL number too 
     cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
     print("Maximum CFL number: %12.5e" % cfl)
     

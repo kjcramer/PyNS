@@ -386,46 +386,49 @@ for ts in range(1,ndt+1):
   #-----------------------
   # Momentum conservation
   #-----------------------
-  g_v = -G * avg(Y, rho[H2O])
-
-  ef = zeros(ru[H2O]), g_v, zeros(rw[H2O])
+  for c in range(AIR,H2O+1):
+    g_v = -G * avg(Y, rho[c])
   
-  calc_uvw((uf[H2O],vf[H2O],wf[H2O]), (uf[H2O],vf[H2O],wf[H2O]), rho[H2O], mu[H2O],  \
-           dt, (dx[H2O],dy[H2O],dz[H2O]), 
-           obstacle = obst[H2O],
-           pressure = p_tot[H2O],
-           force = ef)
+    ef = zeros(ru[c]), g_v, zeros(rw[c])
+    
+    calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
+             dt, (dx[c],dy[c],dz[c]), 
+             obstacle = obst[c],
+             pressure = p_tot[c],
+             force = ef)
   
   #----------
   # Pressure
   #----------
-  calc_p(p[H2O], (uf[H2O],vf[H2O],wf[H2O]), rho[H2O],  \
-         dt, (dx[H2O],dy[H2O],dz[H2O]), 
-         obstacle = obst[H2O])
-
-  p_tot[H2O].val = p_tot[H2O].val + p[H2O].val
+  for c in range(AIR,H2O+1):
+    calc_p(p[c], (uf[c],vf[c],wf[c]), rho[c],  \
+           dt, (dx[c],dy[c],dz[c]), 
+           obstacle = obst[c])
+  
+    p_tot[c].val = p_tot[c].val + p[c].val
   
   #---------------------
   # Velocity correction
   #---------------------
-  corr_uvw((uf[H2O],vf[H2O],wf[H2O]), p[H2O], rho[H2O],  \
-           dt, (dx[H2O],dy[H2O],dz[H2O]), 
-           obstacle = obst[H2O])
- 
-  # Compute volume balance for checking 
-  err = vol_balance((uf[H2O],vf[H2O],wf[H2O]),  \
-                    (dx[H2O],dy[H2O],dz[H2O]), 
-                    obstacle = obst[H2O])
-  print("Maximum volume error after correction: %12.5e" % abs(err).max())
-
-  # Check the CFL number too 
-  cfl = cfl_max((uf[H2O],vf[H2O],wf[H2O]), dt, (dx[H2O],dy[H2O],dz[H2O]))
-  print("Maximum CFL number: %12.5e" % cfl)
+  for c in range(AIR,H2O+1):
+    corr_uvw((uf[c],vf[c],wf[c]), p[c], rho[c],  \
+             dt, (dx[c],dy[c],dz[c]), 
+             obstacle = obst[c])
+   
+    # Compute volume balance for checking 
+    err = vol_balance((uf[c],vf[c],wf[c]),  \
+                      (dx[c],dy[c],dz[c]), 
+                      obstacle = obst[c])
+    print("Maximum volume error after correction: %12.5e" % abs(err).max())
+  
+    # Check the CFL number too 
+    cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
+    print("Maximum CFL number: %12.5e" % cfl)
 
   if ts % dt_save == 0:
       np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, xn, yn, zn  )
-  print (np.sum(np.sum(m_evap/(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]))))
-  #print(np.sum(np.sum(m_j/(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]))))
+  print (np.sum(np.sum(m_evap))/np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1,:]))*3600)
+  #print(np.sum(np.sum(m_j))/np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1,:]))*3600)
   ##m_total = m_total +  (np.sum(np.sum(m_evap)))
   print (np.sum(np.sum(m_evap)))
   #print (m_total/(dx[AIR]*dz[AIR]))
@@ -458,9 +461,9 @@ for ts in range(1,ndt+1):
     #xcRho = avg(xn[H2O])
     #ycRho=avg(yn[H2O])
     #ycA = avg(yn[AIR])
-    xt = np.arange(0.,15000.,1)
+    xt = np.arange(0.,ts,1)
     
-    xtt = np.arange(180.,15000.,1)
+    xtt = np.arange(180.,ts,1)
     #ychange_p = np.a
     
    

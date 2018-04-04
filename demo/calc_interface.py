@@ -109,15 +109,8 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
     # Unpack tuple(s)
     dx, dy, dz = dxyz 
     M_AIR, M_H2O, M_salt = M_input
-    
-    # Compute new temperature of the membrane      
-    kappa_mem = mem.kap*(1-mem.eps) + kappa[dom[VAP]][:,-1:,:]*mem.eps 
-    
-    const_mem_1 = kappa_mem *dy[dom[VAP]][:,-1:,:]  \
-                 /kappa[dom[VAP]][:,-1:,:] /mem.d
-                 
-    mem.t[:,:1,:] = ((1.0+const_mem_1)*mem.t_int + t[dom[VAP]].val[:,-1:,:])  \
-                 / (2.0+const_mem_1)
+
+    kappa_mem = mem.kap*(1-mem.eps) + kappa[dom[VAP]][:,-1:,:]*mem.eps
     
     # Compute new fluid variables in the membrane
     mem.t[:,:1,:] = mem.t + 273.15;
@@ -156,23 +149,30 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
       for kk in range(0,nz):
         jump_cond_mem = lambda t: lhs_lin_mem[ii,:1,kk]*t + lhs_fun_mem[ii,:1,kk] \
           * p_v_sat_salt(t, a[dom[LIQ]].val[ii,:1,kk], M_salt) - rhs_mem[ii,:1,kk]
-        mem.t_int[ii,:1,kk] = fsolve(jump_cond_mem, t[dom[LIQ]].val[ii,-1:,kk])
+        mem.t_int[ii,:1,kk] = fsolve(jump_cond_mem, t[dom[LIQ]].val[ii,:1,kk])
     
     print("mem.t_int = " + "%3.4f" %np.mean(mem.t_int))
     
     
     # update boundary conditions & membrane flux
+    # Liquid domain boundary condition
     t[dom[LIQ]].bnd[S].val[:,:1,:] = mem.t_int
-    
+                  
+    # Vapor domain boundary condition    
     const_mem_2 = 2*kappa[dom[VAP]][:,-1:,:]*mem.d  \
                   /kappa_mem/dy[dom[VAP]][:,-1:,:];
-                  
+              
     t[dom[VAP]].bnd[N].val[:,:1,:] = (mem.t_int + const_mem_2 \
                                     *t[dom[VAP]].val[:,-1:,:])/(1+const_mem_2)
-                                    
+    
+    # membrane temperature                                
+    mem.t[:,:1,:] = (t[dom[VAP]].bnd[N].val[:,:1,:] + mem.t_int)/2.0
+    
+    # saturated vapor pressure at liquid domain boundary                             
     p_v[dom[VAP]].bnd[N].val[:,:,:]= p_v_sat_salt(mem.t_int, \
                                     a[dom[LIQ]].val[:,:1,:], M_salt)
-                                    
+    
+    # membrane vapor flux                            
     mem.j[:,:,:] = C_T[:,:,:] *dx[dom[VAP]][:,-1:,:]*dz[dom[VAP]][:,-1:,:]  \
                    *(p_v[dom[VAP]].bnd[N].val[:,:,:]-p_v[dom[VAP]].val[:,-1:,:])  
 
