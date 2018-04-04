@@ -23,7 +23,7 @@ from pyns.physical.constants import G
 
 # membrane aux functions
 from p_v_sat import *
-from calc_interface_detailed import *
+from calc_interface import *
 # from latent_heat import *
 
 plt.close("all")
@@ -269,8 +269,8 @@ for ts in range(1,ndt+1):
   # Membrane
   #------------------------   
   
-  #mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
-  mem, t, p_v, t_mem_ptfe_top, q_x = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
+  mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
+  #mem, t, p_v, t_mem_ptfe_top, q_x = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
                     
   #------------------------
@@ -359,7 +359,7 @@ for ts in range(1,ndt+1):
     print("Maximum CFL number: %12.5e" % cfl)
     
   if ts % dt_save == 0:
-      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val  )
+      np.savez('ws_temp_simple.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val  )
     
   # Check relative change in domain:
   change_t[ts-1] = (np.absolute(t[H2O].val-t[H2O].old)).max()/t[H2O].old.max()
@@ -378,17 +378,17 @@ for ts in range(1,ndt+1):
 #%%
   if ts % ndt == 0:
     x_plot_air=[np.mean(t[H2O].val[:,:1,:]),np.mean(mem.t_int),np.mean(mem.t),np.mean(t[AIR].bnd[N].val[:,:1,:]),np.mean(t[AIR].val[:,-1:,:])]
-    x_plot_ptfe=[np.mean(t[H2O].val[:,:1,:]),np.mean(t_mem_ptfe_top),np.mean(mem.t),np.mean(t[AIR].bnd[N].val[:,:1,:]),np.mean(t[AIR].val[:,-1:,:])]
+    #x_plot_ptfe=[np.mean(t[H2O].val[:,:1,:]),np.mean(t_mem_ptfe_top),np.mean(mem.t),np.mean(t[AIR].bnd[N].val[:,:1,:]),np.mean(t[AIR].val[:,-1:,:])]
     x_plot_mem=[63,70]
     y_plot_air=[dy[AIR][1,-1:,1]/2+mem.d+dy[H2O][1,:1,1]/2,dy[AIR][1,-1:,1]/2+mem.d,dy[AIR][1,-1:,1]/2+mem.d/2,dy[AIR][1,-1:,1]/2,0]
     y_plot_mem_1=[dy[AIR][1,-1:,1]/2+mem.d,dy[AIR][1,-1:,1]/2+mem.d]
     y_plot_mem_2=[dy[AIR][1,-1:,1]/2,dy[AIR][1,-1:,1]/2]
     plt.figure
     plt.plot(x_plot_air,y_plot_air,'b',linewidth=1.2,label='Air')
-    plt.plot(x_plot_ptfe,y_plot_air,'g',linewidth=1.2, label='PTFE')
+    #plt.plot(x_plot_ptfe,y_plot_air,'g',linewidth=1.2, label='PTFE')
     plt.plot(x_plot_mem,y_plot_mem_1,'k:')
     plt.plot(x_plot_mem,y_plot_mem_2,'k:')
-    plt.xlim([68,78])
+    #plt.xlim([68,78])
     plt.xlabel('Temperature [C]')
     plt.ylabel('Vertical [m]')
     plt.legend(loc=2)

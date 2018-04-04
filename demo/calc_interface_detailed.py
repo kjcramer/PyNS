@@ -159,7 +159,7 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
       for kk in range(0,nz):
         jump_cond_mem = lambda t: lhs_lin_mem[ii,:1,kk]*t + lhs_fun_mem[ii,:1,kk] \
           * p_v_sat_salt(t, a[dom[LIQ]].val[ii,:1,kk], M_salt) - rhs_mem[ii,:1,kk]
-        mem.t_int[ii,:1,kk] = fsolve(jump_cond_mem, t[dom[LIQ]].val[ii,-1:,kk])
+        mem.t_int[ii,:1,kk] = fsolve(jump_cond_mem, t[dom[LIQ]].val[ii,:1,kk])
     
     print("mem.t_int = " + "%3.4f" %np.mean(mem.t_int))
     
@@ -173,8 +173,8 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
     
     # update boundary conditions & membrane flux
     # Liquid domain boundary condition
-    const_mem_top = mem.kap*dy[dom[LIQ]][:,:1,:] / (kappa[dom[LIQ]][:,-1:,:]*mem.d)
-    t_mem_ptfe_top = (t[dom[LIQ]].val[:,-1:,:] + const_mem_top*mem.t) \
+    const_mem_top = mem.kap*dy[dom[LIQ]][:,:1,:] / (kappa[dom[LIQ]][:,:1,:]*mem.d)
+    t_mem_ptfe_top = (t[dom[LIQ]].val[:,:1,:] + const_mem_top*mem.t) \
       /(1+const_mem_top)
     t[dom[LIQ]].bnd[S].val[:,:1,:] = mem.eps*mem.t_int + (1-mem.eps)*t_mem_ptfe_top
     
