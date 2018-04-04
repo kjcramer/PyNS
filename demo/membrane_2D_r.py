@@ -43,7 +43,7 @@ t_cold = 20   # °C
 
 # Node coordinates for both domains
 xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
-yn = (nodes(-0.004, 0,     10), nodes( -0.02,    -0.004,  30), nodes(0, 0.005,  15))
+yn = (nodes(-0.004, 0,     10), nodes( -0.024,    -0.004,  30), nodes(0, 0.002,  3))
 zn = (nodes( 0.0,   0.0006, 2), nodes( 0.0,  0.0006, 2), nodes( 0.0,    0.0006, 2))
 
 # Cell coordinates 
@@ -105,7 +105,7 @@ membrane = namedtuple("membrane", "d kap eps tau r p t t_int pv j t_old t_int_ol
 mem = membrane(65E-6,   \
                  0.2,    \
                  0.85,  \
-                 2,      \
+                 1.5,      \
                  0.1E-6, \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
@@ -207,9 +207,10 @@ for c in range(W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =   10       # number of time steps
+ndt =   15000       # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
+m_total = 0
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL])]
 
@@ -426,8 +427,11 @@ for ts in range(1,ndt+1):
   print("Maximum CFL number: %12.5e" % cfl)
 
   if ts % dt_save == 0:
-      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,t_int_mem, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val  )
-
+      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, xn, yn, zn  )
+  print (np.sum(np.sum(m_evap/(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]))))
+  #print(np.sum(np.sum(m_j/(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]))))
+  ##m_total = m_total +  (np.sum(np.sum(m_evap)))
+  print (np.sum(np.sum(m_evap))) 
   # Check relative change in domain:
   change_t[ts-1] = (np.absolute(t[H2O].val-t[H2O].old)).max()/t[H2O].old.max()
   change_t[ts-1] = max(change_t[ts-1],(np.absolute(t[AIR].val-t[AIR].old)).max()/t[AIR].old.max())
@@ -456,6 +460,9 @@ for ts in range(1,ndt+1):
     #xcRho = avg(xn[H2O])
     #ycRho=avg(yn[H2O])
     #ycA = avg(yn[FIL])
+    xt = np.arange(0.,15000.,1)
+    
+    xtt = np.arange(180.,15000.,1)
     
     
     
@@ -477,7 +484,7 @@ for ts in range(1,ndt+1):
     #rho_plot=np.transpose(rho[FIL][:,:,z_pos])
     
     plt.figure
-    plt.subplot(2,2,1)
+    plt.subplot(3,2,1)
     levels_t=linspace( t_plot.min(), t_plot.max(), 11)
     norm_t=cm.colors.Normalize( vmax=t_plot.max(), vmin=t_plot.min() )
     cax_t=plt.contourf(xc,yc,t_plot,levels_t,cmap="rainbow",norm=norm_t)
@@ -487,7 +494,7 @@ for ts in range(1,ndt+1):
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
     
-    plt.subplot(2,2,2)
+    plt.subplot(3,2,2)
     matplotlib.rcParams["contour.negative_linestyle"] = "solid"
     cax_p=plt.contourf(xc,yc,p_plot,cmap="rainbow")
     cax_p2=plt.contour(xc,yc,p_plot,colors="k")
@@ -498,7 +505,7 @@ for ts in range(1,ndt+1):
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
     
-    plt.subplot(2,2,3)
+    plt.subplot(3,2,3)
     cax_a=plt.contourf(xc,yc,a_plot,cmap="rainbow")
     cbar_a=plt.colorbar(cax_a)
     plt.title("Concentration")
@@ -506,12 +513,24 @@ for ts in range(1,ndt+1):
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
     
-    plt.subplot(2,2,4)
-    cax_rho=plt.contourf(xc,yc,rho_plot,cmap="rainbow_r")
-    cbar_rho=plt.colorbar(cax_rho) 
-    plt.title("Density")
-    plt.xlabel("x test")
-    plt.ylabel("y test")
+    #plt.subplot(2,2,4)
+    #cax_rho=plt.contourf(xc,yc,rho_plot,cmap="rainbow_r")
+    #cbar_rho=plt.colorbar(cax_rho) 
+    #plt.title("Density")
+    #plt.xlabel("x test")
+    #plt.ylabel("y test")
+    
+    plt.subplot(3,2,4)
+    plt.title("Change_p")
+    plt.plot(xt, change_p  , linestyle='-', color='blue', linewidth=0.5 )
+    #plt.plot(xt, change_t,  linestyle='-', color='green', linewidth=0.6)
+    plt.xlabel("Number of timesteps")
+    plt.ylabel("change_p (blue)")
+    
+    #change_tt = change_t[150:]
+    plt.subplot(3, 2 , 5)
+    plt.plot(xtt, change_t[180:],  linestyle='-', color='green', linewidth=0.5)
+    plt.ylabel("change_t (green)")
     
     pylab.show()
 
