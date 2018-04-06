@@ -151,7 +151,7 @@ for k in range(0,nz[H2O]):
 uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
 uf[H2O].bnd[E].val[:1,:,:] = u_in
 
-for c in range(AIR,H2O):
+for c in range(AIR,H2O+1):
   for j in (B,T):
     uf[c].bnd[j].typ[:] = NEUMANN    
     vf[c].bnd[j].typ[:] = NEUMANN     
