@@ -1,0 +1,3 @@
+np.savez("ws_advanced.npz",ts,t[H2O].val[:,:1,:],mem.t_int,mem.t,t[AIR].bnd[N].val[:,:1,:],t[AIR].val[:,-1:,:],q_x,x_plot_air,y_plot_air,y_plot_mem_1,y_plot_mem_2)
+
+np.savez("ws_simple.npz",ts,t[H2O].val[:,:1,:],mem.t_int,mem.t,t[AIR].bnd[N].val[:,:1,:],t[AIR].val[:,-1:,:],x_plot_air,y_plot_air,y_plot_mem_1,y_plot_mem_2)
