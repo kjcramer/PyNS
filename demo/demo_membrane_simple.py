@@ -388,7 +388,7 @@ for ts in range(1,ndt+1):
     #plt.plot(x_plot_ptfe,y_plot_air,'g',linewidth=1.2, label='PTFE')
     plt.plot(x_plot_mem,y_plot_mem_1,'k:')
     plt.plot(x_plot_mem,y_plot_mem_2,'k:')
-    #plt.xlim([68,78])
+    plt.xlim([63,69])
     plt.xlabel('Temperature [C]')
     plt.ylabel('Vertical [m]')
     plt.legend(loc=2)
