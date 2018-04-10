@@ -50,12 +50,12 @@ def water(t_in,rc):
     mu    = ones(rc) *    0.355E-03
     cp    = ones(rc) * 4198
     kappa = ones(rc) *    0.6680
-  else: # values at 60°C
+  else: # values at 60C
     rho   = ones(rc) *  983.0
     mu    = ones(rc) *    0.466E-3
     cp    = ones(rc) * 4185
     kappa = ones(rc) *    0.6546
     
-  print('water properties at ' + '%2.0f' %t_in + '°C')
+  print('water properties at ' + '%2.0f' %t_in + 'C')
     
   return rho, mu, cp, kappa  # end of function

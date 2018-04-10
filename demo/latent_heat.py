@@ -32,9 +32,9 @@ def latent_heat(t_in):
     h_d = 2334E3
   elif   (int(t_in) == 80):
     h_d = 2309E3
-  else: # values at 60°C
+  else: # values at 60C
     h_d = 2359E3
     
-  print('latent heat at ' + '%2.0f' %t_in + '°C')
+  print('latent heat at ' + '%2.0f' %t_in + 'C')
     
   return h_d  # end of function

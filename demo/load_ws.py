@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_temp.npz')
+data=np.load('ws_temp600502.npz')
 
 ts = data['arr_0']
 t_air = data['arr_1']
@@ -136,3 +136,23 @@ plt.yticks(fontsize=18)
 plt.ylabel('Y [m]',fontsize=20)
 plt.title('Inlet Velocity Profile [m/s]',fontsize=20)
 pylab.show
+
+
+#%% velocity contour plot
+
+xc = avg(xn[AIR,1:])
+yc = avg(yn[H2O])
+
+#u_plot=np.sqrt(u_h2o*u_h2o+v_h2o*v_h2o+w_h2o*w_h2o)
+u_plot=u_h2o[:,:,20]
+u_plot=transpose(u_plot)
+
+plt.figure
+levels_t=linspace( u_plot.min(), u_plot.max(), 11)
+norm_t=cm.colors.Normalize( vmax=u_plot.max(), vmin=u_plot.min() )
+cax_u=plt.contourf(xc,yc,u_plot,levels_t,cmap="rainbow",norm=norm_t)
+cbar_u=plt.colorbar(cax_u)
+plt.title("Velocity [m/s]")
+plt.xlabel("x [m]")
+#plt.ylim([-1E1,1E1])
+plt.ylabel("y [m]" )

@@ -43,12 +43,12 @@ def air(t_in,rc):
     mu    = ones(rc) *   20.94E-06
     cp    = ones(rc) * 1009
     kappa = ones(rc) *    0.0299
-  else: # values at 60°C
+  else: # values at 60C
     rho   = ones(rc) *    1.067
     mu    = ones(rc) *   18.90E-06
     cp    = ones(rc) * 1009
     kappa = ones(rc) *    0.0285
     
-  print('air properties at ' + '%2.0f' %t_in + '°C')
+  print('air properties at ' + '%2.0f' %t_in + 'C')
     
   return rho, mu, cp, kappa  # end of function
