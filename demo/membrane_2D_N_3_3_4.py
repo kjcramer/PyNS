@@ -40,9 +40,9 @@ FIL = 2
 
 id = 'N_3_3_4'
 u_in   = 0.12 # m/s
-t_in   = 80   # °C
+t_in   = 80   # C
 a_salt = 35.0 # g/l seawater
-t_cold = 20   # °C
+t_cold = 20   # C
 
 # Node coordinates for both domains
 xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
@@ -449,7 +449,7 @@ for ts in range(1,ndt+1):
 #
 # Visualisation
 #
-#==========================================================================AW: Schlüssel für L117
+#==========================================================================
 #%%
   if ts % dt_plot == 0:
     plt.close("all")
