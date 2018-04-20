@@ -432,8 +432,8 @@ for ts in range(1,ndt+1):
     print("Maximum CFL number: %12.5e" % cfl)
 
   if ts % dt_save == 0:
-      ws_name = 'ws_temp_R_3_3_0' + id + '.npz'
-      np.savez(ws_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, xn, yn, zn  )
+      ws_name = 'ws_temp_' + id + '.npz'
+      np.savez(ws_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, xn, yn[AIR], yn[H2O], yn[FIL], zn, uf[AIR].val,vf[AIR].val,wf[AIR].val,  p[AIR].val)
   print (np.sum(np.sum(m_evap))/np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]))*3600)
   #print(np.sum(np.sum(m_j))/np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1,:]))*3600)
   ##m_total = m_total +  (np.sum(np.sum(m_evap)))
