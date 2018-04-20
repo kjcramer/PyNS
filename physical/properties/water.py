@@ -3,7 +3,7 @@ from pyns.standard import *
 
 
 #==========================================================================
-def water(t_in,rc):
+def water(t_in,rc,prin=True):
 #--------------------------------------------------------------------------
 # Returns physical properties for water for given resolution 'rc'
 #
@@ -55,7 +55,8 @@ def water(t_in,rc):
     mu    = ones(rc) *    0.466E-3
     cp    = ones(rc) * 4185
     kappa = ones(rc) *    0.6546
-    
-  print('water properties at ' + '%2.0f' %t_in + 'C')
+  
+  if prin == True: 
+    print('water properties at ' + '%2.0f' %t_in + 'C')
     
   return rho, mu, cp, kappa  # end of function

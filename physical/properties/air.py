@@ -3,7 +3,7 @@ from pyns.standard import *
 
 
 #==========================================================================
-def air(t_in,rc):
+def air(t_in,rc,prin=True):
 #--------------------------------------------------------------------------
 # Returns physical properties of air for given resolution 'rc'
 #
@@ -48,7 +48,8 @@ def air(t_in,rc):
     mu    = ones(rc) *   18.90E-06
     cp    = ones(rc) * 1009
     kappa = ones(rc) *    0.0285
-    
-  print('air properties at ' + '%2.0f' %t_in + 'C')
+   
+  if prin == True: 
+    print('air properties at ' + '%2.0f' %t_in + 'C')
     
   return rho, mu, cp, kappa  # end of function
