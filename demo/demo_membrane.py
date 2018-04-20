@@ -3,7 +3,7 @@
 
 import sys
 sys.path.append("../..")
-
+import time
 
 # Standard Python modules
 from pyns.standard import *
@@ -23,8 +23,8 @@ from pyns.physical.constants import G
 
 # membrane aux functions
 from p_v_sat import *
-from calc_interface_detailed import *
-# from latent_heat import *
+from calc_interface import *
+from latent_heat import *
 
 plt.close("all")
 
@@ -70,14 +70,14 @@ rc,ru,rv,rw =        (cell[AIR][6], cell[H2O][6], cell[FIL][6]),  \
                      (cell[AIR][9], cell[H2O][9], cell[FIL][9])
 
 # Set physical properties					 
-prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]),    \
-        properties.water(t_in,rc[H2O]),  \
-        properties.water(t_cold,rc[FIL])]
+#prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]),    \
+#        properties.water(t_in,rc[H2O]),  \
+#        properties.water(t_cold,rc[FIL])]
 					 
 # Set physical properties temperature dependent:
-#prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]), \
-#        properties.water(t_in,rc[H2O]),                    \
-#        properties.water(t_cold,rc[FIL])]
+prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]), \
+        properties.water(t_in,rc[H2O]),                    \
+        properties.water(t_cold,rc[FIL])]
 
 rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0]),  \
                       (prop[AIR][1], prop[H2O][1], prop[FIL][1]),  \
@@ -86,8 +86,8 @@ rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0]),  \
                       
 diff = (ones(rc[AIR])*4.0E-4, ones(rc[H2O])*1.99E-09)
 
-#h_d = [ 0.0, latent_heat(t_in), latent_heat(t_cold) ]
-h_d = [ 0.0, 2359E3, 2359E3]
+h_d = [ 0.0, latent_heat(t_in), latent_heat(t_cold) ]
+#h_d = [ 0.0, 2359E3, 2359E3]
 
 M_H2O  = 18E-3      # kg/mol
 M_AIR  = 28E-3      # kg/mol
@@ -95,6 +95,15 @@ M_salt = 58.4428E-3 # kg/mol
 
 R = 8.314
 pi = 3.1415
+
+# for density interpolation
+t_interp = [20,30,40,50,60,70,80]
+rho_air = zeros(np.shape(t_interp))
+rho_water = zeros(np.shape(t_interp))
+for count,tem in enumerate(t_interp):
+  rho_air[count]   = properties.air(tem,1,False)[0]
+  rho_water[count] = properties.water(tem,1,False)[0]
+
 
 # Membrane properties
 membrane = namedtuple("membrane", "d kap eps tau r p t t_int pv j t_old t_int_old")
@@ -148,7 +157,7 @@ for k in range(0,nz[H2O]):
 uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
 uf[H2O].bnd[E].val[:1,:,:] = u_in
 
-for c in range(AIR,H2O):
+for c in (AIR,H2O):
   for j in (B,T):
     uf[c].bnd[j].typ[:] = NEUMANN     
     vf[c].bnd[j].typ[:] = NEUMANN     
@@ -192,7 +201,7 @@ a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
 a[H2O].val[:,:,:] = a_salt/rho[H2O][:,:,:]
  
-for c in range(AIR,FIL+1):
+for c in (AIR,H2O,FIL):
   adj_n_bnds(p[c])
   adj_n_bnds(t[c])
   adj_n_bnds(a[c])
@@ -201,14 +210,14 @@ for c in range(AIR,FIL+1):
 t_max = 0.0
 t_min = 100.0
 
-for c in range(W,T):
+for c in (W,T):
   t_max = np.amax([t_max, np.amax(t[H2O].bnd[c].val)])
   t_min = np.amin([t_min, np.amin(t[FIL].bnd[c].val)]) 
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =   10000      # number of time steps
-dt_plot = ndt+1    # plot frequency
+ndt =   10      # number of time steps
+dt_plot = ndt    # plot frequency
 dt_save = 100
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL])]
@@ -236,7 +245,7 @@ for ts in range(1,ndt+1):
   #------------------
   # Store old values
   #------------------
-  for c in range(AIR,FIL+1):
+  for c in range(AIR,H2O,FIL):
     a[c].old[:]  = a[c].val
     t[c].old[:]  = t[c].val
     p[c].old[:]  = p[c].val
@@ -246,13 +255,16 @@ for ts in range(1,ndt+1):
   mem.t_old[:] = mem.t
   mem.t_int_old[:] = mem.t_int
   
-  #calculate rho
-  t_min_rho = 20
-  t_max_rho = 80
-  rho_min = 1.205
-  rho_max = 1.000
-  rho[AIR][:,:,:] = (t[AIR].val[:,:,:] - t_min_rho)/(t_max_rho - t_min_rho) * \
-                     (rho_max - rho_min) + rho_min
+#  #calculate rho
+#  t_min_rho = 20
+#  t_max_rho = 80
+#  rho_min = 1.205
+#  rho_max = 1.000
+#  rho[AIR][:,:,:] = (t[AIR].val[:,:,:] - t_min_rho)/(t_max_rho - t_min_rho) * \
+#                     (rho_max - rho_min) + rho_min
+                     
+  rho[AIR][:,:,:] = np.interp(t[AIR].val, t_interp, rho_air)
+  rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
     
   #------------------------
   # Partial vapor pressure & molar mass
@@ -264,15 +276,18 @@ for ts in range(1,ndt+1):
   
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
                             M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL)) 
+                            
+  
     
   #------------------------
   # Membrane
   #------------------------   
-  
-  #mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
-  mem, t, p_v, t_mem_ptfe_top, q_x = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
+ 
+  mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
-                    
+   
+  vf[H2O].bnd[S].val[:,:1,:] = mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:])
+                 
   #------------------------
   # Concentration
   #------------------------
@@ -284,12 +299,15 @@ for ts in range(1,ndt+1):
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:]
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
   
-  # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
-  for c in range(AIR,H2O+1):
+  # in case of v[H2O].bnd[S].val ~= 0 correct advection into membrane 
+  for c in (AIR,H2O):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
            source = q_a[c])
+           
+  for c in (AIR,H2O,FIL):
+    a[c].val[a[c].val < 0.0] = 0.0
 
   #------------------------
   # Temperature (enthalpy)
@@ -304,13 +322,13 @@ for ts in range(1,ndt+1):
   q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
   q_t[FIL][:,-1:,:] = -h_d[FIL]*m_evap[:,:1,:] / dv[FIL][:,-1:,:]
   
-  for c in range(AIR,FIL+1):
+  for c in (AIR,H2O,FIL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
            source = q_t[c])
 
-  for c in range(AIR,FIL):
+  for c in (AIR,H2O,FIL):
     t[c].val[t[c].val > t_max] = t_max
     t[c].val[t[c].val < t_min] = t_min
 
@@ -374,25 +392,7 @@ for ts in range(1,ndt+1):
 #
 # Visualisation
 #
-#==========================================================================
-#%%
-  if ts % ndt == 0:
-    x_plot_air=[np.mean(t[H2O].val[:,:1,:]),np.mean(mem.t_int),np.mean(mem.t),np.mean(t[AIR].bnd[N].val[:,:1,:]),np.mean(t[AIR].val[:,-1:,:])]
-    x_plot_ptfe=[np.mean(t[H2O].val[:,:1,:]),np.mean(t_mem_ptfe_top),np.mean(mem.t),np.mean(t[AIR].bnd[N].val[:,:1,:]),np.mean(t[AIR].val[:,-1:,:])]
-    x_plot_mem=[63,70]
-    y_plot_air=[dy[AIR][1,-1:,1]/2+mem.d+dy[H2O][1,:1,1]/2,dy[AIR][1,-1:,1]/2+mem.d,dy[AIR][1,-1:,1]/2+mem.d/2,dy[AIR][1,-1:,1]/2,0]
-    y_plot_mem_1=[dy[AIR][1,-1:,1]/2+mem.d,dy[AIR][1,-1:,1]/2+mem.d]
-    y_plot_mem_2=[dy[AIR][1,-1:,1]/2,dy[AIR][1,-1:,1]/2]
-    plt.figure
-    plt.plot(x_plot_air,y_plot_air,'b',linewidth=1.2,label='Air')
-    plt.plot(x_plot_ptfe,y_plot_air,'g',linewidth=1.2, label='PTFE')
-    plt.plot(x_plot_mem,y_plot_mem_1,'k:')
-    plt.plot(x_plot_mem,y_plot_mem_2,'k:')
-    plt.xlim([63,69])
-    plt.xlabel('Temperature [C]')
-    plt.ylabel('Vertical [m]')
-    plt.legend(loc=2)
-    
+#========================================================================== 
 
 #%%
   if ts % dt_plot == 0:
@@ -444,7 +444,7 @@ for ts in range(1,ndt+1):
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
     
-    pylab.savefig('membrane.pdf')
+    #pylab.savefig('membrane.pdf')
 
     #pylab.show()
 
