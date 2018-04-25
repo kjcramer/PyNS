@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('uio.npz')
+data=np.load('ws_temp_Membrane_R_1_1_2.npz')
 
 ts = data['arr_0']
 t_air = data['arr_1']
@@ -61,8 +61,8 @@ FIL = 2
 z_pos = 1
     
 xc = avg(xn[AIR])
-yc = np.append(avg(yn[H2O]), avg(yn[AIR]),axis=0)
-yc = np.append(yc, avg(yn[FIL]),axis=0)
+yc = np.append(avg(yn_h2o), avg(yn_air),axis=0)
+yc = np.append(yc, avg(yn_fil),axis=0)
 zc = avg(zn[AIR])
 np.mean(t_h2o[-1:,:,:])
 
@@ -136,7 +136,7 @@ u_h2o_plot=u_h2o
 u_h2o[u_h2o<0]=0
 
 plt.figure
-plt.contourf(zc,avg(yn[H2O]),u_h2o_plot[0,:,:])
+plt.contourf(zc,avg(yn_h2o),u_h2o_plot[0,:,:])
 plt.colorbar()
 plt.xlabel('Z [m]',fontsize=20)
 plt.xticks(fontsize=18)
@@ -149,7 +149,7 @@ np.mean(t_h2o[-1:,:,:])
 #%% velocity contour plot
 
 xc = avg(xn[AIR,1:])
-yc = avg(yn[H2O])
+yc = avg(yn_h2o)
 
 #u_plot=np.sqrt(u_h2o*u_h2o+v_h2o*v_h2o+w_h2o*w_h2o)
 u_plot=u_h2o[:,:,20]
