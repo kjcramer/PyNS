@@ -218,8 +218,8 @@ def main(show_plot=True, time_steps=200, plot_freq=200):
 # =============================================================================
         if show_plot:
             if ts % plot_freq == 0:
-                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Y, fig_path + "/fig1_t" + str(ts) + ".pdf")
-                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z, fig_path + "/fig2_t" + str(ts) + ".pdf")
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Y)
+                plot.isolines(p.val, (uc,vc,wc), (xn,yn,zn), Z)
                 #plot.gmv("obst-thinner-collocated-%6.6d" % ts, (xn,yn,zn), (uc,vc,wc,p))
 
 if __name__ == "__main__":
