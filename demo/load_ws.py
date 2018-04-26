@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_temp600502.npz')
+data=np.load('ws_temp600102_150000.npz')
 
 ts = data['arr_0']
 t_air = data['arr_1']
@@ -156,3 +156,54 @@ plt.title("Velocity [m/s]")
 plt.xlabel("x [m]")
 #plt.ylim([-1E1,1E1])
 plt.ylabel("y [m]" )
+
+#%% contour plots
+
+xc = avg(xn[AIR,:])
+yc = np.append(avg(yn[FIL]), avg(yn[AIR]),axis=0)
+yc = np.append(yc, avg(yn[H2O]),axis=0)
+
+t_plot=np.append(t_fil[:,:,z_pos],t_air[:,:,z_pos],axis=1)
+t_plot=np.append(t_plot, t_h2o[:,:,z_pos],axis=1)
+t_plot=transpose(t_plot)
+p_air = np.zeros(np.shape(t_air))
+p_fil = np.zeros(np.shape(t_fil))
+p_plot=np.append(p_fil[:,:,z_pos],p_air[:,:,z_pos],axis=1)
+p_plot=np.append(p_plot, p_h2o[:,:,z_pos],axis=1)
+p_plot=transpose(p_plot)
+a_fil = np.zeros(np.shape(t_fil))
+a_plot=np.append(a_fil[:,:,z_pos],a_air[:,:,z_pos],axis=1)
+a_plot=np.append(a_plot, a_h2o[:,:,z_pos],axis=1)
+a_plot=transpose(a_plot)
+
+plt.figure
+plt.subplot(3,2,1)
+levels_t=linspace( t_plot.min(), t_plot.max(), 11)
+norm_t=cm.colors.Normalize( vmax=t_plot.max(), vmin=t_plot.min() )
+cax_u=plt.contourf(xc,yc,t_plot,levels_t,cmap="rainbow",norm=norm_t)
+cbar_u=plt.colorbar(cax_u)
+plt.title("Temperature [m/s]")
+plt.xlabel("x [m]")
+#plt.ylim([-1E1,1E1])
+plt.ylabel("y [m]" )
+
+plt.subplot(3,2,2)
+matplotlib.rcParams["contour.negative_linestyle"] = "solid"
+cax_p=plt.contourf(xc,yc,p_plot,cmap="rainbow")
+cax_p2=plt.contour(xc,yc,p_plot,colors="k")
+plt.clabel(cax_p2, fontsize=12, inline=1)
+cbar_p = plt.colorbar(cax_p)
+plt.title("Pressure Correction")
+plt.xlabel("x [m]")
+#plt.ylim([-1E1,1E1])
+plt.ylabel("y [m]" )
+
+plt.subplot(3,2,3)
+cax_a=plt.contourf(xc,yc,a_plot,cmap="rainbow")
+cbar_a=plt.colorbar(cax_a)
+plt.title("Concentration")
+plt.xlabel("x [m]")
+#plt.ylim([-1E1,1E1])
+plt.ylabel("y [m]" )
+
+
