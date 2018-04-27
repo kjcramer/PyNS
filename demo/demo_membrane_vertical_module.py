@@ -219,7 +219,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =   10      # number of time steps
+ndt =   150000   # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
 
@@ -242,8 +242,6 @@ change_p = zeros(ndt)
 #
 #-----------
 for ts in range(1,ndt+1):
-
-  start_iteration = time.time()
   
   write.time_step(ts)
  
@@ -392,9 +390,7 @@ for ts in range(1,ndt+1):
   if p[H2O].old.max() > 0.0: 
     change_p[ts-1] = (np.absolute(p[H2O].val-p[H2O].old)).max()/p[H2O].old.max()
     
-  end_iteration = time.time()
-  print("Iteration time: %3.2e" % (end_iteration-start_iteration))
-  print("Total time: %3.2e" % (end_iteration-time_start))
+
 #==========================================================================
 #
 # Visualisation
@@ -458,3 +454,6 @@ for ts in range(1,ndt+1):
     #for c in (AIR,H2O):
     #  plot_isolines(t[c].val, (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
      # plot_isolines(p_tot[c], (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
+     
+time_end = time.time()     
+print("Total time: %4.4e" % ((time_end-time_start)/3600))
