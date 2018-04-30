@@ -39,16 +39,17 @@ plt.close("all")
 AIR = 0
 H2O = 1
 FIL = 2
+COL = 3
 
-u_in   = 0.6111 # m/s
-t_in   = 70   # C
+u_h_in   = 0.6111 # m/s
+t_h_in   = 70   # C
 a_salt = 90.0 # g/l
-t_cold = 20   # C
+t_c_in = 20   # C
 
 # Node coordinates for both domains
-xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240))
-yn = (nodes(-0.0035, 0, 12), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3))
-zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150))
+xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
+yn = (nodes(-0.0035, 0, 12), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, 0.004, 10))
+zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]))
@@ -72,14 +73,14 @@ rc,ru,rv,rw =        (cell[AIR][6], cell[H2O][6], cell[FIL][6]),  \
                      (cell[AIR][9], cell[H2O][9], cell[FIL][9])
 
 # Set physical properties					 
-#prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]),    \
-#        properties.water(t_in,rc[H2O]),  \
-#        properties.water(t_cold,rc[FIL])]
+#prop = [properties.air(round((t_h_in+t_c_in)/2,-1),rc[AIR]),    \
+#        properties.water(t_h_in,rc[H2O]),  \
+#        properties.water(t_c_in,rc[FIL])]
 					 
 # Set physical properties temperature dependent:
-prop = [properties.air(round((t_in+t_cold)/2,-1),rc[AIR]), \
-        properties.water(t_in,rc[H2O]),                    \
-        properties.water(t_cold,rc[FIL])]
+prop = [properties.air(round((t_h_in+t_c_in)/2,-1),rc[AIR]), \
+        properties.water(t_h_in,rc[H2O]),                    \
+        properties.water(t_c_in,rc[FIL])]
 
 rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0]),  \
                       (prop[AIR][1], prop[H2O][1], prop[FIL][1]),  \
@@ -88,7 +89,7 @@ rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0]),  \
                       
 diff = (ones(rc[AIR])*4.0E-4, ones(rc[H2O])*1.99E-09)
 
-h_d = [ 0.0, latent_heat(t_in), latent_heat(t_cold) ]
+h_d = [ 0.0, latent_heat(t_h_in), latent_heat(t_c_in) ]
 #h_d = [ 0.0, 2359E3, 2359E3]
 
 M_H2O  = 18E-3      # kg/mol
@@ -113,11 +114,12 @@ membrane = namedtuple("membrane", "d kap eps tau r p t t_int pv j t_old t_int_ol
   # eps is porosity, tau is tortuosity
   # r is pore radius
 
-mem = membrane(65E-6,   \
-                 0.2,    \
+# values duropore PDVF membrane
+mem = membrane(110E-6,   \
+                 0.19,    \
                  0.75,  \
                  1.5,      \
-                 0.25E-6, \
+                 0.225E-6, \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
@@ -155,10 +157,10 @@ M  = [Unknown("molar mass",    C, rc[AIR], NEUMANN)]
 # Specify boundary conditions
 
 for k in range(0,nz[H2O]):
-  uf[H2O].bnd[W].val[:1,:,k] = par(u_in, yn[H2O])
-  uf[H2O].val[:,:,k] = par(u_in, yn[H2O])
+  uf[H2O].bnd[W].val[:1,:,k] = par(u_h_in, yn[H2O])
+  uf[H2O].val[:,:,k] = par(u_h_in, yn[H2O])
 uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
-uf[H2O].bnd[E].val[:1,:,:] = u_in
+uf[H2O].bnd[E].val[:1,:,:] = u_h_in
 
 for c in (AIR,H2O):
   for j in (B,T):
@@ -167,19 +169,19 @@ for c in (AIR,H2O):
     wf[c].bnd[j].typ[:] = NEUMANN     
   
 t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
-t[AIR].bnd[S].val[:,:1,:] = t_cold
+t[AIR].bnd[S].val[:,:1,:] = t_c_in
 t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[AIR].bnd[N].val[:,:1,:] = 60
 
 t[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
-t[H2O].bnd[W].val[:1,:,:] = t_in
+t[H2O].bnd[W].val[:1,:,:] = t_h_in
 t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET  
 t[H2O].bnd[S].val[:,:1,:] = 60
  
 t[FIL].bnd[S].typ[:,:1,:] = DIRICHLET
-t[FIL].bnd[S].val[:,:1,:] = t_cold
+t[FIL].bnd[S].val[:,:1,:] = t_c_in
 t[FIL].bnd[N].typ[:,:1,:] = DIRICHLET  
-t[FIL].bnd[N].val[:,:1,:] = t_cold
+t[FIL].bnd[N].val[:,:1,:] = t_c_in
 
 mem.t_int[:] = t[H2O].bnd[S].val[:,:1,:] # temporary
 
@@ -196,9 +198,9 @@ p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[H2O].bnd[S].val[:,:,:])
 p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
-t[AIR].val[:,:,:] = round((t_in+t_cold)/2,-1)
+t[AIR].val[:,:,:] = round((t_h_in+t_c_in)/2,-1)
 t[H2O].val[:,:,:] = 70
-t[FIL].val[:,:,:] = t_cold
+t[FIL].val[:,:,:] = t_c_in
 
 a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
