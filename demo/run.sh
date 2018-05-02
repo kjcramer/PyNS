@@ -9,5 +9,5 @@
 
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
-python2.7 demo_membrane_vertical_module.py
+python2.7 validation_70.py
 

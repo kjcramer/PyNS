@@ -247,7 +247,7 @@ for c in (W,T):
   # Time-stepping parameters
 dt  =    0.0002  # time step
 ndt =   150000  # number of time steps
-dt_plot = ndt    # plot frequency
+dt_plot = ndt+1 # plot frequency
 dt_save = 100
 dt_save_ts = 50000
 
@@ -416,9 +416,9 @@ for ts in range(1,ndt+1):
     print("Maximum CFL number: %12.5e" % cfl)
     
   if ts % dt_save == 0:
-      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
+      np.savez('ws_temp_70.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
       if ts % dt_save_ts ==0:
-        ws_save_title = 'ws_' + str(ts) + 'ts.npz'
+        ws_save_title = 'ws_70' + str(ts) + 'ts.npz'
         np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
       
     
