@@ -258,6 +258,27 @@ change_t = zeros(ndt)
 change_a = zeros(ndt)
 change_p = zeros(ndt)
 
+ws_name = 'ws_temp_' + id + '.npz'
+data=np.load(ws_name)
+
+tss = data['arr_0']
+t[AIR].val[:,:,:] = data['arr_1']
+t[H2O].val[:,:,:] = data['arr_2']
+t[FIL].val[:,:,:] = data['arr_3']
+uf[H2O].val[:,:,:] = data['arr_4']
+vf[H2O].val[:,:,:] = data['arr_5']
+wf[H2O].val[:,:,:] = data['arr_6']
+a[H2O].val[:,:,:] = data['arr_7']
+a[AIR].val[:,:,:] = data['arr_8']
+p[H2O].val[:,:,:] = data['arr_9']
+p_tot[H2O].val[:,:,:] = data['arr_9']
+mem.t_int[:,:,:] = data['arr_10']
+mem.j[:,:,:] = data['arr_13']
+mem.pv[:,:,:] = data['arr_14']
+p_v[AIR].val[:,:,:] = data['arr_15']
+p_v[AIR].bnd[N].val[:,:,:] = data['arr_16']
+p_v[AIR].bnd[S].val[:,:,:] = data['arr_17']
+
 #==========================================================================
 #
 # Solution algorithm
