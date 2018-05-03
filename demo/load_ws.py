@@ -40,6 +40,16 @@ m_pv = data['arr_14']
 pv_air = data['arr_15']
 pv_n = data['arr_16']
 pv_s = data['arr_17']
+u_air = data['arr_18']
+v_air = data['arr_19']
+w_air = data['arr_20']
+xn = data['arr_21'] 
+yn_air = data['arr_22']
+yn_h2o = data['arr_23']
+yn_fil = data['arr_24']
+yn_col = data['arr_25']
+zn = data['arr_26']
+t[COL].val = data['arr_27']
 
 AIR = 0
 H2O = 1
