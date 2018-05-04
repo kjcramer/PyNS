@@ -9,5 +9,5 @@
 module load lang/Python/3.6.0-foss-2017a
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
 
-python validation_40.py
+python validation_40_restart.py
 
