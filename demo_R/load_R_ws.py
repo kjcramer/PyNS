@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_temp_Membrane_R_2_3_0.npz')
+data=np.load('ws_temp_Membrane_R_3_1_4.npz')
 
 ts = data['arr_0']
 t_air = data['arr_1']
@@ -149,10 +149,10 @@ np.mean(t_h2o[-1:,:,:])
 #%% velocity contour plot
 
 xc = avg(xn[AIR,1:])
-yc = avg(yn_h2o)
+yc = avg(yn_air[1:])
 
-#u_plot=np.sqrt(u_h2o*u_h2o+v_h2o*v_h2o+w_h2o*w_h2o)
-u_plot=u_h2o[:,:,20]
+u_plot_3=np.sqrt(uf_air[:,1:,1:]*uf_air[:,1:,1:]+vf_air[1:,:,1:]*vf_air[1:,:,1:]+wf_air[1:,1:,:]*wf_air[1:,1:,:])
+u_plot=u_plot_3[:,:,20]
 u_plot=transpose(u_plot)
 
 plt.figure
