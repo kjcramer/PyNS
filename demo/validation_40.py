@@ -358,8 +358,10 @@ for ts in range(1,ndt+1):
          dx[H2O]*dy[H2O]*dz[H2O], 
          dx[FIL]*dy[FIL]*dz[FIL], 
          dx[COL]*dy[COL]*dz[COL]]  
-  q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
-  q_t[FIL][:,-1:,:] = -h_d[FIL]*m_evap[:,:1,:] / dv[FIL][:,-1:,:]
+  q_t[H2O][:,:1,:]  = -cap[H2O]*mem.j [:,:1,:]*t[H2O].val[:,:1,:]  / dv[H2O][:,:1,:]
+  q_t[AIR][:,-1:,:] =  cap_vap *mem.j [:,:1,:]*t[AIR].val[:,-1:,:] / dv[AIR][:,-1:,:]
+  q_t[AIR][:,:1,:]  =  cap_vap *m_evap[:,:1,:]*t[AIR].val[:,:1,:]  / dv[AIR][:,:1,:]
+  q_t[FIL][:,-1:,:] = -cap[FIL]*m_evap[:,:1,:]*t[FIL].val[:,-1:,:] / dv[FIL][:,-1:,:]
   
   for c in (AIR,H2O,FIL,COL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
