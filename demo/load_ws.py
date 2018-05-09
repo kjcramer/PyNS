@@ -47,23 +47,24 @@ xn = data['arr_21']
 yn_air = data['arr_22']
 yn_h2o = data['arr_23']
 yn_fil = data['arr_24']
-yn_col = data['arr_25']
-zn = data['arr_26']
-t[COL].val = data['arr_27']
+#yn_col = data['arr_25']
+zn = data['arr_25'] # data['arr_26']
+#t[COL].val = data['arr_27']
 
 AIR = 0
 H2O = 1
 FIL = 2
 
-xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
-yn = (nodes(-0.004, 0,     10), nodes( 0,    0.02,  30), nodes(-0.005, -0.004,  3))
-zn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
+#xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
+#yn = (nodes(-0.004, 0,     10), nodes( 0,    0.02,  30), nodes(-0.005, -0.004,  3))
+#zn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
 
 z_pos = 75
     
 xc = avg(xn[AIR])
-yc = np.append(avg(yn[FIL]), avg(yn[AIR]),axis=0)
-yc = np.append(yc, avg(yn[H2O]),axis=0)
+yc = np.append(avg(yn_fil), avg(yn_air),axis=0)
+#yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(yc, avg(yn_h2o),axis=0)
 zc = avg(zn[AIR])
 
 #%% vertical temperature profil

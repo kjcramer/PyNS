@@ -169,6 +169,18 @@ p_tot = [Unknown("pressure-tot",  C, rc[AIR], NEUMANN),  \
 p_v =[Unknown("vapor_pressure",C, rc[AIR], NEUMANN)]
 M  = [Unknown("molar mass",    C, rc[AIR], NEUMANN)]
 
+# initialize source terms
+q_t = [zeros(rc[AIR]),
+       zeros(rc[H2O]), 
+       zeros(rc[FIL]), 
+       zeros(rc[COL])]
+q_a = [zeros(rc[AIR]),
+       zeros(rc[H2O])]
+dv  = [dx[AIR]*dy[AIR]*dz[AIR], 
+       dx[H2O]*dy[H2O]*dz[H2O], 
+       dx[FIL]*dy[FIL]*dz[FIL], 
+       dx[COL]*dy[COL]*dz[COL]]
+
 # Specify boundary conditions
 
 for k in range(0,nz[H2O]):
@@ -207,7 +219,7 @@ t[COL].bnd[E].val[:1,:,:] = t_c_in
 t[COL].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[COL].bnd[N].val[:,:1,:] = t_c_in
 
-mem.t_int[:] = t[H2O].bnd[S].val[:,:1,:] # temporary
+mem.t_int[:,:,:] = t[H2O].bnd[S].val[:,:1,:] # temporary
 
 a[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 a[H2O].bnd[W].val[:1,:,:] = a_salt/rho[H2O][:1,:,:]
@@ -308,13 +320,18 @@ for ts in range(1,ndt+1):
   # Interphase energy equation between AIR & FIL
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
                             M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL)) 
-       
+  
+  #q_t[FIL][:,-1:,:] = -h_d[FIL]*m_evap[:,:1,:] / dv[FIL][:,-1:,:]  
+  q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
+   
   # Membrane diffusion and energy equation between H2O & AIR
   mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
                     
   vf[H2O].bnd[S].val[:,:1,:] = mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:])
-            
+  #q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]  
+  q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
+          
   # Heat transfer between FIL & COL d_plate=2mm, kappa_stainless steel=20W/(mK)
   tot_res_plate = dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:]) + d_plate/kappa_plate \
                 + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:])
@@ -328,13 +345,6 @@ for ts in range(1,ndt+1):
   #------------------------
   # Concentration
   #------------------------
-  
-  q_a = [zeros(rc[AIR]),
-         zeros(rc[H2O])]
-  dv  = [dx[AIR]*dy[AIR]*dz[AIR], 
-         dx[H2O]*dy[H2O]*dz[H2O]]  
-  q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:]
-  q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
   
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
   for c in (AIR,H2O):
@@ -350,16 +360,7 @@ for ts in range(1,ndt+1):
   # Temperature (enthalpy)
   #------------------------
 
-  q_t = [zeros(rc[AIR]),
-         zeros(rc[H2O]), 
-         zeros(rc[FIL]), 
-         zeros(rc[COL])]
-  dv  = [dx[AIR]*dy[AIR]*dz[AIR], 
-         dx[H2O]*dy[H2O]*dz[H2O], 
-         dx[FIL]*dy[FIL]*dz[FIL], 
-         dx[COL]*dy[COL]*dz[COL]]  
-  q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
-  q_t[FIL][:,-1:,:] = -h_d[FIL]*m_evap[:,:1,:] / dv[FIL][:,-1:,:]
+  
   
   for c in (AIR,H2O,FIL,COL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
