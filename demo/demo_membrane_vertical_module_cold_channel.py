@@ -14,6 +14,7 @@ import matplotlib.pylab as pylab
 import numpy as np
 import matplotlib
 from scipy.optimize import fsolve
+from scipy.constants import R
 
 # PyNS modules
 from pyns.constants          import *
@@ -98,8 +99,7 @@ M_H2O  = 18E-3      # kg/mol
 M_AIR  = 28E-3      # kg/mol
 M_salt = 58.4428E-3 # kg/mol      
 
-R = 8.314
-pi = 3.1415
+pi = np.pi
 
 # for density interpolation
 t_interp = [20,30,40,50,60,70,80]
@@ -196,6 +196,7 @@ uf[H2O].bnd[E].typ[:1,:,:] = OUTLET
 uf[H2O].bnd[E].val[:1,:,:] = u_h_in
 uf[COL].bnd[W].typ[:1,:,:] = OUTLET 
 uf[COL].bnd[W].val[:1,:,:] = -u_h_in
+uf[AIR].bnd[W].typ[:1,:,:] = OUTLET
 
 for c in (AIR,H2O,COL):
   for j in (B,T):
@@ -262,10 +263,10 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =   5  # number of time steps
+ndt =   500  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
-dt_save_ts = 50000
+dt_save_ts = 50
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 
@@ -273,6 +274,8 @@ obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 change_t = zeros(ndt)
 change_a = zeros(ndt)
 change_p = zeros(ndt)
+
+#%%
 
 #==========================================================================
 #
@@ -328,7 +331,7 @@ for ts in range(1,ndt+1):
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
   #vf[FIL].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
-  #vf[AIR].bnd[S].val[:,:1,:] = m_evap[:,:1,:]/(rho[AIR][:,:1,:]*dx[AIR][:,:1,:]*dz[AIR][:,:1,:])
+  vf[AIR].bnd[S].val[:,:1,:] = m_evap[:,:1,:]/(rho[AIR][:,:1,:]*dx[AIR][:,:1,:]*dz[AIR][:,:1,:])
    
   # Membrane diffusion and energy equation between H2O & AIR
   mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
@@ -336,7 +339,7 @@ for ts in range(1,ndt+1):
   
   # downward (negative) velocity induced through evaporation (positive mem_j)                
   vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
-  #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
+  vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
           
   # Heat transfer between FIL & COL d_plate=2mm, kappa_stainless steel=20W/(mK)
