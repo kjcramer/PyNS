@@ -180,6 +180,10 @@ dv  = [dx[AIR]*dy[AIR]*dz[AIR],
        dx[H2O]*dy[H2O]*dz[H2O], 
        dx[FIL]*dy[FIL]*dz[FIL], 
        dx[COL]*dy[COL]*dz[COL]]
+       
+# variables to temporarily store vf bnd values:
+vf_air_S_tmp=zeros(vf[AIR].bnd[S].val.shape)
+vf_h2o_S_tmp=zeros(vf[H2O].bnd[S].val.shape)
 
 # Specify boundary conditions
 
@@ -258,7 +262,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =   150000  # number of time steps
+ndt =   5  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
 dt_save_ts = 50000
@@ -288,7 +292,7 @@ for ts in range(1,ndt+1):
   #------------------
   # Store old values
   #------------------
-  for c in (AIR,H2O,FIL):
+  for c in (AIR,H2O,FIL,COL):
     a[c].old[:]  = a[c].val
     t[c].old[:]  = t[c].val
     p[c].old[:]  = p[c].val
@@ -319,17 +323,20 @@ for ts in range(1,ndt+1):
     
   # Interphase energy equation between AIR & FIL
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL)) 
+                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL))  
   
-  #q_t[FIL][:,-1:,:] = -h_d[FIL]*m_evap[:,:1,:] / dv[FIL][:,-1:,:]  
+  # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
+  #vf[FIL].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
+  #vf[AIR].bnd[S].val[:,:1,:] = m_evap[:,:1,:]/(rho[AIR][:,:1,:]*dx[AIR][:,:1,:]*dz[AIR][:,:1,:])
    
   # Membrane diffusion and energy equation between H2O & AIR
   mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
-                    
-  vf[H2O].bnd[S].val[:,:1,:] = mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:])
-  #q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]  
+  
+  # downward (negative) velocity induced through evaporation (positive mem_j)                
+  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
+  #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
           
   # Heat transfer between FIL & COL d_plate=2mm, kappa_stainless steel=20W/(mK)
@@ -346,6 +353,13 @@ for ts in range(1,ndt+1):
   # Concentration
   #------------------------
   
+  # correct for salt retention in feed water
+  vf_h2o_S_tmp[:,:,:] = vf[H2O].bnd[S].val[:,:1,:]
+  vf[H2O].bnd[S].val[:,:1,:] = 0.0
+  
+  vf_air_S_tmp[:,:,:] = vf[AIR].bnd[S].val[:,:1,:]
+  vf[AIR].bnd[S].val[:,:1,:] = 0.0
+  
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
   for c in (AIR,H2O):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
@@ -356,11 +370,12 @@ for ts in range(1,ndt+1):
   for c in (AIR,H2O):
     a[c].val[a[c].val < 0.0] = 0.0
     
+  vf[H2O].bnd[S].val[:,:1,:] = vf_h2o_S_tmp[:,:,:]
+  vf[AIR].bnd[S].val[:,:1,:] = vf_air_S_tmp[:,:,:]
+    
   #------------------------
   # Temperature (enthalpy)
   #------------------------
-
-  
   
   for c in (AIR,H2O,FIL,COL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
