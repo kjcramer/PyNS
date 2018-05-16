@@ -42,7 +42,7 @@ FIL = 2
 COL = 3
 
 u_h_in = 0.2 # m/s
-t_h_in = 70   # C
+t_h_in = 60   # C
 a_salt = 90.0 # g/l
 t_c_in = 20   # C
 id = str(t_h_in)

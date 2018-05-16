@@ -42,7 +42,7 @@ FIL = 2
 COL = 3
 
 u_h_in = 0.2 # m/s
-t_h_in = 70   # C
+t_h_in = 40   # C
 a_salt = 90.0 # g/l
 t_c_in = 20   # C
 id = str(t_h_in)
@@ -261,7 +261,7 @@ for c in (W,T):
   # Time-stepping parameters
 dt  =    0.0002  # time step
 ndt =   150000  # number of time steps
-dt_plot = ndt+1 # plot frequency
+dt_plot = ndt+1    # plot frequency
 dt_save = 100
 dt_save_ts = 50000
 
@@ -271,30 +271,6 @@ obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 change_t = zeros(ndt)
 change_a = zeros(ndt)
 change_p = zeros(ndt)
-
-ws_name = 'ws_temp_' + id + '.npz'
-data=np.load(ws_name)
-
-tss = data['arr_0']
-t[AIR].val[:,:,:] = data['arr_1']
-t[H2O].val[:,:,:] = data['arr_2']
-t[FIL].val[:,:,:] = data['arr_3']
-uf[H2O].val[:,:,:] = data['arr_4']
-vf[H2O].val[:,:,:] = data['arr_5']
-wf[H2O].val[:,:,:] = data['arr_6']
-a[H2O].val[:,:,:] = data['arr_7']
-a[AIR].val[:,:,:] = data['arr_8']
-p[H2O].val[:,:,:] = data['arr_9']
-p_tot[H2O].val[:,:,:] = data['arr_9']
-mem.t_int[:,:,:] = data['arr_10']
-mem.j[:,:,:] = data['arr_13']
-mem.pv[:,:,:] = data['arr_14']
-p_v[AIR].val[:,:,:] = data['arr_15']
-p_v[AIR].bnd[N].val[:,:,:] = data['arr_16']
-p_v[AIR].bnd[S].val[:,:,:] = data['arr_17']
-uf[AIR].val = data['arr_18']
-vf[AIR].val = data['arr_19']
-wf[AIR].val = data['arr_20']
 
 #==========================================================================
 #
@@ -307,7 +283,7 @@ wf[AIR].val = data['arr_20']
 # Time loop 
 #
 #-----------
-for ts in range(tss-1,ndt+1):
+for ts in range(1,ndt+1):
   
   write.time_step(ts)
  
@@ -346,12 +322,13 @@ for ts in range(tss-1,ndt+1):
   # Interphase energy equation between AIR & FIL
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
                             M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL)) 
-  
+   
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
   #vf[FIL].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
   #vf[AIR].bnd[S].val[:,:1,:] = m_evap[:,:1,:]/(rho[AIR][:,:1,:]*dx[AIR][:,:1,:]*dz[AIR][:,:1,:])
-     
+
+    
   # Membrane diffusion and energy equation between H2O & AIR
   mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
@@ -373,7 +350,7 @@ for ts in range(tss-1,ndt+1):
          
   #------------------------
   # Concentration
-  #------------------------ 
+  #------------------------
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
   for c in (AIR,H2O):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
@@ -386,7 +363,7 @@ for ts in range(tss-1,ndt+1):
     
   #------------------------
   # Temperature (enthalpy)
-  #------------------------ 
+  #------------------------
   for c in (AIR,H2O,FIL,COL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
@@ -460,7 +437,6 @@ for ts in range(tss-1,ndt+1):
         text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e}".format \
           (t_h_in, u_h_in, airgap_outfile, massflow_outfile, RR_outfile, GOR_outfile))
         text_file.close()
-      
     
   # Check relative change in domain:
   change_t[ts-1] = (np.absolute(t[H2O].val-t[H2O].old)).max()/t[H2O].old.max()
