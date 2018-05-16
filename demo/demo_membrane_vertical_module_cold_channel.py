@@ -49,7 +49,7 @@ t_c_in = 20   # C
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
-yn = (nodes(-0.0035, 0, 30), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
+yn = (nodes(-0.0035, 0, 20), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
 zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
 
 # Cell coordinates 
@@ -262,7 +262,7 @@ for c in (W,T):
   t_min = np.amin([t_min, np.amin(t[COL].bnd[c].val)]) 
   
   # Time-stepping parameters
-dt  =    0.0002  # time step
+dt  =    0.0001  # time step
 ndt =    500  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100

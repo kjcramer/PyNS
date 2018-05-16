@@ -50,7 +50,7 @@ id = str(t_h_in)
 # Node coordinates for both domains
 xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
 yn = (nodes(-0.0035, 0, 30), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
-zn = (nodes(0,   0.1,  100), nodes(0, 0.1,   100), nodes(0,       0.1,  150), nodes(0,       0.1,  100))
+zn = (nodes(0,   0.1,  100), nodes(0, 0.1,   100), nodes(0,       0.1,  100), nodes(0,       0.1,  100))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]), avg(xn[COL]))
