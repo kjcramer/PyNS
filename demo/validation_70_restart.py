@@ -49,8 +49,8 @@ id = str(t_h_in)
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
-yn = (nodes(-0.0035, 0, 12), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
-zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
+yn = (nodes(-0.0035, 0, 30), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
+zn = (nodes(0,   0.1,  100), nodes(0, 0.1,   100), nodes(0,       0.1,  150), nodes(0,       0.1,  100))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]), avg(xn[COL]))
@@ -170,6 +170,18 @@ p_tot = [Unknown("pressure-tot",  C, rc[AIR], NEUMANN),  \
 p_v =[Unknown("vapor_pressure",C, rc[AIR], NEUMANN)]
 M  = [Unknown("molar mass",    C, rc[AIR], NEUMANN)]
 
+# initialize source terms
+q_t = [zeros(rc[AIR]),
+       zeros(rc[H2O]), 
+       zeros(rc[FIL]), 
+       zeros(rc[COL])]
+q_a = [zeros(rc[AIR]),
+       zeros(rc[H2O])]
+dv  = [dx[AIR]*dy[AIR]*dz[AIR], 
+       dx[H2O]*dy[H2O]*dz[H2O], 
+       dx[FIL]*dy[FIL]*dz[FIL], 
+       dx[COL]*dy[COL]*dz[COL]]
+
 # Specify boundary conditions
 
 for k in range(0,nz[H2O]):
@@ -181,6 +193,7 @@ uf[H2O].bnd[E].typ[:1,:,:] = OUTLET
 uf[H2O].bnd[E].val[:1,:,:] = u_h_in
 uf[COL].bnd[W].typ[:1,:,:] = OUTLET 
 uf[COL].bnd[W].val[:1,:,:] = -u_h_in
+uf[AIR].bnd[W].typ[:1,:,:] = OUTLET
 
 for c in (AIR,H2O,COL):
   for j in (B,T):
@@ -246,7 +259,7 @@ for c in (W,T):
   t_min = np.amin([t_min, np.amin(t[COL].bnd[c].val)]) 
   
   # Time-stepping parameters
-dt  =    0.0002  # time step
+dt  =    0.0001  # time step
 ndt =   150000  # number of time steps
 dt_plot = ndt+1 # plot frequency
 dt_save = 100
@@ -301,7 +314,7 @@ for ts in range(tss-1,ndt+1):
   #------------------
   # Store old values
   #------------------
-  for c in (AIR,H2O,FIL):
+  for c in (AIR,H2O,FIL,COL):
     a[c].old[:]  = a[c].val
     t[c].old[:]  = t[c].val
     p[c].old[:]  = p[c].val
@@ -333,13 +346,21 @@ for ts in range(tss-1,ndt+1):
   # Interphase energy equation between AIR & FIL
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
                             M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL)) 
-       
+  
+  # upward (positive) velocity induced through evaporation (positive m_evap) 
+  q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
+  #vf[FIL].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
+  vf[AIR].bnd[S].val[:,:1,:] = m_evap[:,:1,:]/(rho[AIR][:,:1,:]*dx[AIR][:,:1,:]*dz[AIR][:,:1,:])
+     
   # Membrane diffusion and energy equation between H2O & AIR
   mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
                     
-  vf[H2O].bnd[S].val[:,:1,:] = mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:])
-            
+  # downward (negative) velocity induced through evaporation (positive mem_j)                
+  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
+  vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
+  q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
+             
   # Heat transfer between FIL & COL d_plate=2mm, kappa_stainless steel=20W/(mK)
   tot_res_plate = dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:]) + d_plate/kappa_plate \
                 + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:])
@@ -352,15 +373,7 @@ for ts in range(tss-1,ndt+1):
          
   #------------------------
   # Concentration
-  #------------------------
-  
-  q_a = [zeros(rc[AIR]),
-         zeros(rc[H2O])]
-  dv  = [dx[AIR]*dy[AIR]*dz[AIR], 
-         dx[H2O]*dy[H2O]*dz[H2O]]  
-  q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:]
-  q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
-  
+  #------------------------ 
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
   for c in (AIR,H2O):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
@@ -373,19 +386,7 @@ for ts in range(tss-1,ndt+1):
     
   #------------------------
   # Temperature (enthalpy)
-  #------------------------
-
-  q_t = [zeros(rc[AIR]),
-         zeros(rc[H2O]), 
-         zeros(rc[FIL]), 
-         zeros(rc[COL])]
-  dv  = [dx[AIR]*dy[AIR]*dz[AIR], 
-         dx[H2O]*dy[H2O]*dz[H2O], 
-         dx[FIL]*dy[FIL]*dz[FIL], 
-         dx[COL]*dy[COL]*dz[COL]]  
-  q_t[H2O][:,:1,:]  = -h_d[H2O]*mem.j [:,:1,:] / dv[H2O][:,:1,:]
-  q_t[FIL][:,-1:,:] = -h_d[FIL]*m_evap[:,:1,:] / dv[FIL][:,-1:,:]
-  
+  #------------------------ 
   for c in (AIR,H2O,FIL,COL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
@@ -428,24 +429,24 @@ for ts in range(tss-1,ndt+1):
              dt, (dx[c],dy[c],dz[c]), 
              obstacle = obst[c])
  
-  # Compute volume balance for checking 
-  for c in (AIR,H2O,COL):
-    err = vol_balance((uf[c],vf[c],wf[c]),  \
-                      (dx[c],dy[c],dz[c]), 
-                      obstacle = obst[c])
-    print("Maximum volume error after correction: %12.5e" % abs(err).max())
+#  # Compute volume balance for checking 
+#  for c in (AIR,H2O,COL):
+#    err = vol_balance((uf[c],vf[c],wf[c]),  \
+#                      (dx[c],dy[c],dz[c]), 
+#                      obstacle = obst[c])
+#    print("Maximum volume error after correction: %12.5e" % abs(err).max())
 
   # Check the CFL number too 
   for c in (AIR,H2O,COL):
     cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
-    print("Maximum CFL number: %12.5e" % cfl)
+#    print("Maximum CFL number: %12.5e" % cfl)
     
   if ts % dt_save == 0:
       ws_name = 'ws_temp_' + id + '.npz'
-      np.savez(ws_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val   )
+      np.savez(ws_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COl].val, wf[COL].val)
       if ts % dt_save_ts == 0:
         ws_save_title = 'ws_' + id + '_' + str(ts) + 'ts.npz'
-        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val )
+        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COl].val, wf[COL].val)
         text_id = 'Output_' + id + '_' + str(ts) + '.txt'
         text_file = open(text_id, "w")
         airgap_outfile = 0.0035

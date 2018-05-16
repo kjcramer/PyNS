@@ -49,7 +49,7 @@ t_c_in = 20   # C
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
-yn = (nodes(-0.0035, 0, 12), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
+yn = (nodes(-0.0035, 0, 30), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
 zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
 
 # Cell coordinates 
@@ -239,7 +239,7 @@ p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[H2O].bnd[S].val[:,:,:])
 p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
-t[AIR].val[:,:,:] = round((t_h_in+t_c_in)/2,-1)
+t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
 t[H2O].val[:,:,:] = 70
 t[FIL].val[:,:,:] = t_c_in
 t[COL].val[:,:,:] = t_c_in
@@ -263,7 +263,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =   500  # number of time steps
+ndt =    500  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
 dt_save_ts = 50
@@ -422,17 +422,17 @@ for ts in range(1,ndt+1):
              dt, (dx[c],dy[c],dz[c]), 
              obstacle = obst[c])
  
-  # Compute volume balance for checking 
-  for c in (AIR,H2O,COL):
-    err = vol_balance((uf[c],vf[c],wf[c]),  \
-                      (dx[c],dy[c],dz[c]), 
-                      obstacle = obst[c])
-    print("Maximum volume error after correction: %12.5e" % abs(err).max())
+#  # Compute volume balance for checking 
+#  for c in (AIR,H2O,COL):
+#    err = vol_balance((uf[c],vf[c],wf[c]),  \
+#                      (dx[c],dy[c],dz[c]), 
+#                      obstacle = obst[c])
+#    print("Maximum volume error after correction: %12.5e" % abs(err).max())
 
   # Check the CFL number too 
   for c in (AIR,H2O,COL):
     cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
-    print("Maximum CFL number: %12.5e" % cfl)
+    # print("Maximum CFL number: %12.5e" % cfl)
     
   if ts % dt_save == 0:
       np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
@@ -483,6 +483,9 @@ for ts in range(1,ndt+1):
     a_plot=np.append(a_plot, a[H2O].val[:,:,z_pos],axis=1)
     a_plot=transpose(a_plot)
     
+    uc = avg_x(cat_x((u[AIR].bnd[W].val[:1,:,:], u[AIR].val, u[AIR].bnd[E].val[:1,:,:])))
+    u_plot = transpose(uc [:,:,z_pos])
+    
     plt.figure
     plt.subplot(2,2,1)
     levels_t=linspace( t_plot.min(), t_plot.max(), 11)
@@ -509,6 +512,14 @@ for ts in range(1,ndt+1):
     cax_a=plt.contourf(xc,yc,a_plot,cmap="rainbow")
     cbar_a=plt.colorbar(cax_a)
     plt.title("Concentration")
+    plt.xlabel("x [m]")
+    #plt.ylim([-1E1,1E1])
+    plt.ylabel("y [m]" )
+    
+    plt.subplot(2,2,4)
+    cax_u=plt.contourf(xc,yc,u_plot,cmap="rainbow")
+    cbar_u=plt.colorbar(cax_u)
+    plt.title("Axial Velocity")
     plt.xlabel("x [m]")
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )

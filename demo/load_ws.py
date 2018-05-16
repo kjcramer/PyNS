@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_temp.npz')
+data=np.load('ws_50ts_noairvelocity.npz')
 
 ts = data['arr_0']
 t_air = data['arr_1']
@@ -54,6 +54,7 @@ zn = data['arr_25'] # data['arr_26']
 AIR = 0
 H2O = 1
 FIL = 2
+COL = 3
 
 #xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
 #yn = (nodes(-0.004, 0,     10), nodes( 0,    0.02,  30), nodes(-0.005, -0.004,  3))
@@ -82,15 +83,17 @@ plt.figure
 plt.subplot(1,3,1)
 plt.plot(t_plot_s,yc, linestyle='-', color='blue', linewidth=1.2)
 plt.plot([18, 80],[0, 0], linestyle='--', color='black', linewidth=1)
+plt.plot([18, 80],[-0.0035, -0.0035], linestyle='--', color='black', linewidth=1)
 plt.plot([18, 80],[-0.004, -0.004], linestyle='--', color='black', linewidth=1)
 plt.xlim([18, 80])
 plt.ylabel('Y [m]',fontsize=20)
 plt.xticks([20,40,60,80],fontsize=18)
-plt.yticks([-0.005, 0, 0.01, 0.02],fontsize=18)
+plt.yticks([-0.004, -0.002, 0, 0.0015],fontsize=18)
 
 plt.subplot(1,3,2)
 plt.plot(t_plot_m,yc, linestyle='-', color='blue', linewidth=1.2)
 plt.plot([18, 80],[0, 0], linestyle='--', color='black', linewidth=1)
+plt.plot([18, 80],[-0.0035, -0.0035], linestyle='--', color='black', linewidth=1)
 plt.plot([18, 80],[-0.004, -0.004], linestyle='--', color='black', linewidth=1)
 plt.xlim([18, 80])
 plt.xticks([20,40,60,80],fontsize=18)
@@ -100,6 +103,7 @@ plt.xlabel('Temperature [°C]',fontsize=20)
 plt.subplot(1,3,3)
 plt.plot(t_plot_e,yc, linestyle='-', color='blue', linewidth=1.2)
 plt.plot([18, 80],[0, 0], linestyle='--', color='black', linewidth=1)
+plt.plot([18, 80],[-0.0035, -0.0035], linestyle='--', color='black', linewidth=1)
 plt.plot([18, 80],[-0.004, -0.004], linestyle='--', color='black', linewidth=1)
 plt.xlim([18, 80])
 plt.xticks([20,40,60,80],fontsize=18)
@@ -110,7 +114,7 @@ pylab.show
 #%% axial membrane flux
 
 plt.figure
-plt.plot(xc+0.05,m_j[:,0,75]/6.666E-4/6.666E-4*3600, linestyle='-', color='blue', linewidth=1.2)
+plt.plot(xc+0.05,m_j[:,:1,75]/0.001/0.0006667*3600, linestyle='-', color='blue', linewidth=1.2)
 plt.xlabel('X [m]',fontsize=20)
 plt.ylabel('Membrane Mass Flux [kg/(m^2 h)]',fontsize=20)
 plt.xticks(fontsize=18)
