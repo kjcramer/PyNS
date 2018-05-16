@@ -236,7 +236,7 @@ p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[H2O].bnd[S].val[:,:,:])
 p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
-t[AIR].val[:,:,:] = round((t_h_in+t_c_in)/2,-1)
+t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
 t[H2O].val[:,:,:] = t_h_in
 t[FIL].val[:,:,:] = t_c_in
 t[COL].val[:,:,:] = t_c_in
