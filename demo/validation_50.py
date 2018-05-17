@@ -420,10 +420,10 @@ for ts in range(1,ndt+1):
     
   if ts % dt_save == 0:
       ws_name = 'ws_temp_' + id + '.npz'
-      np.savez(ws_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COl].val, wf[COL].val)
+      np.savez(ws_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val)
       if ts % dt_save_ts == 0:
         ws_save_title = 'ws_' + id + '_' + str(ts) + 'ts.npz'
-        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COl].val, wf[COL].val)
+        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val)
         text_id = 'Output_' + id + '_' + str(ts) + '.txt'
         text_file = open(text_id, "w")
         airgap_outfile = 0.0035
