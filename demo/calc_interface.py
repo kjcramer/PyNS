@@ -11,7 +11,7 @@ from pyns.operators import *
 from pyns.display   import write
 
 import numpy as np
-from p_v_sat import *
+from pyns.demo.p_v_sat import *
 from scipy.optimize import fsolve
 
 

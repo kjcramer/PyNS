@@ -49,7 +49,7 @@ t_c_in = 20   # C
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
-yn = (nodes(-0.0035, 0, 35), nodes(0, 0.0015, 9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
+yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015, 9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
 zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
 
 # Cell coordinates 
