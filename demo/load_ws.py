@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_50ts_noairvelocity.npz')
+data=np.load('ws_temp_70.npz')
 
 ts = data['arr_0']
 t_air = data['arr_1']
@@ -47,9 +47,12 @@ xn = data['arr_21']
 yn_air = data['arr_22']
 yn_h2o = data['arr_23']
 yn_fil = data['arr_24']
-#yn_col = data['arr_25']
-zn = data['arr_25'] # data['arr_26']
-#t[COL].val = data['arr_27']
+yn_col = data['arr_25']
+zn = data['arr_26']
+t_col = data['arr_27']
+uf_col = data['arr_28']
+vf_col = data['arr_29']
+wf_col = data['arr_30']
 
 AIR = 0
 H2O = 1
