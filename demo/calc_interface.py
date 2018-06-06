@@ -238,7 +238,7 @@ def calc_membrane_SotA(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz
     [nx,ny,nz] = t[dom[VAP]].val.shape
     
     # State-of-the-Art assumption:
-    mem.t_int = t[dom[LIQ]].val[:,:1,:]
+    mem.t_int[:,:1,:] = t[dom[LIQ]].val[:,:1,:]
     
     # update boundary conditions & membrane flux
     # Liquid domain boundary condition

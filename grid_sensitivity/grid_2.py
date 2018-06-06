@@ -196,16 +196,10 @@ uf[H2O].bnd[E].typ[:1,:,:] = OUTLET
 uf[H2O].bnd[E].val[:1,:,:] = u_h_in
 uf[COL].bnd[W].typ[:1,:,:] = OUTLET 
 uf[COL].bnd[W].val[:1,:,:] = -u_h_in
-#uf[AIR].bnd[W].typ[:1,:,:] = OUTLET
-
-for c in (AIR,H2O,COL):
-  for j in (B,T):
-    uf[c].bnd[j].typ[:] = NEUMANN     
-    vf[c].bnd[j].typ[:] = NEUMANN     
-    wf[c].bnd[j].typ[:] = NEUMANN     
+#uf[AIR].bnd[W].typ[:1,:,:] = OUTLET    
   
 t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
-t[AIR].bnd[S].val[:,:1,:] = t_c_in
+t[AIR].bnd[S].val[:,:1,:] = 30
 t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[AIR].bnd[N].val[:,:1,:] = 60
 
@@ -217,7 +211,7 @@ t[H2O].bnd[S].val[:,:1,:] = 60
 t[FIL].bnd[S].typ[:,:1,:] = DIRICHLET
 t[FIL].bnd[S].val[:,:1,:] = t_c_in
 t[FIL].bnd[N].typ[:,:1,:] = DIRICHLET  
-t[FIL].bnd[N].val[:,:1,:] = t_c_in
+t[FIL].bnd[N].val[:,:1,:] = 30
 
 t[COL].bnd[E].typ[:1,:,:] = DIRICHLET
 t[COL].bnd[E].val[:1,:,:] = t_c_in
@@ -239,9 +233,9 @@ p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[H2O].bnd[S].val[:,:,:])
 p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
-t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
+t[AIR].val[:,:,:] = np.reshape(np.linspace(30,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
 t[H2O].val[:,:,:] = 70
-t[FIL].val[:,:,:] = t_c_in
+t[FIL].val[:,:,:] = 30
 t[COL].val[:,:,:] = t_c_in
 
 a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
@@ -262,11 +256,11 @@ for c in (W,T):
   t_min = np.amin([t_min, np.amin(t[COL].bnd[c].val)]) 
   
   # Time-stepping parameters
-dt  =    0.0002  # time step
-ndt =    1  # number of time steps
+dt  =    0.0001  # time step
+ndt =    150000  # number of time steps
 dt_plot = ndt    # plot frequency
-dt_save = 100
-dt_save_ts = 50
+dt_save = 50
+dt_save_ts = 500
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 
@@ -274,6 +268,8 @@ obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 change_t = zeros(ndt)
 change_a = zeros(ndt)
 change_p = zeros(ndt)
+
+time_start=time.time()
 
 #%%
 
@@ -436,6 +432,8 @@ for ts in range(1,ndt+1):
     
   if ts % dt_save == 0:
       np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
+      time_end = time.time()     
+      print("Total time: %4.4e" % ((time_end-time_start)/3600))
       if ts % dt_save_ts ==0:
         ws_save_title = 'ws_' + str(ts) + 'ts.npz'
         np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
