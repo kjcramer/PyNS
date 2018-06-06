@@ -138,11 +138,21 @@ pylab.show
 
 #%% inlet velocity profile
 
-u_h2o_plot=u_h2o
-u_h2o[u_h2o<0]=0
+u_h2o_plot=w_h2o
+#u_h2o[u_h2o<0]=0
+
+xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
+yn = (nodes(-0.0035, 0, 35), nodes(0, 0.0015, 9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
+zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
+xc = avg(xn[AIR])
+yc = np.append(avg(yn_fil), avg(yn_air),axis=0)
+#yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(yc, avg(yn_h2o),axis=0)
+zc = avg(zn[AIR])
 
 plt.figure
-plt.contourf(zc,avg(yn[H2O]),u_h2o_plot[0,:,:])
+#plt.contourf(zn[H2O],(yn[H2O]),u_h2o_plot[0,:,:])
+plt.contourf(u_h2o_plot[50,:,:])
 plt.colorbar()
 plt.xlabel('Z [m]',fontsize=20)
 plt.xticks(fontsize=18)
@@ -150,3 +160,33 @@ plt.yticks(fontsize=18)
 plt.ylabel('Y [m]',fontsize=20)
 plt.title('Inlet Velocity Profile [m/s]',fontsize=20)
 pylab.show
+
+#%% inlet velocity profile
+
+u_h2o_plot=uf_col
+#u_h2o[u_h2o<0]=0
+
+xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
+yn = (nodes(-0.0035, 0, 35), nodes(0, 0.0015, 9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
+zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
+xc = avg(xn[AIR])
+yc = np.append(avg(yn_fil), avg(yn_air),axis=0)
+#yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(yc, avg(yn_h2o),axis=0)
+zc = avg(zn[AIR])
+
+plt.figure
+plt.contourf(avg(xc),(yn[COL]),np.transpose(u_h2o_plot[:,:,75]))
+plt.colorbar()
+plt.xlabel('Z [m]',fontsize=20)
+plt.xticks(fontsize=18)
+plt.yticks(fontsize=18)
+plt.ylabel('Y [m]',fontsize=20)
+plt.title('Velocity Profile [m/s]',fontsize=20)
+pylab.show
+
+#%% 
+
+plt.figure
+plt.contourf(np.transpose(p_h2o[100,:,:]))
+plt.colorbar()

@@ -299,6 +299,7 @@ t[COL].val = data['arr_27']
 uf[COL].val = data['arr_28']
 vf[COL].val = data['arr_29']
 wf[COL].val = data['arr_30']
+uf[COL] = 
 
 #==========================================================================
 #

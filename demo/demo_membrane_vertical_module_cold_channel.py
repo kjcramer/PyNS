@@ -196,13 +196,7 @@ uf[H2O].bnd[E].typ[:1,:,:] = OUTLET
 uf[H2O].bnd[E].val[:1,:,:] = u_h_in
 uf[COL].bnd[W].typ[:1,:,:] = OUTLET 
 uf[COL].bnd[W].val[:1,:,:] = -u_h_in
-#uf[AIR].bnd[W].typ[:1,:,:] = OUTLET
-
-for c in (AIR,H2O,COL):
-  for j in (B,T):
-    uf[c].bnd[j].typ[:] = NEUMANN     
-    vf[c].bnd[j].typ[:] = NEUMANN     
-    wf[c].bnd[j].typ[:] = NEUMANN     
+#uf[AIR].bnd[W].typ[:1,:,:] = OUTLET    
   
 t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
 t[AIR].bnd[S].val[:,:1,:] = t_c_in
@@ -435,10 +429,10 @@ for ts in range(1,ndt+1):
     # print("Maximum CFL number: %12.5e" % cfl)
     
   if ts % dt_save == 0:
-      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
+      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p_tot[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn,  t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p_tot[AIR].val   )
       if ts % dt_save_ts ==0:
         ws_save_title = 'ws_' + str(ts) + 'ts.npz'
-        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn   )
+        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p_tot[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn,  t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p_tot[AIR].val   )
       
     
   # Check relative change in domain:

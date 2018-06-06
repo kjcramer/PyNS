@@ -295,6 +295,7 @@ p_v[AIR].bnd[S].val[:,:,:] = data['arr_17']
 uf[AIR].val = data['arr_18']
 vf[AIR].val = data['arr_19']
 wf[AIR].val = data['arr_20']
+uf[COL] = 
 
 #==========================================================================
 #
