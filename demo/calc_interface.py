@@ -182,6 +182,9 @@ def calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom
 def calc_membrane_SotA(t, a, p_v, p_tot, mem, kappa, diff, M, M_input, h_d, dxyz, dom):
 # -----------------------------------------------------------------------------
     """
+    Important: Correct for substraction of latent heat in water domain by
+               adjusting the source term!!!
+    
     Args:
       t: ...... Object of the type "Unknown", holding the temperature.
       a: ...... Object of the type "Unknown", holding the concentration.
