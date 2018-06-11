@@ -48,9 +48,9 @@ a_salt = 90.0 # g/l
 t_c_in = 20   # C
 
 # Node coordinates for both domains
-xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
-yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015, 9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
-zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
+xn = (nodes(0,   0.16, 128), nodes(0, 0.16,  128), nodes(0,       0.16, 128), nodes(0,       0.16, 128))
+yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015,  9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
+zn = (nodes(0,   0.1,   80), nodes(0, 0.1,    80), nodes(0,       0.1,   80), nodes(0,       0.1,   80))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]), avg(xn[COL]))
