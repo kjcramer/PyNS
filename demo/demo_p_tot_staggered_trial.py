@@ -30,8 +30,8 @@ from pyns.physical.constants import G
 # =============================================================================
 
 # Node coordinates
-xn = nodes(0, 0.16,  120)
-yn = nodes(0, 0.004,   8)
+xn = nodes(0, 0.16,  128)
+yn = nodes(0, 0.004,  21)
 zn = nodes(0, 0.1,    80)
 
 # Cell coordinates
@@ -50,9 +50,12 @@ cap   = zeros(rc)
 rho   [:] =    1000         # density              [kg/m^3]
 mu    [:] =       0.00078   # viscosity            [Pa s]
 
+rho, mu, cap, kappa = properties.water(70,rc)
+rho[:,:,:]=np.reshape(np.linspace(50,70,num=rho.shape[1]),[1,rho.shape[1],1])
+
 # Time-stepping parameters
 dt  =   0.0002  # time step
-ndt = 40      # number of time steps
+ndt = 800      # number of time steps
 
 # Create unknowns; names, positions and sizes
 uf    = Unknown("face-u-vel",     X, ru, DIRICHLET)
@@ -64,7 +67,7 @@ p_tot = Unknown("total-pressure", C, rc, NEUMANN)
 # Specify boundary conditions
 uf.bnd[E].typ[:1,:,:] = DIRICHLET
 for k in range(0,nz):
-    uf.bnd[E].val[:1,:,k]  = -par(0.1, yn)
+    uf.bnd[E].val[:1,:,k]  = -par(0.6, yn)
 
 uf.bnd[W].typ[:1,:,:] = OUTLET
 
@@ -91,6 +94,7 @@ obst = zeros(rc)
 for ts in range(1,ndt+1):
 
     write.time_step(ts)
+    
 
     # -----------------
     # Store old values
@@ -135,5 +139,9 @@ for ts in range(1,ndt+1):
 #
 # =============================================================================
 
-    if ts % 20 == 0:
+    if ts % 200 == 0:
         plot.isolines(p_tot.val, (uf,vf,wf), (xn,yn,zn), Z)
+        
+#%%
+
+

@@ -30,9 +30,9 @@ from pyns.physical.constants import G
 # =============================================================================
 
 # Node coordinates
-xn = nodes(0, 0.1,   80)
-yn = nodes(0, 0.01,  20)
-zn = nodes(0, 0.005,  5)
+xn = nodes(0, 0.1,   96)
+yn = nodes(0, 0.01,  24)
+zn = nodes(0, 0.005,  8)
 
 # Cell coordinates
 xc = avg(xn)
@@ -52,7 +52,7 @@ mu    [:] =       0.00078   # viscosity            [Pa s]
 
 # Time-stepping parameters
 dt  =   0.001  # time step
-ndt = 800      # number of time steps
+ndt = 5      # number of time steps
 
 # Create unknowns; names, positions and sizes
 uf    = Unknown("face-u-vel",     X, ru, DIRICHLET)
@@ -106,7 +106,7 @@ for ts in range(1,ndt+1):
     g_v = -G * avg(Y, rho) #* min(ts/100,1)
     g_w = -G * avg(Z, rho) #* min(ts/100,1)
 
-    ext_f = g_u, g_v, zeros(rw)
+    ext_f = g_u, zeros(rv), zeros(rw)
 #    ext_f = zeros(ru), g_v, zeros(rw)
 #    ext_f = zeros(ru), zeros(rv), g_w
 
@@ -135,5 +135,5 @@ for ts in range(1,ndt+1):
 #
 # =============================================================================
 
-    if ts % 200 == 0:
+    if ts % 25 == 0:
         plot.isolines(p_tot.val, (uf,vf,wf), (xn,yn,zn), Z)

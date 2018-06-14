@@ -15,6 +15,7 @@ from pyns.discretization.diffusion      import diffusion
 from pyns.discretization.vol_balance    import vol_balance
 from pyns.discretization.obst_zero_val  import obst_zero_val
 from pyns.solvers.nonstationary         import cg, cgs, bicgstab
+from pyns.solvers.multigrid             import gamg_v_cycle
 
 # =============================================================================
 def calc_p(p, uvwf, rho, dt, dxyz, 
@@ -55,7 +56,7 @@ def calc_p(p, uvwf, rho, dt, dxyz,
         print("  Volume imbalance before correction : %12.5e" % b_p.sum())
 
     # Solve for pressure
-    p.val[:] = bicgstab(A_p, p, b_p, TOL, False)
+    p.val[:] = cg(A_p, p, b_p, TOL, False)
 
     # Anchor it to values around zero (the absolute value of pressure
     # correction can get really volatile.  Although it is in prinicple not

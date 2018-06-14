@@ -42,7 +42,7 @@ H2O = 1
 FIL = 2
 COL = 3
 
-u_h_in = 0.2 # m/s
+u_h_in = 0.6 # m/s
 t_h_in = 70   # C
 a_salt = 90.0 # g/l
 t_c_in = 20   # C
@@ -332,7 +332,7 @@ for ts in range(1,ndt+1):
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
   
   # downward (negative) velocity induced through evaporation (positive mem_j)                
-  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
+  #vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
           
@@ -429,10 +429,10 @@ for ts in range(1,ndt+1):
     # print("Maximum CFL number: %12.5e" % cfl)
     
   if ts % dt_save == 0:
-      np.savez('ws_temp.npz', ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p_tot[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn,  t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p_tot[AIR].val   )
+      np.savez('ws_temp.npz', ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
       if ts % dt_save_ts ==0:
         ws_save_title = 'ws_' + str(ts) + 'ts.npz'
-        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p_tot[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], zn,  t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p_tot[AIR].val   )
+        np.savez(ws_save_title, ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
       
     
   # Check relative change in domain:

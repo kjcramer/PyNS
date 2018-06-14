@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_temp_70.npz')
+data=np.load('ws_500ts.npz')
 
 ts = data['arr_0']
 t_air = data['arr_1']
