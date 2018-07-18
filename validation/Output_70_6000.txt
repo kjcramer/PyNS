@@ -1,0 +1,2 @@
+t_h_in u_h_in airgap m_evap RR GOR
+70 0.600 0.0035 -2.899e+01 1.3724e-05 3.9549e-03

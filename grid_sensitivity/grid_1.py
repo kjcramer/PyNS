@@ -48,6 +48,10 @@ a_salt = 90.0 # g/l
 t_c_in = 20   # C
 name = 'grid_1'
 
+# restart options
+restart = True
+restart_file = 'ws_grid_1_temp.npz'
+
 # Node coordinates for both domains
 xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
 yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015, 9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
@@ -258,10 +262,11 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =    5 #150000  # number of time steps
+ndt =    150000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
 dt_save_ts = 500
+tss = 1
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 
@@ -271,6 +276,55 @@ change_a = zeros(ndt)
 change_p = zeros(ndt)
 
 time_start=time.time()
+
+#%%
+
+if restart==True:
+  
+  data=np.load(restart_file)
+    
+  tss = data['arr_0']-1
+  
+  t[AIR].val[:,:,:] = data['arr_7']
+  uf[AIR].val[:,:,:] = data['arr_8']
+  vf[AIR].val[:,:,:] = data['arr_9']
+  wf[AIR].val[:,:,:] = data['arr_10']
+  p_tot[AIR].val[:,:,:] = data['arr_11']
+  p[AIR].val[:,:,:] = data['arr_12']
+  a[AIR].val[:,:,:] = data['arr_13']
+  p_v[AIR].val[:,:,:] = data['arr_14']
+  p_v[AIR].bnd[N].val[:,:,:] = data['arr_15']
+  p_v[AIR].bnd[S].val[:,:,:] = data['arr_16']
+  
+  t[H2O].val[:,:,:] = data['arr_17']
+  uf[H2O].val[:,:,:] = data['arr_18']
+  vf[H2O].val[:,:,:] = data['arr_19']
+  wf[H2O].val[:,:,:] = data['arr_20']
+  p_tot[H2O].val[:,:,:] = data['arr_21']
+  p[H2O].val[:,:,:] = data['arr_22']
+  a[H2O].val[:,:,:] = data['arr_23']
+  
+  t[FIL].val[:,:,:] = data['arr_24']
+  
+  t[COL].val[:,:,:] = data['arr_25']
+  uf[COL].val[:,:,:] = data['arr_26']
+  vf[COL].val[:,:,:] = data['arr_27']
+  wf[COL].val[:,:,:] = data['arr_28']
+  p_tot[COL].val[:,:,:] = data['arr_29']
+  p[COL].val[:,:,:] = data['arr_30']
+  
+  mem.t_int[:,:,:] = data['arr_31']
+  mem.j[:,:,:] = data['arr_32']
+  mem.pv[:,:,:] = data['arr_33']
+  t_int = data['arr_34']
+  m_evap = data['arr_35']
+  
+  print("data from file loaded")
+  
+  for c in (AIR,H2O,FIL,COL):
+    adj_n_bnds(p[c])
+    adj_n_bnds(t[c])
+    adj_n_bnds(a[c])
 #%%
 
 #==========================================================================
@@ -284,7 +338,7 @@ time_start=time.time()
 # Time loop 
 #
 #-----------
-for ts in range(1,ndt+1):
+for ts in range(tss,ndt+1):
   
   write.time_step(ts)
  
@@ -334,7 +388,7 @@ for ts in range(1,ndt+1):
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
   
   # downward (negative) velocity induced through evaporation (positive mem_j)                
-  #vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
+  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
           
@@ -437,12 +491,12 @@ for ts in range(1,ndt+1):
     
   if ts % dt_save == 0:
       ws_tmp_name = 'ws_' + name + '_temp.npz'
-      np.savez(ws_tmp_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val, wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[H2O].val, p_tot[COL].val, p_tot[AIR].val   )
+      np.savez(ws_tmp_name, ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
       time_end = time.time()     
       print("Total time: %4.4e" % ((time_end-time_start)/3600))
       if ts % dt_save_ts ==0:
         ws_save_title = 'ws_' + name + '_' + str(ts) + 'ts.npz'
-        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val, wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[H2O].val, p_tot[COL].val, p_tot[AIR].val   )
+        np.savez(ws_save_title, ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
       
     
   # Check relative change in domain:
