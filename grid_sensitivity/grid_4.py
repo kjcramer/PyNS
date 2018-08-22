@@ -43,18 +43,18 @@ FIL = 2
 COL = 3
 
 u_h_in = 0.6 # m/s
-t_h_in = 50   # C
+t_h_in = 70   # C
 a_salt = 90.0 # g/l
 t_c_in = 20   # C
-name = str(t_h_in)
+name = "grid_4"
 
 # restart options
 restart = True
-restart_file = 'ws_50_temp.npz'
+restart_file = 'ws_grid_4_temp.npz'
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.16, 128), nodes(0, 0.16,  128), nodes(0,       0.16, 128), nodes(0,       0.16, 128))
-yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015,  9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
+yn = (nodes(-0.0035, 0, 32), nodes(0, 0.0015, 16), nodes(-0.004, -0.0035, 8), nodes(-0.0055, -0.004,16))
 zn = (nodes(0,   0.1,   80), nodes(0, 0.1,    80), nodes(0,       0.1,   80), nodes(0,       0.1,   80))
 
 # Cell coordinates 
@@ -243,6 +243,8 @@ t[H2O].val[:,:,:] = 70
 t[FIL].val[:,:,:] = t_c_in
 t[COL].val[:,:,:] = t_c_in
 
+t_int = t_c_in
+
 a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
 a[H2O].val[:,:,:] = a_salt/rho[H2O][:,:,:]
@@ -265,7 +267,7 @@ dt  =    0.0002  # time step
 ndt =    150000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
-dt_save_ts = 1000
+dt_save_ts = 10000
 tss = 1
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
@@ -355,6 +357,7 @@ for ts in range(tss,ndt+1):
     wf[c].old[:] = wf[c].val
   mem.t_old[:] = mem.t
   mem.t_int_old[:] = mem.t_int
+  t_int_old = t_int
   
                      
   rho[AIR][:,:,:] = np.interp(t[AIR].val, t_interp, rho_air)
@@ -369,8 +372,8 @@ for ts in range(tss,ndt+1):
   p_v[AIR].val[:,:,:] = a[AIR].val[:,:,:] *M[AIR].val[:,:,:]/M_H2O * (p_tot[AIR].val[:,:,:] +1E5) 
     
   # Interphase energy equation between AIR & FIL
-  t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL))  
+  t_int, m_evap, t, p_v = calc_interface2(t, a, p_v, p_tot, kappa, M, \
+                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL), t_int)  
   
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
