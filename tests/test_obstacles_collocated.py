@@ -38,7 +38,7 @@ from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
 
-def main(show_plot=True, time_steps=4800, plot_freq=480):
+def main(show_plot=True, time_steps=200, plot_freq=480):
 
 # =============================================================================
 #
@@ -60,7 +60,7 @@ def main(show_plot=True, time_steps=4800, plot_freq=480):
     nx,ny,nz, dx,dy,dz, rc,ru,rv,rw = cartesian_grid(xn,yn,zn)
 
     # Set physical properties
-    rho, mu, cap, kappa = properties.air(rc)
+    rho, mu, cap, kappa = properties.air(60,rc)
 
     # Time-stepping parameters
     dt  = 0.002      # time step

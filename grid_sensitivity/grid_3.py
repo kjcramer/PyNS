@@ -262,7 +262,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =    7000 #150000  # number of time steps
+ndt =    4840 #150000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 100
 dt_save_ts = 500
@@ -281,43 +281,45 @@ time_start=time.time()
 
 if restart==True:
   
-  load(restart_file)
+  data = np.load(restart_file)
     
   tss = data['arr_0']-1
   
-  t[AIR].val = data['arr_7']
-  uf[AIR].val = data['arr_8']
-  vf[AIR].val = data['arr_9']
-  wf[AIR].val = data['arr_10']
-  p_tot[AIR].val = data['arr_11']
-  p[AIR].val = data['arr_12']
-  a[AIR].val = data['arr_13']
-  pv[AIR].val = data['arr_14']
-  pv[AIR].bnd[N].val = data['arr_15']
-  pv[AIR].bnd[S].val = data['arr_16']
+  t[AIR].val[:,:,:] = data['arr_7']
+  uf[AIR].val[:,:,:] = data['arr_8']
+  vf[AIR].val[:,:,:] = data['arr_9']
+  wf[AIR].val[:,:,:] = data['arr_10']
+  p_tot[AIR].val[:,:,:] = data['arr_11']
+  p[AIR].val[:,:,:] = data['arr_12']
+  a[AIR].val[:,:,:] = data['arr_13']
+  p_v[AIR].val[:,:,:] = data['arr_14']
+  p_v[AIR].bnd[N].val[:,:,:] = data['arr_15']
+  p_v[AIR].bnd[S].val[:,:,:] = data['arr_16']
   
-  t[H2O].val = data['arr_17']
-  uf[H2O].val = data['arr_18']
-  vf[H2O].val = data['arr_19']
-  wf[H2O].val = data['arr_20']
-  p_tot[H2O].val = data['arr_21']
-  p[H2O].val = data['arr_22']
-  a[H2O].val = data['arr_23']
+  t[H2O].val[:,:,:] = data['arr_17']
+  uf[H2O].val[:,:,:] = data['arr_18']
+  vf[H2O].val[:,:,:] = data['arr_19']
+  wf[H2O].val[:,:,:] = data['arr_20']
+  p_tot[H2O].val[:,:,:] = data['arr_21']
+  p[H2O].val[:,:,:] = data['arr_22']
+  a[H2O].val[:,:,:] = data['arr_23']
   
-  t[FIL].val = data['arr_24']
+  t[FIL].val[:,:,:] = data['arr_24']
   
-  t[COL].val = data['arr_25']
-  uf[COL].val = data['arr_26']
-  vf[COL].val = data['arr_27']
-  wf[COL].val = data['arr_28']
-  p_tot[COL].val = data['arr_29']
-  p[COL].val = data['arr_30']
+  t[COL].val[:,:,:] = data['arr_25']
+  uf[COL].val[:,:,:] = data['arr_26']
+  vf[COL].val[:,:,:] = data['arr_27']
+  wf[COL].val[:,:,:] = data['arr_28']
+  p_tot[COL].val[:,:,:] = data['arr_29']
+  p[COL].val[:,:,:] = data['arr_30']
   
-  mem.t_int = data['arr_31']
-  mem.j = data['arr_32']
-  mem.pv = data['arr_33']
+  mem.t_int[:,:,:] = data['arr_31']
+  mem.j[:,:,:] = data['arr_32']
+  mem.pv[:,:,:] = data['arr_33']
   t_int = data['arr_34']
   m_evap = data['arr_35']
+  
+  print("data from file loaded")
   
   for c in (AIR,H2O,FIL,COL):
     adj_n_bnds(p[c])
@@ -380,7 +382,7 @@ for ts in range(tss,ndt+1):
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
   
   # downward (negative) velocity induced through evaporation (positive mem_j)                
-  #vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
+  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
           
