@@ -15,7 +15,7 @@ from pyns.demo.p_v_sat import *
 from scipy.optimize import fsolve
 
 # =============================================================================
-def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, SF=1):
+def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -54,7 +54,7 @@ def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, SF=
                                   (p_tot[dom[VAP]].val[:,:1,:] +1E5)
     
     # calculate interface temperature for saturated air 
-    t_int = t_sat(p_v[dom[VAP]].bnd[S].val[:,:,:]/SF)
+    t_int = t_sat(p_v[dom[VAP]].bnd[S].val[:,:,:])
     print("t_int = " + "%3.4f" %np.mean(t_int))
     
     # update temperature boundary values
@@ -69,7 +69,6 @@ def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, SF=
             * dx[dom[VAP]][:,:1,:] * dz[dom[VAP]][:,:1,:] / h_d[dom[LIQ]]  # kg/s
     
     print("m_evap = " + "%3.4e" %np.mean(m_evap)) 
-    print("Saturation Factor = " + "%1.2f" %np.mean(SF))
 
     return t_int, m_evap, t, p_v # end of function
   
