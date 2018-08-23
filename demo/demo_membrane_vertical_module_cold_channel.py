@@ -340,10 +340,10 @@ for ts in range(1,ndt+1):
   tot_res_plate = dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:]) + d_plate/kappa_plate \
                 + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:])
   t[FIL].bnd[S].val[:,:1,:] = t[FIL].val[:,:1,:] \
-                - dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:] + tot_res_plate) \
+                - dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:] * tot_res_plate) \
                 * (t[FIL].val[:,:1,:] - t[COL].val[:,-1:,:])          
   t[COL].bnd[N].val[:,:1,:] = t[COL].val[:,-1:,:] \
-                + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:] + tot_res_plate) \
+                + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:] * tot_res_plate) \
                 * (t[FIL].val[:,:1,:] - t[COL].val[:,-1:,:])
          
   #------------------------
