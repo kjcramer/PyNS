@@ -48,10 +48,14 @@ a_salt = 90.0 # g/l
 t_c_in = 20   # C
 name = 'grid_2'
 
+# restart options
+restart = True
+restart_file = 'ws_grid_2_temp.npz'
+
 # Node coordinates for both domains
-xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  512), nodes(0,       0.16, 512), nodes(0,       0.16, 512))
+xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
 yn = (nodes(-0.0035, 0, 35), nodes(0, 0.0015, 15), nodes(-0.004, -0.0035, 5), nodes(-0.0055, -0.004, 15))
-zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   320), nodes(0,       0.1,  320), nodes(0,       0.1,  320))
+zn = (nodes(0,   0.1,  150), nodes(0, 0.1,   150), nodes(0,       0.1,  150), nodes(0,       0.1,  150))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]), avg(xn[COL]))
@@ -262,6 +266,7 @@ ndt =    150000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 50
 dt_save_ts = 500
+tss = 1
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 
@@ -271,6 +276,55 @@ change_a = zeros(ndt)
 change_p = zeros(ndt)
 
 time_start=time.time()
+
+#%%
+
+if restart==True:
+  
+  data=np.load(restart_file)
+    
+  tss = data['arr_0']-1
+  
+  t[AIR].val[:,:,:] = data['arr_7']
+  uf[AIR].val[:,:,:] = data['arr_8']
+  vf[AIR].val[:,:,:] = data['arr_9']
+  wf[AIR].val[:,:,:] = data['arr_10']
+  p_tot[AIR].val[:,:,:] = data['arr_11']
+  p[AIR].val[:,:,:] = data['arr_12']
+  a[AIR].val[:,:,:] = data['arr_13']
+  p_v[AIR].val[:,:,:] = data['arr_14']
+  p_v[AIR].bnd[N].val[:,:,:] = data['arr_15']
+  p_v[AIR].bnd[S].val[:,:,:] = data['arr_16']
+  
+  t[H2O].val[:,:,:] = data['arr_17']
+  uf[H2O].val[:,:,:] = data['arr_18']
+  vf[H2O].val[:,:,:] = data['arr_19']
+  wf[H2O].val[:,:,:] = data['arr_20']
+  p_tot[H2O].val[:,:,:] = data['arr_21']
+  p[H2O].val[:,:,:] = data['arr_22']
+  a[H2O].val[:,:,:] = data['arr_23']
+  
+  t[FIL].val[:,:,:] = data['arr_24']
+  
+  t[COL].val[:,:,:] = data['arr_25']
+  uf[COL].val[:,:,:] = data['arr_26']
+  vf[COL].val[:,:,:] = data['arr_27']
+  wf[COL].val[:,:,:] = data['arr_28']
+  p_tot[COL].val[:,:,:] = data['arr_29']
+  p[COL].val[:,:,:] = data['arr_30']
+  
+  mem.t_int[:,:,:] = data['arr_31']
+  mem.j[:,:,:] = data['arr_32']
+  mem.pv[:,:,:] = data['arr_33']
+  t_int = data['arr_34']
+  m_evap = data['arr_35']
+  
+  print("data from file loaded")
+  
+  for c in (AIR,H2O,FIL,COL):
+    adj_n_bnds(p[c])
+    adj_n_bnds(t[c])
+    adj_n_bnds(a[c])
 
 #%%
 
@@ -285,7 +339,7 @@ time_start=time.time()
 # Time loop 
 #
 #-----------
-for ts in range(1,ndt+1):
+for ts in range(tss,ndt+1):
   
   write.time_step(ts)
  

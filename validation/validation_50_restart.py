@@ -14,6 +14,7 @@ import matplotlib.pylab as pylab
 import numpy as np
 import matplotlib
 from scipy.optimize import fsolve
+from scipy.constants import R
 
 # PyNS modules
 from pyns.constants          import *
@@ -24,9 +25,9 @@ from pyns.physical           import properties
 from pyns.physical.constants import G
 
 # membrane aux functions
-from p_v_sat import *
-from calc_interface import *
-from latent_heat import *
+from pyns.demo.p_v_sat import *
+from pyns.demo.calc_interface import *
+from pyns.demo.latent_heat import *
 
 plt.close("all")
 
@@ -41,16 +42,20 @@ H2O = 1
 FIL = 2
 COL = 3
 
-u_h_in = 0.2 # m/s
+u_h_in = 0.6 # m/s
 t_h_in = 50   # C
 a_salt = 90.0 # g/l
 t_c_in = 20   # C
-id = str(t_h_in)
+name = str(t_h_in)
+
+# restart options
+restart = True
+restart_file = 'ws_50_temp.npz'
 
 # Node coordinates for both domains
-xn = (nodes(0,   0.16, 240), nodes(0, 0.16,  240), nodes(0,       0.16, 240), nodes(0,       0.16, 240))
-yn = (nodes(-0.0035, 0, 12), nodes(0, 0.0015, 10), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 10))
-zn = (nodes(0,   0.1,  100), nodes(0, 0.1,   100), nodes(0,       0.1,  100), nodes(0,       0.1,  100))
+xn = (nodes(0,   0.16, 128), nodes(0, 0.16,  128), nodes(0,       0.16, 128), nodes(0,       0.16, 128))
+yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015,  9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
+zn = (nodes(0,   0.1,   80), nodes(0, 0.1,    80), nodes(0,       0.1,   80), nodes(0,       0.1,   80))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]), avg(xn[COL]))
@@ -99,8 +104,7 @@ M_H2O  = 18E-3      # kg/mol
 M_AIR  = 28E-3      # kg/mol
 M_salt = 58.4428E-3 # kg/mol      
 
-R = 8.314
-pi = 3.1415
+pi = np.pi
 
 # for density interpolation
 t_interp = [20,30,40,50,60,70,80]
@@ -133,7 +137,7 @@ mem = membrane(110E-6,   \
                  
 # stainless steel plate properties:
 d_plate = 2.0E-3 # m
-kappa_plate = 16 # W/(mK)                
+kappa_plate = 20 # W/(mK)                
       
  
 # Create unknowns; names, positions and sizes
@@ -181,6 +185,10 @@ dv  = [dx[AIR]*dy[AIR]*dz[AIR],
        dx[H2O]*dy[H2O]*dz[H2O], 
        dx[FIL]*dy[FIL]*dz[FIL], 
        dx[COL]*dy[COL]*dz[COL]]
+       
+# variables to temporarily store vf bnd values:
+vf_air_S_tmp=zeros(vf[AIR].bnd[S].val.shape)
+vf_h2o_S_tmp=zeros(vf[H2O].bnd[S].val.shape)
 
 # Specify boundary conditions
 
@@ -193,23 +201,17 @@ uf[H2O].bnd[E].typ[:1,:,:] = OUTLET
 uf[H2O].bnd[E].val[:1,:,:] = u_h_in
 uf[COL].bnd[W].typ[:1,:,:] = OUTLET 
 uf[COL].bnd[W].val[:1,:,:] = -u_h_in
-uf[AIR].bnd[W].typ[:1,:,:] = OUTLET
-
-for c in (AIR,H2O,COL):
-  for j in (B,T):
-    uf[c].bnd[j].typ[:] = NEUMANN     
-    vf[c].bnd[j].typ[:] = NEUMANN     
-    wf[c].bnd[j].typ[:] = NEUMANN     
+#uf[AIR].bnd[W].typ[:1,:,:] = OUTLET     
   
 t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
 t[AIR].bnd[S].val[:,:1,:] = t_c_in
 t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET  
-t[AIR].bnd[N].val[:,:1,:] = t_h_in
+t[AIR].bnd[N].val[:,:1,:] = 60
 
 t[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 t[H2O].bnd[W].val[:1,:,:] = t_h_in
 t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET  
-t[H2O].bnd[S].val[:,:1,:] = t_h_in
+t[H2O].bnd[S].val[:,:1,:] = 60
  
 t[FIL].bnd[S].typ[:,:1,:] = DIRICHLET
 t[FIL].bnd[S].val[:,:1,:] = t_c_in
@@ -221,7 +223,7 @@ t[COL].bnd[E].val[:1,:,:] = t_c_in
 t[COL].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[COL].bnd[N].val[:,:1,:] = t_c_in
 
-mem.t_int[:] = t[H2O].bnd[S].val[:,:1,:] # temporary
+mem.t_int[:,:,:] = t[H2O].bnd[S].val[:,:1,:] # temporary
 
 a[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 a[H2O].bnd[W].val[:1,:,:] = a_salt/rho[H2O][:1,:,:]
@@ -237,7 +239,7 @@ p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
 t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
-t[H2O].val[:,:,:] = t_h_in
+t[H2O].val[:,:,:] = 70
 t[FIL].val[:,:,:] = t_c_in
 t[COL].val[:,:,:] = t_c_in
 
@@ -260,10 +262,11 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0002  # time step
-ndt =   150000  # number of time steps
-dt_plot = ndt+1 # plot frequency
-dt_save = 100
-dt_save_ts = 50000
+ndt =    150000  # number of time steps
+dt_plot = ndt    # plot frequency
+dt_save = 500
+dt_save_ts = 1000
+tss = 1
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
 
@@ -272,34 +275,58 @@ change_t = zeros(ndt)
 change_a = zeros(ndt)
 change_p = zeros(ndt)
 
-ws_name = 'ws_temp_' + id + '.npz'
-data=np.load(ws_name)
+time_start=time.time()
 
-tss = data['arr_0']
-t[AIR].val[:,:,:] = data['arr_1']
-t[H2O].val[:,:,:] = data['arr_2']
-t[FIL].val[:,:,:] = data['arr_3']
-uf[H2O].val[:,:,:] = data['arr_4']
-vf[H2O].val[:,:,:] = data['arr_5']
-wf[H2O].val[:,:,:] = data['arr_6']
-a[H2O].val[:,:,:] = data['arr_7']
-a[AIR].val[:,:,:] = data['arr_8']
-p[H2O].val[:,:,:] = data['arr_9']
-p_tot[H2O].val[:,:,:] = data['arr_9']
-mem.t_int[:,:,:] = data['arr_10']
-mem.j[:,:,:] = data['arr_13']
-mem.pv[:,:,:] = data['arr_14']
-p_v[AIR].val[:,:,:] = data['arr_15']
-p_v[AIR].bnd[N].val[:,:,:] = data['arr_16']
-p_v[AIR].bnd[S].val[:,:,:] = data['arr_17']
-uf[AIR].val = data['arr_18']
-vf[AIR].val = data['arr_19']
-wf[AIR].val = data['arr_20']
-t[COL].val = data['arr_27']
-uf[COL].val = data['arr_28']
-vf[COL].val = data['arr_29']
-wf[COL].val = data['arr_30']
-uf[COL] = 
+#%%
+
+if restart==True:
+  
+  data=np.load(restart_file)
+    
+  tss = data['arr_0']-1
+  
+  t[AIR].val[:,:,:] = data['arr_7']
+  uf[AIR].val[:,:,:] = data['arr_8']
+  vf[AIR].val[:,:,:] = data['arr_9']
+  wf[AIR].val[:,:,:] = data['arr_10']
+  p_tot[AIR].val[:,:,:] = data['arr_11']
+  p[AIR].val[:,:,:] = data['arr_12']
+  a[AIR].val[:,:,:] = data['arr_13']
+  p_v[AIR].val[:,:,:] = data['arr_14']
+  p_v[AIR].bnd[N].val[:,:,:] = data['arr_15']
+  p_v[AIR].bnd[S].val[:,:,:] = data['arr_16']
+  
+  t[H2O].val[:,:,:] = data['arr_17']
+  uf[H2O].val[:,:,:] = data['arr_18']
+  vf[H2O].val[:,:,:] = data['arr_19']
+  wf[H2O].val[:,:,:] = data['arr_20']
+  p_tot[H2O].val[:,:,:] = data['arr_21']
+  p[H2O].val[:,:,:] = data['arr_22']
+  a[H2O].val[:,:,:] = data['arr_23']
+  
+  t[FIL].val[:,:,:] = data['arr_24']
+  
+  t[COL].val[:,:,:] = data['arr_25']
+  uf[COL].val[:,:,:] = data['arr_26']
+  vf[COL].val[:,:,:] = data['arr_27']
+  wf[COL].val[:,:,:] = data['arr_28']
+  p_tot[COL].val[:,:,:] = data['arr_29']
+  p[COL].val[:,:,:] = data['arr_30']
+  
+  mem.t_int[:,:,:] = data['arr_31']
+  mem.j[:,:,:] = data['arr_32']
+  mem.pv[:,:,:] = data['arr_33']
+  t_int = data['arr_34']
+  m_evap = data['arr_35']
+  
+  print("data from file loaded")
+  
+  for c in (AIR,H2O,FIL,COL):
+    adj_n_bnds(p[c])
+    adj_n_bnds(t[c])
+    adj_n_bnds(a[c])
+
+#%%
 
 #==========================================================================
 #
@@ -312,7 +339,7 @@ uf[COL] =
 # Time loop 
 #
 #-----------
-for ts in range(tss-1,ndt+1):
+for ts in range(tss,ndt+1):
   
   write.time_step(ts)
  
@@ -329,13 +356,6 @@ for ts in range(tss-1,ndt+1):
   mem.t_old[:] = mem.t
   mem.t_int_old[:] = mem.t_int
   
-#  #calculate rho
-#  t_min_rho = 20
-#  t_max_rho = 80
-#  rho_min = 1.205
-#  rho_max = 1.000
-#  rho[AIR][:,:,:] = (t[AIR].val[:,:,:] - t_min_rho)/(t_max_rho - t_min_rho) * \
-#                     (rho_max - rho_min) + rho_min
                      
   rho[AIR][:,:,:] = np.interp(t[AIR].val, t_interp, rho_air)
   rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
@@ -350,22 +370,22 @@ for ts in range(tss-1,ndt+1):
     
   # Interphase energy equation between AIR & FIL
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL)) 
+                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL))  
   
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
   #vf[FIL].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
   #vf[AIR].bnd[S].val[:,:1,:] = m_evap[:,:1,:]/(rho[AIR][:,:1,:]*dx[AIR][:,:1,:]*dz[AIR][:,:1,:])
-     
+   
   # Membrane diffusion and energy equation between H2O & AIR
   mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
-                    
+  
   # downward (negative) velocity induced through evaporation (positive mem_j)                
   vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
-             
+          
   # Heat transfer between FIL & COL d_plate=2mm, kappa_stainless steel=20W/(mK)
   tot_res_plate = dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:]) + d_plate/kappa_plate \
                 + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:])
@@ -378,7 +398,15 @@ for ts in range(tss-1,ndt+1):
          
   #------------------------
   # Concentration
-  #------------------------ 
+  #------------------------
+  
+  # correct for salt retention in feed water
+  vf_h2o_S_tmp[:,:,:] = vf[H2O].bnd[S].val[:,:1,:]
+  vf[H2O].bnd[S].val[:,:1,:] = 0.0
+  
+  vf_air_S_tmp[:,:,:] = vf[AIR].bnd[S].val[:,:1,:]
+  vf[AIR].bnd[S].val[:,:1,:] = 0.0
+  
   # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
   for c in (AIR,H2O):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
@@ -389,9 +417,13 @@ for ts in range(tss-1,ndt+1):
   for c in (AIR,H2O):
     a[c].val[a[c].val < 0.0] = 0.0
     
+  vf[H2O].bnd[S].val[:,:1,:] = vf_h2o_S_tmp[:,:,:]
+  vf[AIR].bnd[S].val[:,:1,:] = vf_air_S_tmp[:,:,:]
+    
   #------------------------
   # Temperature (enthalpy)
-  #------------------------ 
+  #------------------------
+  
   for c in (AIR,H2O,FIL,COL):
     calc_t(t[c], (uf[c],vf[c],wf[c]), (rho[c]*cap[c]), kappa[c],  \
            dt, (dx[c],dy[c],dz[c]), 
@@ -407,8 +439,13 @@ for ts in range(tss-1,ndt+1):
   #-----------------------
   for c in (AIR,H2O,COL):
     g_u = -G * avg(X, rho[c])
+     
+    #ef = g_u, zeros(rv[c]), zeros(rw[c])
+    
+    #g_v = -G * avg(Y, rho[c])
   
     ef = g_u, zeros(rv[c]), zeros(rw[c])
+    
     
     calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
              dt, (dx[c],dy[c],dz[c]), 
@@ -444,19 +481,21 @@ for ts in range(tss-1,ndt+1):
   # Check the CFL number too 
   for c in (AIR,H2O,COL):
     cfl = cfl_max((uf[c],vf[c],wf[c]), dt, (dx[c],dy[c],dz[c]))
-#    print("Maximum CFL number: %12.5e" % cfl)
+    # print("Maximum CFL number: %12.5e" % cfl)
     
   if ts % dt_save == 0:
-      ws_name = 'ws_temp_' + id + '.npz'
-      np.savez(ws_name, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val)
-      if ts % dt_save_ts == 0:
-        ws_save_title = 'ws_' + id + '_' + str(ts) + 'ts.npz'
-        np.savez(ws_save_title, ts, t[AIR].val, t[H2O].val, t[FIL].val,uf[H2O].val,vf[H2O].val,wf[H2O].val,a[H2O].val,a[AIR].val,p[H2O].val,mem.t_int, t_int,m_evap, mem.j, mem.pv,p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val)
-        text_id = 'Output_' + id + '_' + str(ts) + '.txt'
+      ws_tmp_name = 'ws_' + name + '_temp.npz'
+      np.savez(ws_tmp_name, ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
+      time_end = time.time()     
+      print("Total time: %4.4e" % ((time_end-time_start)/3600))
+      if ts % dt_save_ts ==0:
+        ws_save_title = 'ws_' + name + '_' + str(ts) + 'ts.npz'
+        np.savez(ws_save_title, ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
+        text_id = 'Output_' + name + '_' + str(ts) + '.txt'
         text_file = open(text_id, "w")
         airgap_outfile = 0.0035
-        massflow_outfile = np.sum(np.sum(m_evap)) \
-                     /np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]))*3600 
+        massflow_outfile = np.sum(m_evap) \
+                     /np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])*3600 
         RR_outfile = (-np.sum(np.sum(m_evap)))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
                      *np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])))
         GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:]) \
@@ -465,7 +504,6 @@ for ts in range(tss-1,ndt+1):
         text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e}".format \
           (t_h_in, u_h_in, airgap_outfile, massflow_outfile, RR_outfile, GOR_outfile))
         text_file.close()
-      
     
   # Check relative change in domain:
   change_t[ts-1] = (np.absolute(t[H2O].val-t[H2O].old)).max()/t[H2O].old.max()
@@ -509,6 +547,13 @@ for ts in range(tss-1,ndt+1):
     a_plot=np.append(a_plot, a[H2O].val[:,:,z_pos],axis=1)
     a_plot=transpose(a_plot)
     
+    uc_air = avg_x(cat_x((uf[AIR].bnd[W].val[:1,:,:], uf[AIR].val, uf[AIR].bnd[E].val[:1,:,:])))
+    uc_h2o = avg_x(cat_x((uf[H2O].bnd[W].val[:1,:,:], uf[H2O].val, uf[H2O].bnd[E].val[:1,:,:])))
+    uc_fil = avg_x(cat_x((uf[FIL].bnd[W].val[:1,:,:], uf[FIL].val, uf[FIL].bnd[E].val[:1,:,:])))
+    uc_col = avg_x(cat_x((uf[COL].bnd[W].val[:1,:,:], uf[COL].val, uf[COL].bnd[E].val[:1,:,:])))
+    u_plot = np.concatenate([uc_col[:,:,z_pos],uc_fil[:,:,z_pos],uc_air[:,:,z_pos],uc_h2o[:,:,z_pos]],axis=1)
+    u_plot = transpose(u_plot)    
+    
     plt.figure
     plt.subplot(2,2,1)
     levels_t=linspace( t_plot.min(), t_plot.max(), 11)
@@ -539,9 +584,17 @@ for ts in range(tss-1,ndt+1):
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
     
+    plt.subplot(2,2,4)
+    cax_u=plt.contourf(xc,yc,u_plot,cmap="rainbow")
+    cbar_u=plt.colorbar(cax_u)
+    plt.title("Axial Velocity")
+    plt.xlabel("x [m]")
+    #plt.ylim([-1E1,1E1])
+    plt.ylabel("y [m]" )
+    
     #pylab.savefig('membrane.pdf')
 
-    #pylab.show()
+    pylab.show()
 
     #for c in (AIR,H2O):
     #  plot_isolines(t[c].val, (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
