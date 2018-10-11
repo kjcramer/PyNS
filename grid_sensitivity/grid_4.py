@@ -49,7 +49,7 @@ t_c_in = 20   # C
 name = "grid_4"
 
 # restart options
-restart = True
+restart = False
 restart_file = 'ws_grid_4_temp.npz'
 
 # Node coordinates for both domains
@@ -267,7 +267,7 @@ dt  =    0.0002  # time step
 ndt =    150000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
-dt_save_ts = 10000
+dt_save_ts = 1000
 tss = 1
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
@@ -385,7 +385,7 @@ for ts in range(tss,ndt+1):
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
   
   # downward (negative) velocity induced through evaporation (positive mem_j)                
-  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
+  #vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
           

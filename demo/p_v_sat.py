@@ -65,12 +65,12 @@ def p_v_sat(t):
   return p_v # end of function
   
 #--------------------------------------------------------------------------
-def p_v_sat_salt(t,a,M_salt):
+def p_v_sat_salt(t,a,M_salt,M_H2O):
 #--------------------------------------------------------------------------
   
   p_v=p_v_sat(t)
   
-  p_v = p_v * 1
+  p_v = p_v * (1 - M_H2O/M_salt * a)
   
   return p_v # end of function
  
