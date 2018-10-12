@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_70_99000ts.npz')
+data=np.load('ws_70_temp.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
 # t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, 
 # t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val, p_tot[H2O].val, p[H2O].val, a[H2O].val, 
@@ -81,7 +81,7 @@ COL = 3
 #yn = (nodes(-0.004, 0,     10), nodes( 0,    0.02,  30), nodes(-0.005, -0.004,  3))
 #zn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
 
-z_pos = 75
+z_pos = 40
     
 xc = avg(xn[AIR])
 yc = np.append(avg(yn_fil), avg(yn_air),axis=0)
@@ -91,21 +91,31 @@ zc = avg(zn[AIR])
 
 #%% vertical temperature profil
 
-yc = np.append(avg(yn_col), avg(yn_fil),axis=0)
+yc = np.append(avg(yn_col),avg(yn_fil),axis=0)
+yc = np.append(yc, -0.0035)
 yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(yc, 0.0)
 yc = np.append(yc, avg(yn_h2o),axis=0)
 
 t_plot_s=np.append(t_col[0,:,z_pos],t_fil[0,:,z_pos])
+t_plot_s=np.append(t_plot_s, t_int_film[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_air[0,:,z_pos])
+t_plot_s=np.append(t_plot_s, t_int_mem[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_h2o[0,:,z_pos])
 
 t_plot_m=np.append(t_col[64,:,z_pos],t_fil[64,:,z_pos])
+t_plot_m=np.append(t_plot_m, t_int_film[64,:,z_pos])
 t_plot_m=np.append(t_plot_m, t_air[64,:,z_pos])
+t_plot_m=np.append(t_plot_m, t_int_mem[64,:,z_pos])
 t_plot_m=np.append(t_plot_m, t_h2o[64,:,z_pos])
 
 t_plot_e=np.append(t_col[127,:,z_pos],t_fil[127,:,z_pos])
+t_plot_e=np.append(t_plot_e, t_int_film[127,:,z_pos])
 t_plot_e=np.append(t_plot_e, t_air[127,:,z_pos])
+t_plot_e=np.append(t_plot_e, t_int_mem[127,:,z_pos])
 t_plot_e=np.append(t_plot_e, t_h2o[127,:,z_pos])
+
+np.savetxt('vertical_temp_70.dat', np.transpose((yc, t_plot_s, t_plot_m, t_plot_e)), fmt='%1.4e',header='y ts tm te')
 
 plt.figure
 plt.subplot(1,3,1)
@@ -126,7 +136,7 @@ plt.plot([18, 80],[-0.004, -0.004], linestyle='--', color='black', linewidth=1)
 plt.xlim([18, 80])
 plt.xticks([20,40,60,80],fontsize=18)
 plt.yticks([])
-plt.xlabel('Temperature [°C]',fontsize=20)
+plt.xlabel('Temperature [C]',fontsize=20)
 
 plt.subplot(1,3,3)
 plt.plot(t_plot_e,yc, linestyle='-', color='blue', linewidth=1.2)
@@ -138,6 +148,24 @@ plt.xticks([20,40,60,80],fontsize=18)
 plt.yticks([])
 
 pylab.show
+
+#%% streamlines in air gap
+
+y,x = np.mgrid[0:20:1,0:127:1]
+#y,x = np.mgrid[0:0.125:0.00390625,0:1.25:0.0048828125]
+uu = np.transpose(u_air[:,0:20,40])
+vv = np.transpose(v_air[0:127,:,40])
+ww = np.transpose(w_air[0:127,0:20,40])
+U=np.sqrt(uu*uu+vv*vv+ww*ww)
+
+plt.figure()
+plt.gca(aspect="equal")
+#plt.contourf(x,y,np.transpose(obst[:,:,16]),[0.7,1.2],colors=('black'))
+plt.streamplot(x,y,uu,vv, color=U, linewidth=2)
+#plt.xticks([0,0.25,0.5,0.75,1,1.25],fontsize=18)
+#plt.yticks([0,0.06,0.12],fontsize=18)
+plt.ylabel('Y [m]',fontsize=20)
+plt.xlabel('X [m]',fontsize=20)
 
 #%% axial membrane flux
 
@@ -151,15 +179,51 @@ pylab.show
 
 #%% mem interface contour plot
 
-plt.figure
-plt.contourf(xc+0.05,zc,np.transpose(t_int_mem[:,0,:]))
-plt.colorbar()
-plt.xlabel('X [m]',fontsize=20)
-plt.xticks(fontsize=18)
-plt.yticks(fontsize=18)
-plt.ylabel('Z [m]',fontsize=20)
-plt.title('Evaporation Interface Temperature [°C]',fontsize=18)
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+import matplotlib as mpl
+mpl.use("pgf")
+pgf_with_rc_fonts = {
+    "font.family": "serif",
+    "font.serif": [],                   # use latex default serif font
+    "font.sans-serif": ["DejaVu Sans"], # use a specific sans-serif font
+}
+mpl.rcParams.update(pgf_with_rc_fonts)
+
+plt.figure(figsize=(4.5,2.5))
+plt.gca(aspect="equal")
+plt.xlabel('X [m]')
+plt.ylabel('Z [m]')
+plt.xticks((0.04, 0.08, 0.12))
+plt.tight_layout()
+ax = plt.gca()
+im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]),cmap='YlGnBu')
+# create an axes on the right side of ax. The width of cax will be 5%
+# of ax and the padding between cax and ax will be fixed at 0.05 inch.
+divider = make_axes_locatable(ax)
+cax = divider.append_axes("right", size="5%", pad=0.05)
+
+plt.colorbar(im, cax=cax)
+
+#plt.title('Evaporation Interface Temperature [C]')
 pylab.show
+plt.savefig('t_int_mem_70.pdf')
+plt.savefig('t_int_mem_70.pgf')
+
+#from scipy import interpolate
+#z_grid,x_grid = np.mgrid[0:0.1:80j,0:0.16:128j]
+#x_grid_1d = x_grid.flatten()
+#z_grid_1d = z_grid.flatten()
+#t_1d = t_int_mem.flatten()
+#np.savetxt('t_int_mem_70.dat', np.transpose((x_grid_1d, z_grid_1d, t_1d)), fmt='%1.4e',header='x z t_int_mem')
+
+#%% Temperature polarization coefficient
+
+polc_t = (t_int_mem[:,0,:] - t_air[:,20,:])/(t_h2o[:,4,:]-t_air[:,10,:])
+
+z_pos = 40
+
+plt.figure()
+plt.plot(polc_t[:,z_pos])
 
 #%% inlet velocity profile
 
@@ -179,21 +243,33 @@ pylab.show
 #%% contour plots
 
 xc = avg(xn[AIR])
-#yc = np.append(avg(yn[FIL]), avg(yn[AIR]),axis=0)
-#yc = np.append(yc, avg(yn[H2O]),axis=0)
+yc = np.append(avg(yn_col),avg(yn_fil),axis=0)
+yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(yc, avg(yn_h2o),axis=0)
 
-t_plot=np.append(t_fil[:,:,z_pos],t_air[:,:,z_pos],axis=1)
+t_plot=np.append(t_col[:,:,z_pos],t_fil[:,:,z_pos],axis=1)
+t_plot=np.append(t_plot, t_air[:,:,z_pos],axis=1)
 t_plot=np.append(t_plot, t_h2o[:,:,z_pos],axis=1)
 t_plot=transpose(t_plot)
-p_air = np.zeros(np.shape(t_air))
 p_fil = np.zeros(np.shape(t_fil))
-p_plot=np.append(p_fil[:,:,z_pos],p_air[:,:,z_pos],axis=1)
+p_plot=np.append(p_col[:,:,z_pos],p_fil[:,:,z_pos],axis=1)
+p_plot=np.append(p_plot, p_air[:,:,z_pos],axis=1)
 p_plot=np.append(p_plot, p_h2o[:,:,z_pos],axis=1)
 p_plot=transpose(p_plot)
 a_fil = np.zeros(np.shape(t_fil))
-a_plot=np.append(a_fil[:,:,z_pos],a_air[:,:,z_pos],axis=1)
+a_col = np.zeros(np.shape(t_col))
+a_plot=np.append(a_col[:,:,z_pos],a_fil[:,:,z_pos],axis=1)
+a_plot=np.append(a_plot, a_air[:,:,z_pos],axis=1)
 a_plot=np.append(a_plot, a_h2o[:,:,z_pos],axis=1)
 a_plot=transpose(a_plot)
+u_fil = np.zeros((np.shape(t_fil)[0]-1,np.shape(t_fil)[1],np.shape(t_fil)[2]))
+u_plot = np.concatenate([u_col[:,:,z_pos],u_fil[:,:,z_pos],u_air[:,:,z_pos],u_h2o[:,:,z_pos]],axis=1)
+u_plot = transpose(u_plot) 
+p_tot_fil = np.zeros(np.shape(t_fil))
+p_tot_plot=np.append(p_tot_col[:,:,z_pos],p_tot_fil[:,:,z_pos],axis=1)
+p_tot_plot=np.append(p_tot_plot, p_tot_air[:,:,z_pos],axis=1)
+p_tot_plot=np.append(p_tot_plot, p_tot_h2o[:,:,z_pos],axis=1)
+p_tot_plot=transpose(p_tot_plot)
 
 plt.figure
 plt.subplot(3,2,1)
@@ -221,6 +297,25 @@ plt.subplot(3,2,3)
 cax_a=plt.contourf(xc,yc,a_plot,cmap="rainbow")
 cbar_a=plt.colorbar(cax_a)
 plt.title("Concentration")
+plt.xlabel("x [m]")
+#plt.ylim([-1E1,1E1])
+plt.ylabel("y [m]" )
+
+plt.subplot(3,2,4)
+matplotlib.rcParams["contour.negative_linestyle"] = "solid"
+cax_p=plt.contourf(xc,yc,p_tot_plot,cmap="rainbow")
+cax_p2=plt.contour(xc,yc,p_tot_plot,colors="k")
+plt.clabel(cax_p2, fontsize=12, inline=1)
+cbar_p = plt.colorbar(cax_p)
+plt.title("Total Pressure")
+plt.xlabel("x [m]")
+#plt.ylim([-1E1,1E1])
+plt.ylabel("y [m]" )
+
+plt.subplot(3,2,6)
+cax_u=plt.contourf(avg(xc),yc,u_plot,cmap="rainbow")
+cbar_u=plt.colorbar(cax_u)
+plt.title("Axial Velocity")
 plt.xlabel("x [m]")
 #plt.ylim([-1E1,1E1])
 plt.ylabel("y [m]" )
