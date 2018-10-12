@@ -169,12 +169,18 @@ plt.xlabel('X [m]',fontsize=20)
 
 #%% axial membrane flux
 
+dz = 0.00125
+dx = 0.00125
+
+np.savetxt('axial_membrane_flux.dat', np.transpose((xc, m_j[:,0,40]/(dx*dz)*3600, -m_out[:,0,40]/(dx*dz)*3600, t_int_film[:,0,40], a_air[:,0,40])), fmt='%1.4e',header='x m_mem m_out t_int_film a_air')
+
 plt.figure
-plt.plot(xc+0.05,m_j[:,:1,75]/0.001/0.0006667*3600, linestyle='-', color='blue', linewidth=1.2)
+plt.plot(xc,m_j[:,:,40]/(dx*dz)*3600, linestyle='-', color='blue', linewidth=1.2)
 plt.xlabel('X [m]',fontsize=20)
 plt.ylabel('Membrane Mass Flux [kg/(m^2 h)]',fontsize=20)
 plt.xticks(fontsize=18)
 plt.yticks(fontsize=18)
+plt.tight_layout()
 pylab.show
 
 #%% mem interface contour plot
@@ -183,6 +189,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib as mpl
 mpl.use("pgf")
 pgf_with_rc_fonts = {
+    "pgf.texsystem": "pdflatex",
     "font.family": "serif",
     "font.serif": [],                   # use latex default serif font
     "font.sans-serif": ["DejaVu Sans"], # use a specific sans-serif font
@@ -196,7 +203,8 @@ plt.ylabel('Z [m]')
 plt.xticks((0.04, 0.08, 0.12))
 plt.tight_layout()
 ax = plt.gca()
-im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]),cmap='YlGnBu')
+
+im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]),cmap='viridis')
 # create an axes on the right side of ax. The width of cax will be 5%
 # of ax and the padding between cax and ax will be fixed at 0.05 inch.
 divider = make_axes_locatable(ax)
@@ -206,6 +214,7 @@ plt.colorbar(im, cax=cax)
 
 #plt.title('Evaporation Interface Temperature [C]')
 pylab.show
+
 plt.savefig('t_int_mem_70.pdf')
 plt.savefig('t_int_mem_70.pgf')
 
@@ -216,14 +225,17 @@ plt.savefig('t_int_mem_70.pgf')
 #t_1d = t_int_mem.flatten()
 #np.savetxt('t_int_mem_70.dat', np.transpose((x_grid_1d, z_grid_1d, t_1d)), fmt='%1.4e',header='x z t_int_mem')
 
+
 #%% Temperature polarization coefficient
-
-polc_t = (t_int_mem[:,0,:] - t_air[:,20,:])/(t_h2o[:,4,:]-t_air[:,10,:])
-
 z_pos = 40
 
+polc_t = (t_int_mem[:,0,z_pos] - t_air[:,20,z_pos])/(t_h2o[:,4,z_pos]-t_air[:,10,z_pos])
+
+np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4e',header='x polc_t')
+
 plt.figure()
-plt.plot(polc_t[:,z_pos])
+plt.plot(polc_t[:])
+
 
 #%% inlet velocity profile
 

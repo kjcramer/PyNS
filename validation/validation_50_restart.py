@@ -95,7 +95,7 @@ rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0], prop[COL][0]), 
                       (prop[AIR][2], prop[H2O][2], prop[FIL][2], prop[COL][2]),  \
                       (prop[AIR][3], prop[H2O][3], prop[FIL][3], prop[COL][3])
                       
-diff = (ones(rc[AIR])*4.0E-4, ones(rc[H2O])*1.99E-09)
+diff = (ones(rc[AIR])*3.5E-5, ones(rc[H2O])*1.99E-09)
 
 h_d = [ 0.0, latent_heat(t_h_in), latent_heat(t_c_in), latent_heat(t_c_in) ]
 #h_d = [ 0.0, 2359E3, 2359E3]
@@ -206,12 +206,12 @@ uf[COL].bnd[W].val[:1,:,:] = -u_h_in
 t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
 t[AIR].bnd[S].val[:,:1,:] = t_c_in
 t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET  
-t[AIR].bnd[N].val[:,:1,:] = 60
+t[AIR].bnd[N].val[:,:1,:] = t_h_in
 
 t[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 t[H2O].bnd[W].val[:1,:,:] = t_h_in
 t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET  
-t[H2O].bnd[S].val[:,:1,:] = 60
+t[H2O].bnd[S].val[:,:1,:] = t_h_in
  
 t[FIL].bnd[S].typ[:,:1,:] = DIRICHLET
 t[FIL].bnd[S].val[:,:1,:] = t_c_in
@@ -239,7 +239,7 @@ p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
 t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
-t[H2O].val[:,:,:] = 70
+t[H2O].val[:,:,:] = t_h_in
 t[FIL].val[:,:,:] = t_c_in
 t[COL].val[:,:,:] = t_c_in
 
@@ -261,8 +261,8 @@ for c in (W,T):
   t_min = np.amin([t_min, np.amin(t[COL].bnd[c].val)]) 
   
   # Time-stepping parameters
-dt  =    0.0002  # time step
-ndt =    150000  # number of time steps
+dt  =    0.0001  # time step
+ndt =    70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 1000
@@ -602,3 +602,28 @@ for ts in range(tss,ndt+1):
      
 time_end = time.time()     
 print("Total time: %4.4e" % ((time_end-time_start)/3600))
+
+#%%
+
+z_pos = 40
+
+uc_air = avg_x(cat_x((uf[AIR].bnd[W].val[:1,:,:], uf[AIR].val, uf[AIR].bnd[E].val[:1,:,:])))
+uc_h2o = avg_x(cat_x((uf[H2O].bnd[W].val[:1,:,:], uf[H2O].val, uf[H2O].bnd[E].val[:1,:,:])))
+uc_fil = avg_x(cat_x((uf[FIL].bnd[W].val[:1,:,:], uf[FIL].val, uf[FIL].bnd[E].val[:1,:,:])))
+uc_col = avg_x(cat_x((uf[COL].bnd[W].val[:1,:,:], uf[COL].val, uf[COL].bnd[E].val[:1,:,:])))
+u_plot = np.concatenate([uc_col[:,:,z_pos],uc_fil[:,:,z_pos],uc_air[:,:,z_pos],uc_h2o[:,:,z_pos]],axis=1)
+u_plot = transpose(u_plot)
+
+vc_air = avg_y(cat_y((vf[AIR].bnd[S].val[:,:1,:], vf[AIR].val, vf[AIR].bnd[N].val[:,:1,:])))
+vc_h2o = avg_y(cat_y((vf[H2O].bnd[S].val[:,:1,:], vf[H2O].val, vf[H2O].bnd[N].val[:,:1,:])))
+vc_fil = avg_y(cat_y((vf[FIL].bnd[S].val[:,:1,:], vf[FIL].val, vf[FIL].bnd[N].val[:,:1,:])))
+vc_col = avg_y(cat_y((vf[COL].bnd[S].val[:,:1,:], vf[COL].val, vf[COL].bnd[N].val[:,:1,:])))
+
+
+wc_air = avg_z(cat_z((wf[AIR].bnd[B].val[:,:,:1], wf[AIR].val, wf[AIR].bnd[T].val[:,:,:1])))
+wc_h2o = avg_z(cat_z((wf[H2O].bnd[B].val[:,:,:1], wf[H2O].val, wf[H2O].bnd[T].val[:,:,:1])))
+wc_fil = avg_z(cat_z((wf[FIL].bnd[B].val[:,:,:1], wf[FIL].val, wf[FIL].bnd[T].val[:,:,:1])))
+wc_col = avg_z(cat_z((wf[COL].bnd[B].val[:,:,:1], wf[COL].val, wf[COL].bnd[T].val[:,:,:1])))
+
+velo_save_title = 'velocity_' + name + '_' + str(ts) + 'ts.npz'
+np.savez(velo_save_title,uc_air,vc_air,wc_air,uc_h2o,vc_h2o,wc_h2o,uc_fil,vc_fil,wc_fil,uc_col,vc_col,wc_col)
