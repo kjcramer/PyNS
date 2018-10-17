@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_70_temp.npz')
+data=np.load('ws_N_70_06_temp.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
 # t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, 
 # t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val, p_tot[H2O].val, p[H2O].val, a[H2O].val, 
@@ -33,44 +33,34 @@ xn = data['arr_1']
 yn_air = data['arr_2']
 yn_h2o = data['arr_3']
 yn_fil = data['arr_4']
-yn_col = data['arr_5']
-zn = data['arr_6']
+zn = data['arr_5']
 
-t_air = data['arr_7']
-u_air = data['arr_8']
-v_air = data['arr_9']
-w_air = data['arr_10']
-p_tot_air = data['arr_11']
-p_air = data['arr_12']
-a_air = data['arr_13']
-pv_air = data['arr_14']
-pv_n = data['arr_15']
-pv_s = data['arr_16']
+t_air = data['arr_6']
+u_air = data['arr_7']
+v_air = data['arr_8']
+w_air = data['arr_9']
+p_tot_air = data['arr_10']
+p_air = data['arr_11']
+a_air = data['arr_12']
+pv_air = data['arr_13']
+pv_n = data['arr_14']
+pv_s = data['arr_15']
 
-t_h2o = data['arr_17']
-u_h2o = data['arr_18']
-v_h2o = data['arr_19']
-w_h2o = data['arr_20']
-p_tot_h2o = data['arr_21']
-p_h2o = data['arr_22']
-a_h2o = data['arr_23']
+t_h2o = data['arr_16']
+u_h2o = data['arr_17']
+v_h2o = data['arr_18']
+w_h2o = data['arr_19']
+p_tot_h2o = data['arr_20']
+p_h2o = data['arr_21']
+a_h2o = data['arr_22']
 
-t_fil = data['arr_24']
+t_fil = data['arr_23']
 
-t_col = data['arr_25']
-u_col = data['arr_26']
-v_col = data['arr_27']
-w_col = data['arr_28']
-p_tot_col = data['arr_29']
-p_col = data['arr_30']
-
-t_int_mem = data['arr_31']
-m_j = data['arr_32']
-m_pv = data['arr_33']
-t_int_film = data['arr_34']
-m_out = data['arr_35']
-
-
+t_int_mem = data['arr_24']
+m_j = data['arr_25']
+m_pv = data['arr_26']
+t_int_film = data['arr_27']
+m_out = data['arr_28']
 
 AIR = 0
 H2O = 1
@@ -85,37 +75,32 @@ z_pos = 40
     
 xc = avg(xn[AIR])
 yc = np.append(avg(yn_fil), avg(yn_air),axis=0)
-#yc = np.append(yc, avg(yn_air),axis=0)
 yc = np.append(yc, avg(yn_h2o),axis=0)
 zc = avg(zn[AIR])
 
 #%% vertical temperature profil
 
-yc = np.append(avg(yn_col),avg(yn_fil),axis=0)
-yc = np.append(yc, -0.0035)
+yc = np.append(avg(yn_fil),-0.0035,axis=0)
 yc = np.append(yc, avg(yn_air),axis=0)
 yc = np.append(yc, 0.0)
 yc = np.append(yc, avg(yn_h2o),axis=0)
 
-t_plot_s=np.append(t_col[0,:,z_pos],t_fil[0,:,z_pos])
-t_plot_s=np.append(t_plot_s, t_int_film[0,:,z_pos])
+t_plot_s=np.append(t_fil[0,:,z_pos],t_int_film[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_air[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_int_mem[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_h2o[0,:,z_pos])
 
-t_plot_m=np.append(t_col[64,:,z_pos],t_fil[64,:,z_pos])
-t_plot_m=np.append(t_plot_m, t_int_film[64,:,z_pos])
+t_plot_m=np.append(t_fil[64,:,z_pos],t_int_film[64,:,z_pos])
 t_plot_m=np.append(t_plot_m, t_air[64,:,z_pos])
 t_plot_m=np.append(t_plot_m, t_int_mem[64,:,z_pos])
 t_plot_m=np.append(t_plot_m, t_h2o[64,:,z_pos])
 
-t_plot_e=np.append(t_col[127,:,z_pos],t_fil[127,:,z_pos])
-t_plot_e=np.append(t_plot_e, t_int_film[127,:,z_pos])
+t_plot_e=np.append(t_fil[127,:,z_pos],t_int_film[127,:,z_pos])
 t_plot_e=np.append(t_plot_e, t_air[127,:,z_pos])
 t_plot_e=np.append(t_plot_e, t_int_mem[127,:,z_pos])
 t_plot_e=np.append(t_plot_e, t_h2o[127,:,z_pos])
 
-np.savetxt('vertical_temp_70.dat', np.transpose((yc, t_plot_s, t_plot_m, t_plot_e)), fmt='%1.4e',header='y ts tm te')
+#np.savetxt('vertical_temp_70.dat', np.transpose((yc, t_plot_s, t_plot_m, t_plot_e)), fmt='%1.4e',header='y ts tm te')
 
 plt.figure
 plt.subplot(1,3,1)
@@ -172,7 +157,7 @@ plt.xlabel('X [m]',fontsize=20)
 dz = 0.00125
 dx = 0.00125
 
-np.savetxt('axial_membrane_flux.dat', np.transpose((xc, m_j[:,0,40]/(dx*dz)*3600, -m_out[:,0,40]/(dx*dz)*3600, t_int_film[:,0,40], a_air[:,0,40])), fmt='%1.4e',header='x m_mem m_out t_int_film a_air')
+#np.savetxt('axial_membrane_flux.dat', np.transpose((xc, m_j[:,0,40]/(dx*dz)*3600, -m_out[:,0,40]/(dx*dz)*3600, t_int_film[:,0,40], a_air[:,0,40])), fmt='%1.4e',header='x m_mem m_out t_int_film a_air')
 
 plt.figure
 plt.plot(xc,m_j[:,:,40]/(dx*dz)*3600, linestyle='-', color='blue', linewidth=1.2)
@@ -214,7 +199,7 @@ plt.colorbar(im, cax=cax)
 #plt.title('Evaporation Interface Temperature [C]')
 pylab.show
 #plt.savefig('t_int_mem_70.pdf')
-plt.savefig('t_int_mem_70.pgf')
+#plt.savefig('t_int_mem_70.pgf')
 
 
 #%% Temperature polarization coefficient
@@ -222,7 +207,7 @@ z_pos = 40
 
 polc_t = (t_int_mem[:,0,z_pos] - t_air[:,20,z_pos])/(t_h2o[:,4,z_pos]-t_air[:,10,z_pos])
 
-np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4e',header='x polc_t')
+#np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4e',header='x polc_t')
 
 plt.figure()
 plt.plot(polc_t[:])
@@ -245,31 +230,25 @@ pylab.show
 #%% contour plots
 
 xc = avg(xn[AIR])
-yc = np.append(avg(yn_col),avg(yn_fil),axis=0)
-yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(avg(yn_fil),avg(yn_air),axis=0)
 yc = np.append(yc, avg(yn_h2o),axis=0)
 
-t_plot=np.append(t_col[:,:,z_pos],t_fil[:,:,z_pos],axis=1)
-t_plot=np.append(t_plot, t_air[:,:,z_pos],axis=1)
+t_plot=np.append(t_fil[:,:,z_pos],t_air[:,:,z_pos],axis=1)
 t_plot=np.append(t_plot, t_h2o[:,:,z_pos],axis=1)
 t_plot=transpose(t_plot)
 p_fil = np.zeros(np.shape(t_fil))
-p_plot=np.append(p_col[:,:,z_pos],p_fil[:,:,z_pos],axis=1)
-p_plot=np.append(p_plot, p_air[:,:,z_pos],axis=1)
+p_plot=np.append(p_fil[:,:,z_pos], p_air[:,:,z_pos],axis=1)
 p_plot=np.append(p_plot, p_h2o[:,:,z_pos],axis=1)
 p_plot=transpose(p_plot)
 a_fil = np.zeros(np.shape(t_fil))
-a_col = np.zeros(np.shape(t_col))
-a_plot=np.append(a_col[:,:,z_pos],a_fil[:,:,z_pos],axis=1)
-a_plot=np.append(a_plot, a_air[:,:,z_pos],axis=1)
+a_plot=np.append(a_fil[:,:,z_pos], a_air[:,:,z_pos],axis=1)
 a_plot=np.append(a_plot, a_h2o[:,:,z_pos],axis=1)
 a_plot=transpose(a_plot)
 u_fil = np.zeros((np.shape(t_fil)[0]-1,np.shape(t_fil)[1],np.shape(t_fil)[2]))
-u_plot = np.concatenate([u_col[:,:,z_pos],u_fil[:,:,z_pos],u_air[:,:,z_pos],u_h2o[:,:,z_pos]],axis=1)
+u_plot = np.concatenate([u_fil[:,:,z_pos],u_air[:,:,z_pos],u_h2o[:,:,z_pos]],axis=1)
 u_plot = transpose(u_plot) 
 p_tot_fil = np.zeros(np.shape(t_fil))
-p_tot_plot=np.append(p_tot_col[:,:,z_pos],p_tot_fil[:,:,z_pos],axis=1)
-p_tot_plot=np.append(p_tot_plot, p_tot_air[:,:,z_pos],axis=1)
+p_tot_plot=np.append(p_tot_fil[:,:,z_pos], p_tot_air[:,:,z_pos],axis=1)
 p_tot_plot=np.append(p_tot_plot, p_tot_h2o[:,:,z_pos],axis=1)
 p_tot_plot=transpose(p_tot_plot)
 
