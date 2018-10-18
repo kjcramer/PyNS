@@ -51,7 +51,7 @@ t_c_in = 15   # C
 # in line 62 accordingly!!!
 airgap = 0.002 # m
 
-name = 'N_' + str(t_h_in) + '_' + str(u_h_in).replace(".", "")
+name = 'N_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
 restart = False
