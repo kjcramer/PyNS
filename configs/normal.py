@@ -41,10 +41,16 @@ AIR = 0
 H2O = 1
 FIL = 2
 
-u_h_in = 0.6 # m/s
-t_h_in = 70   # C
+u_h_in = 0.08 # m/s
+t_h_in = 80   # C
 a_salt = 90.0 # g/l
-t_c_in = 20   # C
+t_c_in = 15   # C
+
+# when setting the air gap thickness here
+# MAKE SURE TO ADJUST THE NUMBER OF CELLS IN THE AIR GAP
+# in line 62 accordingly!!!
+airgap = 0.002 # m
+
 name = 'N_' + str(t_h_in) + '_' + str(u_h_in).replace(".", "")
 
 # restart options
@@ -52,9 +58,9 @@ restart = False
 restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
-xn = (nodes(0,   0.16, 128), nodes(0, 0.16,  128), nodes(0,       0.16, 128))
-yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015,  9), nodes(-0.004, -0.0035, 3))
-zn = (nodes(0,   0.1,   80), nodes(0, 0.1,    80), nodes(0,       0.1,   80))
+xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
+yn = (nodes(-airgap, 0, 12), nodes(0, 0.01, 26), nodes(- airgap - 0.0005, -airgap, 3))
+zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]))
