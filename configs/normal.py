@@ -41,7 +41,7 @@ AIR = 0
 H2O = 1
 FIL = 2
 
-u_h_in = 0.08 # m/s
+u_h_in = 0.1 # m/s
 t_h_in = 80   # C
 a_salt = 90.0 # g/l
 t_c_in = 15   # C
@@ -59,7 +59,7 @@ restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
-yn = (nodes(-airgap, 0, 12), nodes(0, 0.01, 26), nodes(- airgap - 0.0005, -airgap, 3))
+yn = (nodes(-airgap, 0, 8), nodes(0, 0.01, 26), nodes(- airgap - 0.0005, -airgap, 3))
 zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
 
 # Cell coordinates 
@@ -174,11 +174,9 @@ dv  = [dx[AIR]*dy[AIR]*dz[AIR],
 # variables to temporarily store vf bnd values:
 vf_h2o_S_tmp=zeros(vf[H2O].bnd[S].val.shape)
 
-# Specify boundary conditions
-
-for k in range(0,nz[H2O]):
-  uf[H2O].bnd[W].val[:1,:,k] = par(u_h_in, yn[H2O])
-  uf[H2O].val[:,:,k] = par(u_h_in, yn[H2O])
+# Specify boundary conditions  
+uf[H2O].bnd[W].val[:1,:,:] = u_h_in
+uf[H2O].val[:,:,:] = u_h_in
 uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
 uf[H2O].bnd[E].val[:1,:,:] = u_h_in
 #uf[AIR].bnd[W].typ[:1,:,:] = OUTLET     
