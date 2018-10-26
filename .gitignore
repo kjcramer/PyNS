@@ -6,5 +6,7 @@
 OAR.*
 ws_*
 Output_*
-velocity*ts.npz
+*.npz
 *.dat
+*.pgf
+*.vtr
