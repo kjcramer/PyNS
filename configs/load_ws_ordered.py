@@ -193,9 +193,6 @@ pgf_with_rc_fonts = {
     "font.family": "serif",
     "font.serif": [],                   # use latex default serif font
     "font.sans-serif": ["DejaVu Sans"], # use a specific sans-serif font
-    "pgf.preamble": [
-         "\\usepackage{sistyle}"         # load additional packages
-         ]
 }
 mpl.rcParams.update(pgf_with_rc_fonts)
 
@@ -206,29 +203,18 @@ plt.ylabel('Z [m]')
 plt.xticks((0.04, 0.08, 0.12))
 plt.tight_layout()
 ax = plt.gca()
-
 im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]),cmap='viridis')
 # create an axes on the right side of ax. The width of cax will be 5%
 # of ax and the padding between cax and ax will be fixed at 0.05 inch.
 divider = make_axes_locatable(ax)
 cax = divider.append_axes("right", size="5%", pad=0.05)
 
-cbar = plt.colorbar(im, cax=cax)
-#plt.text(4.205, 0.87, "Temperature [\degC]", rotation='vertical')
-cbar.set_label('Temperature [\degC]')
+plt.colorbar(im, cax=cax)
 
-#plt.title('Evaporation Interface Temperature [\degC]')
+#plt.title('Evaporation Interface Temperature [C]')
 pylab.show
-
-plt.savefig('t_int_mem_70.pdf')
+#plt.savefig('t_int_mem_70.pdf')
 plt.savefig('t_int_mem_70.pgf')
-
-#from scipy import interpolate
-#z_grid,x_grid = np.mgrid[0:0.1:80j,0:0.16:128j]
-#x_grid_1d = x_grid.flatten()
-#z_grid_1d = z_grid.flatten()
-#t_1d = t_int_mem.flatten()
-#np.savetxt('t_int_mem_70.dat', np.transpose((x_grid_1d, z_grid_1d, t_1d)), fmt='%1.4e',header='x z t_int_mem')
 
 
 #%% Temperature polarization coefficient
@@ -240,7 +226,6 @@ np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4
 
 plt.figure()
 plt.plot(polc_t[:])
-
 
 #%% inlet velocity profile
 

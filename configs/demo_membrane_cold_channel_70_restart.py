@@ -43,19 +43,19 @@ FIL = 2
 COL = 3
 
 u_h_in = 0.6 # m/s
-t_h_in = 60   # C
+t_h_in = 70   # C
 a_salt = 90.0 # g/l
 t_c_in = 20   # C
 name = str(t_h_in)
 
 # restart options
-restart = False
-restart_file = 'ws_60_temp.npz'
+restart = True
+restart_file = 'ws_70_temp.npz'
 
 # Node coordinates for both domains
-xn = (nodes(0,   0.005,  5), nodes(0,   0.005, 5), nodes(0,   0.005,  5), nodes(0,   0.005,  5))
+xn = (nodes(0,   0.16, 128), nodes(0, 0.16,  128), nodes(0,       0.16, 128), nodes(0,       0.16, 128))
 yn = (nodes(-0.0035, 0, 21), nodes(0, 0.0015,  9), nodes(-0.004, -0.0035, 3), nodes(-0.0055, -0.004, 9))
-zn = (nodes(0,   0.005,  5), nodes(0,   0.005, 5), nodes(0,   0.005,  5), nodes(0,   0.005,  5))
+zn = (nodes(0,   0.1,   80), nodes(0, 0.1,    80), nodes(0,       0.1,   80), nodes(0,       0.1,   80))
 
 # Cell coordinates 
 xc = (avg(xn[AIR]), avg(xn[H2O]), avg(xn[FIL]), avg(xn[COL]))
@@ -78,11 +78,6 @@ rc,ru,rv,rw =        (cell[AIR][6], cell[H2O][6], cell[FIL][6], cell[COL][6]),  
                      (cell[AIR][7], cell[H2O][7], cell[FIL][7], cell[COL][7]),  \
                      (cell[AIR][8], cell[H2O][8], cell[FIL][8], cell[COL][8]),  \
                      (cell[AIR][9], cell[H2O][9], cell[FIL][9], cell[COL][9])
-
-# Set physical properties					 
-#prop = [properties.air(round((t_h_in+t_c_in)/2,-1),rc[AIR]),    \
-#        properties.water(t_h_in,rc[H2O]),  \
-#        properties.water(t_c_in,rc[FIL])]
 					 
 # Set physical properties temperature dependent:
 prop = [properties.air(round((t_h_in+t_c_in)/2,-1),rc[AIR]), \
@@ -95,14 +90,13 @@ rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0], prop[COL][0]), 
                       (prop[AIR][2], prop[H2O][2], prop[FIL][2], prop[COL][2]),  \
                       (prop[AIR][3], prop[H2O][3], prop[FIL][3], prop[COL][3])
                       
-diff = (ones(rc[AIR])*4.0E-4, ones(rc[H2O])*1.99E-09)
+diff = (ones(rc[AIR])*3.5E-5, ones(rc[H2O])*1.99E-09)
 
 h_d = [ 0.0, latent_heat(t_h_in), latent_heat(t_c_in), latent_heat(t_c_in) ]
-#h_d = [ 0.0, 2359E3, 2359E3]
 
 M_H2O  = 18E-3      # kg/mol
 M_AIR  = 28E-3      # kg/mol
-M_salt = 58.4428E-3 # kg/mol
+M_salt = 58.4428E-3 # kg/mol      
 
 pi = np.pi
 
@@ -125,7 +119,7 @@ membrane = namedtuple("membrane", "d kap eps tau r p t t_int pv j t_old t_int_ol
 mem = membrane(110E-6,   \
                  0.19,    \
                  0.75,  \
-                 2.0,      \
+                 1.5,      \
                  0.225E-6, \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
@@ -137,7 +131,7 @@ mem = membrane(110E-6,   \
                  
 # stainless steel plate properties:
 d_plate = 2.0E-3 # m
-kappa_plate = 32 # W/(mK)                
+kappa_plate = 20 # W/(mK)                
       
  
 # Create unknowns; names, positions and sizes
@@ -206,12 +200,12 @@ uf[COL].bnd[W].val[:1,:,:] = -u_h_in
 t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
 t[AIR].bnd[S].val[:,:1,:] = t_c_in
 t[AIR].bnd[N].typ[:,:1,:] = DIRICHLET  
-t[AIR].bnd[N].val[:,:1,:] = 60
+t[AIR].bnd[N].val[:,:1,:] = t_h_in
 
 t[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 t[H2O].bnd[W].val[:1,:,:] = t_h_in
 t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET  
-t[H2O].bnd[S].val[:,:1,:] = 60
+t[H2O].bnd[S].val[:,:1,:] = t_h_in
  
 t[FIL].bnd[S].typ[:,:1,:] = DIRICHLET
 t[FIL].bnd[S].val[:,:1,:] = t_c_in
@@ -235,9 +229,11 @@ p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 p_v[AIR].bnd[N].typ[:,:,:] = DIRICHLET
 p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[H2O].bnd[S].val[:,:,:])
+p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
+p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[FIL].bnd[N].val[:,:,:])
 
 t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
-t[H2O].val[:,:,:] = 70
+t[H2O].val[:,:,:] = t_h_in
 t[FIL].val[:,:,:] = t_c_in
 t[COL].val[:,:,:] = t_c_in
 
@@ -259,11 +255,11 @@ for c in (W,T):
   t_min = np.amin([t_min, np.amin(t[COL].bnd[c].val)]) 
   
   # Time-stepping parameters
-dt  =    0.0002  # time step
-ndt =    100000  # number of time steps
+dt  =    0.0001  # time step
+ndt =    70000  # number of time steps
 dt_plot = ndt    # plot frequency
-dt_save = 100
-dt_save_ts = 500
+dt_save = 500
+dt_save_ts = 1000
 tss = 1
 
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL]),zeros(rc[COL])]
@@ -380,20 +376,19 @@ for ts in range(tss,ndt+1):
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))
   
   # downward (negative) velocity induced through evaporation (positive mem_j)                
-  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:])
-
+  vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   #vf[AIR].bnd[N].val[:,:1,:] = -mem.j[:,:1,:]/(rho[AIR][:,-1:,:]*dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
           
   # Heat transfer between FIL & COL d_plate=2mm, kappa_stainless steel=20W/(mK)
-  #tot_res_plate = dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:]) + d_plate/kappa_plate \
-   #             + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:])
-  #t[FIL].bnd[S].val[:,:1,:] = t[FIL].val[:,:1,:] \
-   #             - dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:] * tot_res_plate) \
-   #             * (t[FIL].val[:,:1,:] - t[COL].val[:,-1:,:])          
-  #t[COL].bnd[N].val[:,:1,:] = t[COL].val[:,-1:,:] \
-  #              + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:] * tot_res_plate) \
-   #             * (t[FIL].val[:,:1,:] - t[COL].val[:,-1:,:])
+  tot_res_plate = dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:]) + d_plate/kappa_plate \
+                + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:])
+  t[FIL].bnd[S].val[:,:1,:] = t[FIL].val[:,:1,:] \
+                - dy[FIL][:,:1,:]/(2*kappa[FIL][:,:1,:] * tot_res_plate) \
+                * (t[FIL].val[:,:1,:] - t[COL].val[:,-1:,:])          
+  t[COL].bnd[N].val[:,:1,:] = t[COL].val[:,-1:,:] \
+                + dy[COL][:,-1:,:]/(2*kappa[COL][:,-1:,:] * tot_res_plate) \
+                * (t[FIL].val[:,:1,:] - t[COL].val[:,-1:,:])
          
   #------------------------
   # Concentration
@@ -437,13 +432,11 @@ for ts in range(tss,ndt+1):
   # Momentum conservation
   #-----------------------
   for c in (AIR,H2O,COL):
-    #g_u = -G * avg(X, rho[c])
-     
-    #ef = g_u, zeros(rv[c]), zeros(rw[c])
+    g_u = -G * avg(X, rho[c])
     
-    g_v = -G * avg(Y, rho[c])
+    #g_v = -G * avg(Y, rho[c])
   
-    ef = zeros(ru[c]), g_v, zeros(rw[c])
+    ef = g_u, zeros(rv[c]), zeros(rw[c])
     
     
     calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
@@ -489,12 +482,12 @@ for ts in range(tss,ndt+1):
       print("Total time: %4.4e" % ((time_end-time_start)/3600))
       if ts % dt_save_ts ==0:
         ws_save_title = 'ws_' + name + '_' + str(ts) + 'ts.npz'
-        #np.savez(ws_save_title, ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
+        np.savez(ws_save_title, ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, t[COL].val, uf[COL].val, vf[COL].val, wf[COL].val, p_tot[COL].val, p[COL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
         text_id = 'Output_' + name + '_' + str(ts) + '.txt'
         text_file = open(text_id, "w")
         airgap_outfile = 0.0035
-        massflow_outfile = np.sum(m_evap \
-                     /(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:]))*3600 
+        massflow_outfile = np.sum(m_evap) \
+                     /np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])*3600 
         RR_outfile = (-np.sum(np.sum(m_evap)))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
                      *np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])))
         GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:]) \
@@ -526,7 +519,7 @@ for ts in range(tss,ndt+1):
   if ts % dt_plot == 0:
     plt.close("all")
     
-    z_pos = 3
+    z_pos = 10
     
     xc = avg(xn[AIR])
     yc = np.append(avg(yn[COL]), avg(yn[FIL]),axis=0)
@@ -601,3 +594,28 @@ for ts in range(tss,ndt+1):
      
 time_end = time.time()     
 print("Total time: %4.4e" % ((time_end-time_start)/3600))
+
+#%%
+
+z_pos = 40
+
+uc_air = avg_x(cat_x((uf[AIR].bnd[W].val[:1,:,:], uf[AIR].val, uf[AIR].bnd[E].val[:1,:,:])))
+uc_h2o = avg_x(cat_x((uf[H2O].bnd[W].val[:1,:,:], uf[H2O].val, uf[H2O].bnd[E].val[:1,:,:])))
+uc_fil = avg_x(cat_x((uf[FIL].bnd[W].val[:1,:,:], uf[FIL].val, uf[FIL].bnd[E].val[:1,:,:])))
+uc_col = avg_x(cat_x((uf[COL].bnd[W].val[:1,:,:], uf[COL].val, uf[COL].bnd[E].val[:1,:,:])))
+u_plot = np.concatenate([uc_col[:,:,z_pos],uc_fil[:,:,z_pos],uc_air[:,:,z_pos],uc_h2o[:,:,z_pos]],axis=1)
+u_plot = transpose(u_plot)
+
+vc_air = avg_y(cat_y((vf[AIR].bnd[S].val[:,:1,:], vf[AIR].val, vf[AIR].bnd[N].val[:,:1,:])))
+vc_h2o = avg_y(cat_y((vf[H2O].bnd[S].val[:,:1,:], vf[H2O].val, vf[H2O].bnd[N].val[:,:1,:])))
+vc_fil = avg_y(cat_y((vf[FIL].bnd[S].val[:,:1,:], vf[FIL].val, vf[FIL].bnd[N].val[:,:1,:])))
+vc_col = avg_y(cat_y((vf[COL].bnd[S].val[:,:1,:], vf[COL].val, vf[COL].bnd[N].val[:,:1,:])))
+
+
+wc_air = avg_z(cat_z((wf[AIR].bnd[B].val[:,:,:1], wf[AIR].val, wf[AIR].bnd[T].val[:,:,:1])))
+wc_h2o = avg_z(cat_z((wf[H2O].bnd[B].val[:,:,:1], wf[H2O].val, wf[H2O].bnd[T].val[:,:,:1])))
+wc_fil = avg_z(cat_z((wf[FIL].bnd[B].val[:,:,:1], wf[FIL].val, wf[FIL].bnd[T].val[:,:,:1])))
+wc_col = avg_z(cat_z((wf[COL].bnd[B].val[:,:,:1], wf[COL].val, wf[COL].bnd[T].val[:,:,:1])))
+
+velo_save_title = 'velocity_' + name + '_' + str(ts) + 'ts.npz'
+np.savez(velo_save_title,uc_air,vc_air,wc_air,uc_h2o,vc_h2o,wc_h2o,uc_fil,vc_fil,wc_fil,uc_col,vc_col,wc_col)
