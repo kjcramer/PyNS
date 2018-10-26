@@ -37,8 +37,9 @@ from pyns.operators      import *
 from pyns.discretization import *
 from pyns.display        import plot, write
 from pyns.physical       import properties
+import numpy
 
-def main(show_plot=True, time_steps=1800, plot_freq=180):
+def main(show_plot=False, time_steps=200, plot_freq=180):
 
 # =============================================================================
 #
@@ -62,7 +63,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
     rc, ru, rv, rw = cartesian_grid(xn, yn, zn)
 
     # Set physical properties
-    rho, mu, cap, kappa = properties.air(rc)
+    rho, mu, cap, kappa = properties.air(60,rc)
 
     # Time-stepping parameters
     dt  = 0.005      # time step
@@ -180,6 +181,7 @@ def main(show_plot=True, time_steps=1800, plot_freq=180):
         # Check the CFL number too
         cfl = cfl_max((uc,vc,wc), dt, (dx,dy,dz))
 
+        numpy.savez('save.npz',uc.val,vc.val,wc.val,p.val,plates)
 # =============================================================================
 #
 # Visualisation

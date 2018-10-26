@@ -22,7 +22,6 @@ def vec_vec(x, y, gpu=False):
       sum(sum(sum()))
     """
 
-    # if gpu == True then run on GPU
     if gpu:
         
         # Specific Python modules

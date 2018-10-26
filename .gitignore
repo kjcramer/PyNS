@@ -4,3 +4,7 @@
 *~
 *.swp
 OAR.*
+ws_*
+Output_*
+velocity*ts.npz
+*.dat

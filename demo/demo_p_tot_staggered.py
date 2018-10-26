@@ -30,9 +30,9 @@ from pyns.physical.constants import G
 # =============================================================================
 
 # Node coordinates
-xn = nodes(0, 10,   80)
-yn = nodes(0,  1,   20)
-zn = nodes(0,  0.5,  5)
+xn = nodes(0, 0.1,   96)
+yn = nodes(0, 0.01,  24)
+zn = nodes(0, 0.005,  8)
 
 # Cell coordinates
 xc = avg(xn)
@@ -47,12 +47,12 @@ rho   = zeros(rc)
 mu    = zeros(rc)
 kappa = zeros(rc)
 cap   = zeros(rc)
-rho   [:] =    1.15  # density              [kg/m^3]
-mu    [:] =    0.1   # viscosity            [Pa s]
+rho   [:] =    1000         # density              [kg/m^3]
+mu    [:] =       0.00078   # viscosity            [Pa s]
 
 # Time-stepping parameters
-dt  =   0.1  # time step
-ndt = 200    # number of time steps
+dt  =   0.001  # time step
+ndt = 5      # number of time steps
 
 # Create unknowns; names, positions and sizes
 uf    = Unknown("face-u-vel",     X, ru, DIRICHLET)
@@ -62,11 +62,11 @@ p     = Unknown("pressure",       C, rc, NEUMANN)
 p_tot = Unknown("total-pressure", C, rc, NEUMANN)
 
 # Specify boundary conditions
-uf.bnd[W].typ[:1,:,:] = DIRICHLET
+uf.bnd[E].typ[:1,:,:] = DIRICHLET
 for k in range(0,nz):
-    uf.bnd[W].val[:1,:,k]  = par(0.1, yn)
+    uf.bnd[E].val[:1,:,k]  = -par(0.1, yn)
 
-uf.bnd[E].typ[:1,:,:] = OUTLET
+uf.bnd[W].typ[:1,:,:] = OUTLET
 
 for j in (B,T):
     uf.bnd[j].typ[:] = NEUMANN
@@ -102,9 +102,13 @@ for ts in range(1,ndt+1):
     # ----------------------
     # Momentum conservation
     # ----------------------
-    g_v = -G * avg(Y, rho) * min(ts/100,1)
+    g_u = G * avg(X, rho) #* min(ts/100,1)
+    g_v = -G * avg(Y, rho) #* min(ts/100,1)
+    g_w = -G * avg(Z, rho) #* min(ts/100,1)
 
-    ext_f = zeros(ru), g_v, zeros(rw)
+    ext_f = g_u, zeros(rv), zeros(rw)
+#    ext_f = zeros(ru), g_v, zeros(rw)
+#    ext_f = zeros(ru), zeros(rv), g_w
 
     calc_uvw((uf,vf,wf), (uf,vf,wf), rho, mu, dt, (dx,dy,dz), obst,
              pressure = p_tot,
@@ -131,6 +135,5 @@ for ts in range(1,ndt+1):
 #
 # =============================================================================
 
-    if ts % 20 == 0:
+    if ts % 25 == 0:
         plot.isolines(p_tot.val, (uf,vf,wf), (xn,yn,zn), Z)
-        plot.isolines(p.val,     (uf,vf,wf), (xn,yn,zn), Z)
