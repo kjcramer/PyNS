@@ -193,6 +193,9 @@ pgf_with_rc_fonts = {
     "font.family": "serif",
     "font.serif": [],                   # use latex default serif font
     "font.sans-serif": ["DejaVu Sans"], # use a specific sans-serif font
+    "pgf.preamble": [
+         "\\usepackage{sistyle}"         # load additional packages
+         ]
 }
 mpl.rcParams.update(pgf_with_rc_fonts)
 
@@ -209,9 +212,11 @@ im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]),cmap='viridis')
 divider = make_axes_locatable(ax)
 cax = divider.append_axes("right", size="5%", pad=0.05)
 
-plt.colorbar(im, cax=cax)
+cbar = plt.colorbar(im, cax=cax)
+#plt.text(4.205, 0.87, "Temperature [\degC]", rotation='vertical')
+cbar.set_label('Temperature [\degC]')
 
-#plt.title('Evaporation Interface Temperature [C]')
+#plt.title('Evaporation Interface Temperature [\degC]')
 pylab.show
 #plt.savefig('t_int_mem_70.pdf')
 plt.savefig('t_int_mem_70.pgf')

@@ -14,6 +14,7 @@
 %%   \import{<path to file>}{<filename>.pgf}
 %%
 %% Matplotlib used the following preamble
+%%   \usepackage{sistyle}
 %%
 \begingroup%
 \makeatletter%
@@ -2300,6 +2301,9 @@
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgftext[x=3.817316in,y=2.246775in,left,base]{\rmfamily\fontsize{10.000000}{12.000000}\selectfont 69.3}%
+\end{pgfscope}%
+\begin{pgfscope}%
+\pgftext[x=4.119786in,y=1.438889in,,top,rotate=90.000000]{\rmfamily\fontsize{10.000000}{12.000000}\selectfont Temperature [\degC]}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
