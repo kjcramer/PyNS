@@ -42,7 +42,7 @@ H2O = 1
 FIL = 2
 
 u_h_in = 0.1 # m/s
-t_h_in = 80   # C
+t_h_in = 60   # C
 a_salt = 90.0 # g/l
 t_c_in = 15   # C
 
@@ -119,11 +119,11 @@ membrane = namedtuple("membrane", "d kap eps tau r p t t_int pv j t_old t_int_ol
   # r is pore radius
 
 # values duropore PDVF membrane
-mem = membrane(110E-6,   \
-                 0.19,    \
-                 0.75,  \
+mem = membrane(65E-6,   \
+                 0.25,    \
+                 0.85,  \
                  1.5,      \
-                 0.225E-6, \
+                 0.1E-6, \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
@@ -234,7 +234,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =    500 #70000  # number of time steps
+ndt =    70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
