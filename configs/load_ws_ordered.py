@@ -135,12 +135,13 @@ plt.yticks([])
 pylab.show
 
 #%% streamlines in air gap
+# adjust number of cells (always use number of cells -1)
 
-y,x = np.mgrid[0:20:1,0:127:1]
+y,x = np.mgrid[0:31:1,0:55:1]
 #y,x = np.mgrid[0:0.125:0.00390625,0:1.25:0.0048828125]
-uu = np.transpose(u_air[:,0:20,40])
-vv = np.transpose(v_air[0:127,:,40])
-ww = np.transpose(w_air[0:127,0:20,40])
+uu = np.transpose(u_air[:,0:31,40])
+vv = np.transpose(v_air[0:55,:,40])
+ww = np.transpose(w_air[0:55,0:20,40])
 U=np.sqrt(uu*uu+vv*vv+ww*ww)
 
 plt.figure()
