@@ -41,15 +41,15 @@ AIR = 0
 H2O = 1
 FIL = 2
 
-u_h_in = 0.1 # m/s
-t_h_in = 80   # C
+u_h_in = 0.05 # m/s
+t_h_in = 70   # C
 a_salt = 90.0 # g/l
 t_c_in = 15   # C
 
 # when setting the air gap thickness here
 # MAKE SURE TO ADJUST THE NUMBER OF CELLS IN THE AIR GAP
 # in line 62 accordingly!!!
-airgap = 0.002 # m
+airgap = 0.008 # m
 
 name = 'R_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
@@ -59,7 +59,7 @@ restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
-yn = (nodes(-airgap, 0, 8), nodes(-airgap-0.01, -airgap,  26), nodes(0.0, 0.001, 6))
+yn = (nodes(-airgap, 0,32), nodes(-airgap-0.01, -airgap,  26), nodes(0.0, 0.001, 6))
 zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
 
 # Cell coordinates 
@@ -118,12 +118,12 @@ membrane = namedtuple("membrane", "d kap eps tau r p t t_int pv j t_old t_int_ol
   # eps is porosity, tau is tortuosity
   # r is pore radius
 
-# values duropore PDVF membrane
-mem = membrane(110E-6,   \
-                 0.19,    \
-                 0.75,  \
+# values PTFE Merck Millipore FGLP membrane
+mem = membrane(65E-6,   \
+                 0.25,    \
+                 0.85,  \
                  1.5,      \
-                 0.225E-6, \
+                 0.1E-6, \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])), \
@@ -436,7 +436,7 @@ for ts in range(tss,ndt+1):
         np.savez(ws_save_title, ts, xn, yn[AIR], yn[H2O], yn[FIL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
         text_id = 'Output_' + name + '_' + str(ts) + '.txt'
         text_file = open(text_id, "w")
-        airgap_outfile = 0.0035
+        airgap_outfile = airgap
         massflow_outfile = np.sum(mem.j) \
                      /np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])*3600 
         RR_outfile = (-np.sum(np.sum(mem.j)))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
