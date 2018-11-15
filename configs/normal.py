@@ -234,7 +234,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =    500 #70000  # number of time steps
+ndt =   70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
