@@ -42,14 +42,14 @@ H2O = 1
 FIL = 2
 
 u_h_in = 0.05 # m/s
-t_h_in = 70   # C
+t_h_in = 80   # C
 a_salt = 90.0 # g/l
 t_c_in = 15   # C
 
 # when setting the air gap thickness here
 # MAKE SURE TO ADJUST THE NUMBER OF CELLS IN THE AIR GAP
 # in line 62 accordingly!!!
-airgap = 0.008 # m
+airgap = 0.002 # m
 
 name = 'R_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
@@ -59,7 +59,7 @@ restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
-yn = (nodes(-airgap, 0,32), nodes(-airgap-0.01, -airgap,  26), nodes(0.0, 0.001, 6))
+yn = (nodes(-airgap, 0, 8), nodes(-airgap-0.01, -airgap,  26), nodes(0.0, 0.001, 6))
 zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
 
 # Cell coordinates 
@@ -188,8 +188,8 @@ t[AIR].bnd[N].val[:,:1,:] = t_c_in
 
 t[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 t[H2O].bnd[W].val[:1,:,:] = t_h_in
-t[H2O].bnd[S].typ[:,:1,:] = DIRICHLET  
-t[H2O].bnd[S].val[:,:1,:] = t_h_in
+t[H2O].bnd[N].typ[:,:1,:] = DIRICHLET  
+t[H2O].bnd[N].val[:,:1,:] = t_h_in
  
 t[FIL].bnd[S].typ[:,:1,:] = DIRICHLET
 t[FIL].bnd[S].val[:,:1,:] = t_c_in
@@ -232,7 +232,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =    70000  # number of time steps
+ndt =    1000 #70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
