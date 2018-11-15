@@ -439,7 +439,7 @@ for ts in range(tss,ndt+1):
         np.savez(ws_save_title, ts, xn, yn[AIR], yn[H2O], yn[FIL], zn, t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val,p_tot[H2O].val, p[H2O].val, a[H2O].val, t[FIL].val, mem.t_int, mem.j, mem.pv, t_int,m_evap )
         text_id = 'Output_' + name + '_' + str(ts) + '.txt'
         text_file = open(text_id, "w")
-        airgap_outfile = 0.0035
+        airgap_outfile = airgap
         massflow_outfile = np.sum(m_evap) \
                      /np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])*3600 
         RR_outfile = (-np.sum(np.sum(m_evap)))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
