@@ -113,7 +113,7 @@ def calc_interface2(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, t_
                                   (p_tot[dom[VAP]].val[:,:1,:] +1E5)
     
     # calculate interface temperature for saturated air 
-    t_int = t_int_old *0.9 + 0.1 * t_sat(p_v[dom[VAP]].bnd[S].val[:,:,:])
+    t_int = t_int_old *0.7 + 0.3 * t_sat(p_v[dom[VAP]].bnd[S].val[:,:,:])
     print("t_int = " + "%3.4f" %np.mean(t_int))
     
     # update temperature boundary values

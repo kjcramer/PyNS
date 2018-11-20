@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_R_80_05_2_temp.npz')
+data=np.load('ws_R_80_05_8_temp.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
 # t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, 
 # t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val, p_tot[H2O].val, p[H2O].val, a[H2O].val, 
@@ -80,10 +80,10 @@ zc = avg(zn[AIR])
 
 #%% vertical temperature profil
 
-yc = np.append(avg(yn_fil),-0.0035,axis=0)
-yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(avg(yn_fil),-0.008)
+yc = np.append(yc, avg(yn_air))
 yc = np.append(yc, 0.0)
-yc = np.append(yc, avg(yn_h2o),axis=0)
+yc = np.append(yc, avg(yn_h2o))
 
 t_plot_s=np.append(t_fil[0,:,z_pos],t_int_film[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_air[0,:,z_pos])
