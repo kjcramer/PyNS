@@ -42,7 +42,7 @@ H2O = 1
 FIL = 2
 
 u_h_in = 0.05 # m/s
-t_h_in = 80   # C
+t_h_in = 60   # C
 a_salt = 90.0 # g/l
 t_c_in = 15   # C
 
@@ -54,7 +54,7 @@ airgap = 0.002 # m
 name = 'R_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
-restart = False
+restart = True
 restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
@@ -232,7 +232,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =    1000 #70000  # number of time steps
+ndt =    70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
