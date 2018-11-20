@@ -41,7 +41,7 @@ AIR = 0
 H2O = 1
 FIL = 2
 
-u_h_in = 0.025 # m/s
+u_h_in = 0.01 # m/s
 t_h_in = 80   # C
 a_salt = 90.0 # g/l
 t_c_in = 15   # C
@@ -49,17 +49,17 @@ t_c_in = 15   # C
 # when setting the air gap thickness here
 # MAKE SURE TO ADJUST THE NUMBER OF CELLS IN THE AIR GAP
 # in line 62 accordingly!!!
-airgap = 0.008 # m
+airgap = 0.0005 # m
 
 name = 'N_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
-restart = False
+restart = True
 restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
-yn = (nodes(-airgap, 0,32), nodes(0, 0.01, 26), nodes(- airgap - 0.0005, -airgap, 3))
+yn = (nodes(-airgap, 0, 6), nodes(0, 0.01, 26), nodes(- airgap - 0.0005, -airgap, 3))
 zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
 
 # Cell coordinates 
@@ -218,6 +218,8 @@ t[FIL].val[:,:,:] = t_c_in
 a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
 a[H2O].val[:,:,:] = a_salt/rho[H2O][:,:,:]
+
+t_int = t_c_in * ones(np.shape(mem.t_int))
  
 for c in (AIR,H2O,FIL):
   adj_n_bnds(p[c])
@@ -334,8 +336,8 @@ for ts in range(tss,ndt+1):
   p_v[AIR].val[:,:,:] = a[AIR].val[:,:,:] *M[AIR].val[:,:,:]/M_H2O * (p_tot[AIR].val[:,:,:] +1E5) 
     
   # Interphase energy equation between AIR & FIL
-  t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL))  
+  t_int, m_evap, t, p_v = calc_interface2(t, a, p_v, p_tot, kappa, M, \
+                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL), t_int)  
   
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
@@ -469,10 +471,29 @@ for ts in range(tss,ndt+1):
 #========================================================================== 
 
 #%%
-  if ts % dt_plot == 0:
+  if ts % dt_plot == 0:  
+    uc_air = avg_x(cat_x((uf[AIR].bnd[W].val[:1,:,:], uf[AIR].val, uf[AIR].bnd[E].val[:1,:,:])))
+    uc_h2o = avg_x(cat_x((uf[H2O].bnd[W].val[:1,:,:], uf[H2O].val, uf[H2O].bnd[E].val[:1,:,:])))
+    uc_fil = avg_x(cat_x((uf[FIL].bnd[W].val[:1,:,:], uf[FIL].val, uf[FIL].bnd[E].val[:1,:,:])))
+    u_plot = np.concatenate([uc_fil[:,:,z_pos],uc_air[:,:,z_pos],uc_h2o[:,:,z_pos]],axis=1)
+    u_plot = transpose(u_plot)
+    
+    vc_air = avg_y(cat_y((vf[AIR].bnd[S].val[:,:1,:], vf[AIR].val, vf[AIR].bnd[N].val[:,:1,:])))
+    vc_h2o = avg_y(cat_y((vf[H2O].bnd[S].val[:,:1,:], vf[H2O].val, vf[H2O].bnd[N].val[:,:1,:])))
+    vc_fil = avg_y(cat_y((vf[FIL].bnd[S].val[:,:1,:], vf[FIL].val, vf[FIL].bnd[N].val[:,:1,:])))
+    
+    wc_air = avg_z(cat_z((wf[AIR].bnd[B].val[:,:,:1], wf[AIR].val, wf[AIR].bnd[T].val[:,:,:1])))
+    wc_h2o = avg_z(cat_z((wf[H2O].bnd[B].val[:,:,:1], wf[H2O].val, wf[H2O].bnd[T].val[:,:,:1])))
+    wc_fil = avg_z(cat_z((wf[FIL].bnd[B].val[:,:,:1], wf[FIL].val, wf[FIL].bnd[T].val[:,:,:1])))
+    
+    velo_save_title = 'velocity_' + name + '_' + str(ts) + 'ts.npz'
+    np.savez(velo_save_title,uc_air,vc_air,wc_air,uc_h2o,vc_h2o,wc_h2o,uc_fil,vc_fil,wc_fil)
     plt.close("all")
     
+    #%%
     z_pos = 10
+    
+    plt.ion()
     
     xc = avg(xn[AIR])
     yc = np.append(avg(yn[FIL]), avg(yn[AIR]),axis=0)
@@ -543,23 +564,4 @@ for ts in range(tss,ndt+1):
 time_end = time.time()     
 print("Total time: %4.4e" % ((time_end-time_start)/3600))
 
-#%%
 
-z_pos = 40
-
-uc_air = avg_x(cat_x((uf[AIR].bnd[W].val[:1,:,:], uf[AIR].val, uf[AIR].bnd[E].val[:1,:,:])))
-uc_h2o = avg_x(cat_x((uf[H2O].bnd[W].val[:1,:,:], uf[H2O].val, uf[H2O].bnd[E].val[:1,:,:])))
-uc_fil = avg_x(cat_x((uf[FIL].bnd[W].val[:1,:,:], uf[FIL].val, uf[FIL].bnd[E].val[:1,:,:])))
-u_plot = np.concatenate([uc_fil[:,:,z_pos],uc_air[:,:,z_pos],uc_h2o[:,:,z_pos]],axis=1)
-u_plot = transpose(u_plot)
-
-vc_air = avg_y(cat_y((vf[AIR].bnd[S].val[:,:1,:], vf[AIR].val, vf[AIR].bnd[N].val[:,:1,:])))
-vc_h2o = avg_y(cat_y((vf[H2O].bnd[S].val[:,:1,:], vf[H2O].val, vf[H2O].bnd[N].val[:,:1,:])))
-vc_fil = avg_y(cat_y((vf[FIL].bnd[S].val[:,:1,:], vf[FIL].val, vf[FIL].bnd[N].val[:,:1,:])))
-
-wc_air = avg_z(cat_z((wf[AIR].bnd[B].val[:,:,:1], wf[AIR].val, wf[AIR].bnd[T].val[:,:,:1])))
-wc_h2o = avg_z(cat_z((wf[H2O].bnd[B].val[:,:,:1], wf[H2O].val, wf[H2O].bnd[T].val[:,:,:1])))
-wc_fil = avg_z(cat_z((wf[FIL].bnd[B].val[:,:,:1], wf[FIL].val, wf[FIL].bnd[T].val[:,:,:1])))
-
-velo_save_title = 'velocity_' + name + '_' + str(ts) + 'ts.npz'
-np.savez(velo_save_title,uc_air,vc_air,wc_air,uc_h2o,vc_h2o,wc_h2o,uc_fil,vc_fil,wc_fil)
