@@ -248,7 +248,7 @@ def normal_config_05(t_h_in,u_h_in,ndt,restart = False):
     dt  =    0.0001  # time step
     #ndt =   70000  # number of time steps
     dt_plot = ndt    # plot frequency
-    dt_save = 500
+    dt_save = 100
     dt_save_ts = 10000
     tss = 1
     
