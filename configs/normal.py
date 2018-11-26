@@ -59,7 +59,7 @@ restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
 xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
-yn = (nodes(-airgap, 0, 6), nodes(0, 0.01, 26), nodes(- airgap - 0.0005, -airgap, 3))
+yn = (nodes(-airgap, 0, 6), nodes(0, 0.01, 48), nodes(- airgap - 0.0005, -airgap, 3))
 zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
 
 # Cell coordinates 

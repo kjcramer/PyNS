@@ -69,7 +69,7 @@ def normal_config_05(t_h_in,u_h_in,ndt,restart = False):
     
     # Node coordinates for both domains
     xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
-    yn = (nodes(-airgap, 0, 6), nodes(0, 0.01, 60), nodes(- airgap - 0.0005, -airgap, 3))
+    yn = (nodes(-airgap, 0, 6), nodes(0, 0.01, 48), nodes(- airgap - 0.0005, -airgap, 3))
     zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
     
     # Cell coordinates 
