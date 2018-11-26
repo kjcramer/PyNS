@@ -20,7 +20,9 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_R_80_05_8_temp.npz')
+name = 'ws_test_N_80_025_05_temp'
+
+data=np.load(name + '.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
 # t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, 
 # t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val, p_tot[H2O].val, p[H2O].val, a[H2O].val, 
@@ -77,6 +79,75 @@ xc = avg(xn[AIR])
 yc = np.append(avg(yn_fil), avg(yn_air),axis=0)
 yc = np.append(yc, avg(yn_h2o),axis=0)
 zc = avg(zn[AIR])
+
+#%% interpolate 60 to 48 grid
+
+
+grid_new = np.linspace(0,1,48)
+grid_new = grid_new[np.newaxis,:]
+grid_new = np.repeat(grid_new,56,axis=0)
+grid_new = np.repeat(grid_new[:,:,np.newaxis],56,axis=2)
+
+grid_old = np.linspace(0,1,60)
+
+t_h2o_n = np.zeros(np.shape(grid_new))
+p_tot_h2o_n = np.zeros(np.shape(grid_new))
+p_h2o_n = np.zeros(np.shape(grid_new))
+a_h2o_n = np.zeros(np.shape(grid_new)) 
+
+for i in range(0,56):
+    for k in range(0,56):
+        t_h2o_n[i,:,k] = np.interp(grid_new[i,:,k], grid_old, t_h2o[i,:,k])
+        p_tot_h2o_n[i,:,k] = np.interp(grid_new[i,:,k], grid_old, p_tot_h2o[i,:,k])
+        p_h2o_n[i,:,k] = np.interp(grid_new[i,:,k], grid_old, p_h2o[i,:,k])
+        a_h2o_n[i,:,k] = np.interp(grid_new[i,:,k], grid_old, a_h2o[i,:,k])
+
+# u        
+grid_new = np.linspace(0,1,48)
+grid_new = grid_new[np.newaxis,:]
+grid_new = np.repeat(grid_new,55,axis=0)
+grid_new = np.repeat(grid_new[:,:,np.newaxis],56,axis=2)
+
+u_h2o_n = np.zeros(np.shape(grid_new))
+
+for i in range(0,55):
+    for k in range(0,56):
+        u_h2o_n[i,:,k] = np.interp(grid_new[i,:,k], grid_old, u_h2o[i,:,k])
+
+# w
+grid_new = np.linspace(0,1,48)
+grid_new = grid_new[np.newaxis,:]
+grid_new = np.repeat(grid_new,56,axis=0)
+grid_new = np.repeat(grid_new[:,:,np.newaxis],55,axis=2)
+
+w_h2o_n = np.zeros(np.shape(grid_new))
+
+for i in range(0,56):
+    for k in range(0,55):
+        w_h2o_n[i,:,k] = np.interp(grid_new[i,:,k], grid_old, w_h2o[i,:,k])
+
+# v
+grid_new = np.linspace(0,1,47)
+grid_new = grid_new[np.newaxis,:]
+grid_new = np.repeat(grid_new,56,axis=0)
+grid_new = np.repeat(grid_new[:,:,np.newaxis],56,axis=2)
+
+grid_old = np.linspace(0,1,59)
+
+v_h2o_n = np.zeros(np.shape(grid_new))
+
+for i in range(0,56):
+    for k in range(0,56):
+        v_h2o_n[i,:,k] = np.interp(grid_new[i,:,k], grid_old, v_h2o[i,:,k])
+
+# write out data
+
+np.save(name + '_overfine.npz', ts, xn, yn_air, yn_h2o, yn_fil, zn, t_air, u_air, v_air, w_air, p_tot_air, p_air, a_air,  pv_air, pv_n, pv_s, t_h2o, u_h2o, v_h2o, w_h2o, p_tot_h2o, p_h2o, a_h2o, t_fil, t_int_mem, m_j, m_pv, t_int_film, m_out)
+        
+np.save(name + '.npz', ts, xn, yn_air, yn_h2o, yn_fil, zn, t_air, u_air, v_air, w_air, p_tot_air, p_air, a_air,  pv_air, pv_n, pv_s, t_h2o_n, u_h2o_n, v_h2o_n, w_h2o_n, p_tot_h2o_n, p_h2o_n, a_h2o_n, t_fil, t_int_mem, m_j, m_pv, t_int_film, m_out)
+
+# rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
+
 
 #%% vertical temperature profil
 
