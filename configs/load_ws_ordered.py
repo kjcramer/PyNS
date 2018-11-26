@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-name = 'ws_test_N_80_025_05_temp'
+name = 'ws_N_80_025_05_temp'
 
 data=np.load(name + '.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
@@ -142,9 +142,9 @@ for i in range(0,56):
 
 # write out data
 
-np.save(name + '_overfine.npz', ts, xn, yn_air, yn_h2o, yn_fil, zn, t_air, u_air, v_air, w_air, p_tot_air, p_air, a_air,  pv_air, pv_n, pv_s, t_h2o, u_h2o, v_h2o, w_h2o, p_tot_h2o, p_h2o, a_h2o, t_fil, t_int_mem, m_j, m_pv, t_int_film, m_out)
+np.savez(name + '_overfine.npz', ts, xn, yn_air, yn_h2o, yn_fil, zn, t_air, u_air, v_air, w_air, p_tot_air, p_air, a_air,  pv_air, pv_n, pv_s, t_h2o, u_h2o, v_h2o, w_h2o, p_tot_h2o, p_h2o, a_h2o, t_fil, t_int_mem, m_j, m_pv, t_int_film, m_out)
         
-np.save(name + '.npz', ts, xn, yn_air, yn_h2o, yn_fil, zn, t_air, u_air, v_air, w_air, p_tot_air, p_air, a_air,  pv_air, pv_n, pv_s, t_h2o_n, u_h2o_n, v_h2o_n, w_h2o_n, p_tot_h2o_n, p_h2o_n, a_h2o_n, t_fil, t_int_mem, m_j, m_pv, t_int_film, m_out)
+np.savez(name + '.npz', ts, xn, yn_air, yn_h2o, yn_fil, zn, t_air, u_air, v_air, w_air, p_tot_air, p_air, a_air,  pv_air, pv_n, pv_s, t_h2o_n, u_h2o_n, v_h2o_n, w_h2o_n, p_tot_h2o_n, p_h2o_n, a_h2o_n, t_fil, t_int_mem, m_j, m_pv, t_int_film, m_out)
 
 # rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
 

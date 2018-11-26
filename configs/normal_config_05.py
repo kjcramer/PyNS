@@ -61,7 +61,7 @@ def normal_config_05(t_h_in,u_h_in,ndt,restart = False):
     # in line 62 accordingly!!!
     airgap = 0.0005 # m
     
-    name = 'grid_N_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
+    name = 'N_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
     
     # restart options
     #restart = True
