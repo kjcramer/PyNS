@@ -8,5 +8,6 @@
 # ${1} is the inlet temperature
 # ${2} is the inlet velocity
 # ${3} is the airgap in {05, 2, 8}
+# ${4} is the restart from file option {True, False}
 
-python2.7 normal_gaia.py ${1} ${2} ${3}
+python2.7 normal_gaia.py ${1} ${2} ${3} ${4}
