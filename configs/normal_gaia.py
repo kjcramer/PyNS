@@ -13,13 +13,13 @@ airgap = sys.argv[3]
 
 if airgap == '05':
   print('=============== running normal_config_05 now ==============' )
-  normal_config_05(t_h_in, u_h_in, 70000, False)
+  normal_config_05(t_h_in, u_h_in, 70000, True)
 elif airgap == '2':
   print('=============== running normal_config_2 now ==============' )
-  normal_config_2(t_h_in, u_h_in, 70000, False)
+  normal_config_2(t_h_in, u_h_in, 70000, True)
 elif airgap == '8':
   print('=============== running normal_config_8 now ==============' )
-  normal_config_8(t_h_in, u_h_in, 70000, False)
+  normal_config_8(t_h_in, u_h_in, 70000, True)
 else:
   print( 'airgap info not valid')
 
