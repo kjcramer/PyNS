@@ -13,7 +13,7 @@ airgap = sys.argv[3]
 
 if sys.argv[4] == 'True':
   restart = True
-elif sysargv[4] == 'False':
+elif sys.argv[4] == 'False':
   restart = False
 else:
   print('restart argument not valid')
