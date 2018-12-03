@@ -26,4 +26,4 @@ module load lang/Python
 # ${3} is the airgap in {05, 2, 8}
 # ${4} is the restart from file option {True, False}
 
-python normal_gaia.py ${1} ${2} ${3} ${4}
+python reversed_gaia.py ${1} ${2} ${3} ${4}
