@@ -28,7 +28,7 @@ from pyns.demo.calc_interface import *
 from pyns.demo.latent_heat import *
 
 # =============================================================================
-def reversed_config_2(t_h_in,u_h_in,ndt,restart = False):
+def reversed_config_05(t_h_in,u_h_in,ndt,restart = False):
 # -----------------------------------------------------------------------------
     """
     Args:
