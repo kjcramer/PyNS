@@ -53,7 +53,7 @@ def normal_config_05(t_h_in,u_h_in,ndt,restart = False):
     
     #u_h_in = 0.01 # m/s
     #t_h_in = 80   # C
-    a_salt = 90.0 # g/l
+    a_salt = 0.0 # g/l previously 90.0
     t_c_in = 15   # C
     
     # when setting the air gap thickness here
@@ -454,13 +454,13 @@ def normal_config_05(t_h_in,u_h_in,ndt,restart = False):
             airgap_outfile = airgap
             massflow_outfile = np.sum(m_evap) \
                          /np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])*3600 
-            RR_outfile = (-np.sum(np.sum(m_evap)))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
-                         *np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])))
-            GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:]) \
-                         *(t_h_in - np.mean(t[H2O].val[-1:,:,:])))
-            text_file.write("t_h_in u_h_in airgap m_evap RR GOR\n")
-            text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e}".format \
-              (t_h_in, u_h_in, airgap_outfile, massflow_outfile, RR_outfile, GOR_outfile))
+            RR_outfile = (-np.sum(m_evap))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
+                          *np.sum(dy[H2O][:1,:,:]*dz[H2O][:1,:,:]))
+            dT_H2O = t_h_in - np.mean(t[H2O].val[-1:,:,:])
+            GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:])*dT_H2O)
+            text_file.write("t_h_in u_h_in airgap m_evap RR GOR Delta_T Delta_T*u_in\n")
+            text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e} {5:2.4e} {5:2.4e}".format \
+              (t_h_in, u_h_in, airgap_outfile, massflow_outfile, RR_outfile, GOR_outfile, dT_H2O, dT_H2O*u_h_in ))
             text_file.close()
         
       # Check relative change in domain:

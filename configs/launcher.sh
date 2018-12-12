@@ -25,5 +25,6 @@ module load lang/Python
 # ${2} is the inlet velocity
 # ${3} is the airgap in {05, 2, 8}
 # ${4} is the restart from file option {True, False}
+# ${5} is the number of timesteps/1000
 
-python reversed_gaia.py ${1} ${2} ${3} ${4}
+python normal_gaia.py ${1} ${2} ${3} ${4} ${5}

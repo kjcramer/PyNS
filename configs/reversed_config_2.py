@@ -244,7 +244,7 @@ def reversed_config_2(t_h_in,u_h_in,ndt,restart = False):
       
       # Time-stepping parameters
     dt  =    0.0001  # time step
-    ndt =    70000  # number of time steps
+    #ndt =    70000  # number of time steps
     dt_plot = ndt    # plot frequency
     dt_save = 500
     dt_save_ts = 10000
@@ -348,7 +348,7 @@ def reversed_config_2(t_h_in,u_h_in,ndt,restart = False):
       
       # upward (positive) velocity induced through evaporation (positive m_evap) 
       q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
-      #vf[H2O].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
+      vf[H2O].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
        
       # Membrane diffusion and energy equation between FIL & AIR
       mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
@@ -480,6 +480,7 @@ def reversed_config_2(t_h_in,u_h_in,ndt,restart = False):
     #%%
       if ts % dt_plot == 0:
           
+        z_pos = 10
         uc_air = avg_x(cat_x((uf[AIR].bnd[W].val[:1,:,:], uf[AIR].val, uf[AIR].bnd[E].val[:1,:,:])))
         uc_h2o = avg_x(cat_x((uf[H2O].bnd[W].val[:1,:,:], uf[H2O].val, uf[H2O].bnd[E].val[:1,:,:])))
         uc_fil = avg_x(cat_x((uf[FIL].bnd[W].val[:1,:,:], uf[FIL].val, uf[FIL].bnd[E].val[:1,:,:])))
