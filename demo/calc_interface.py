@@ -15,7 +15,7 @@ from pyns.demo.p_v_sat import *
 from scipy.optimize import fsolve
 
 # =============================================================================
-def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom):
+def calc_interface(t, a, p_v, p_tot, kappa, M, M_input, h_d, dxyz, dom):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -25,7 +25,7 @@ def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom):
       p_tot: .. Object holding the total pressure.
       kappa: .. Three-dimensional array holding heat conductivity for all cells.
       M: ...... Three-dimensional array holding molar mass for all air cells
-      M_AIR/H2O:Molar mass of pure air / water 
+      M_input:  Tuple holding molar masses of air, water and salt
       h_d: .... Latent heat of evaporation array
       dxyz: ... Tuple holding cell dimensions in "x", "y" and "z" directions.
                 Each cell dimension is a three-dimensional array.
@@ -44,6 +44,7 @@ def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom):
     
     # Unpack tuple(s)
     dx, dy, dz = dxyz 
+    M_AIR, M_H2O, M_salt = M_input
     
     # Update boundary values of air 
     M[dom[VAP]].bnd[S].val[:,:,:] = np.power(((1-a[dom[VAP]].bnd[S].val[:,:,:])/M_AIR \
@@ -54,7 +55,7 @@ def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom):
                                   (p_tot[dom[VAP]].val[:,:1,:] +1E5)
     
     # calculate interface temperature for saturated air 
-    t_int = t_sat(p_v[dom[VAP]].bnd[S].val[:,:,:])
+    t_int = t_sat_salt(p_v[dom[VAP]].bnd[S].val[:,:,:],a[dom[LIQ]].val[:,-1:,:],M_salt,M_H2O)
     print("t_int = " + "%3.4f" %np.mean(t_int))
     
     # update temperature boundary values
@@ -74,7 +75,7 @@ def calc_interface(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom):
   
   
 # =============================================================================
-def calc_interface2(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, t_int_old):
+def calc_interface2(t, a, p_v, p_tot, kappa, M, M_input, h_d, dxyz, dom, t_int_old):
 # -----------------------------------------------------------------------------
     """
     Args:
@@ -84,7 +85,7 @@ def calc_interface2(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, t_
       p_tot: .. Object holding the total pressure.
       kappa: .. Three-dimensional array holding heat conductivity for all cells.
       M: ...... Three-dimensional array holding molar mass for all air cells
-      M_AIR/H2O:Molar mass of pure air / water 
+      M_input:  Tuple holding molar masses of air, water and salt
       h_d: .... Latent heat of evaporation array
       dxyz: ... Tuple holding cell dimensions in "x", "y" and "z" directions.
                 Each cell dimension is a three-dimensional array.
@@ -103,6 +104,7 @@ def calc_interface2(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, t_
     
     # Unpack tuple(s)
     dx, dy, dz = dxyz 
+    M_AIR, M_H2O, M_salt = M_input
     
     # Update boundary values of air 
     M[dom[VAP]].bnd[S].val[:,:,:] = np.power(((1-a[dom[VAP]].bnd[S].val[:,:,:])/M_AIR \
@@ -113,7 +115,8 @@ def calc_interface2(t, a, p_v, p_tot, kappa, M, M_AIR, M_H2O, h_d, dxyz, dom, t_
                                   (p_tot[dom[VAP]].val[:,:1,:] +1E5)
     
     # calculate interface temperature for saturated air 
-    t_int = t_int_old *0.7 + 0.3 * t_sat(p_v[dom[VAP]].bnd[S].val[:,:,:])
+    t_int = t_int_old *0.7 + 0.3 \
+          * t_sat_salt(p_v[dom[VAP]].bnd[S].val[:,:,:],a[dom[LIQ]].val[:,-1:,:],M_salt,M_H2O)
     print("t_int = " + "%3.4f" %np.mean(t_int))
     
     # update temperature boundary values
