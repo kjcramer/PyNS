@@ -55,7 +55,7 @@ def reversed_config_8(t_h_in,u_h_in,ndt,restart = False):
     
     #u_h_in = 0.05 # m/s
     #t_h_in = 60   # C
-    a_salt = 90.0 # g/l
+    a_salt = 0.0 # g/l
     t_c_in = 15   # C
     
     # when setting the air gap thickness here

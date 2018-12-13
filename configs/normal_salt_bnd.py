@@ -174,6 +174,12 @@ dv  = [dx[AIR]*dy[AIR]*dz[AIR],
 # variables to temporarily store vf bnd values:
 vf_h2o_S_tmp=zeros(vf[H2O].bnd[S].val.shape)
 
+# variable for salt boundary condition
+x_tot = zeros(vf[H2O].bnd[S].val.shape)
+x_salt = zeros(a[H2O].bnd[S].val.shape)
+x_tot = zeros(a[H2O].bnd[S].val.shape)
+a_2 = zeros(a[H2O].bnd[S].val.shape)
+
 # Specify boundary conditions  
 uf[H2O].bnd[W].val[:1,:,:] = u_h_in
 uf[H2O].val[:,:,:] = u_h_in
@@ -349,6 +355,12 @@ for ts in range(tss,ndt+1):
   # downward (negative) velocity induced through evaporation (positive mem_j)                
   vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:]
+  
+  # salt concentration boundary condition
+  x_tot[:,:1,:] = rho[H2O][:,:1,:] * dv[H2O][:,:1,:] # total mass of salt/water mix in cell
+  x_salt[:,:1,:] = a[H2O].val[:,:1,:] * rho[H2O][:,:1,:] * dv[H2O][:,:1,:] # mass of salt
+  a_2[:,:1,:] = x_salt / (x_tot - mem.j[:,:1,:]*dt) # salt concentration after evaporation
+  q_a[H2O][:,:1,:] = rho[H2O][:,:1,:]/dt*(a_2[:,:1,:] - a[H2O].val[:,:1,:])
          
   #------------------------
   # Concentration
