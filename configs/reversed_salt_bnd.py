@@ -28,6 +28,7 @@ from pyns.physical.constants import G
 from pyns.demo.p_v_sat import *
 from pyns.demo.calc_interface import *
 from pyns.demo.latent_heat import *
+from pyns.demo.rho_salt import *
 
 plt.close("all")
 
@@ -48,10 +49,10 @@ t_c_in = 15   # C
 
 # when setting the air gap thickness here
 # MAKE SURE TO ADJUST THE NUMBER OF CELLS IN THE AIR GAP
-# in line 62 accordingly!!!
+# in line 63 accordingly!!!
 airgap = 0.0005 # m
 
-name = 'R_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
+name = 'R_salt' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
 restart = False
@@ -238,7 +239,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =    16000 #70000  # number of time steps
+ndt =    70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
@@ -327,7 +328,9 @@ for ts in range(tss,ndt+1):
                      
   rho[AIR][:,:,:] = np.interp(t[AIR].val, t_interp, rho_air)
   rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
-    
+  rho[H2O][:,:,:] = rho_salt(a[H2O].val[:,:,:],t[H2O].val[:,:,:],rho[H2O][:,:,:])
+      
+  
   #------------------------
   # Heat and Mass Transfer between Domains
   #-----------------------
