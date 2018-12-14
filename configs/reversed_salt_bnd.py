@@ -327,7 +327,9 @@ for ts in range(tss,ndt+1):
                      
   rho[AIR][:,:,:] = np.interp(t[AIR].val, t_interp, rho_air)
   rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
-    
+  rho[H2O][:,:,:] = rho_salt(a[H2O].val[:,:,:],t[H2O].val[:,:,:],rho[H2O][:,:,:])
+      
+  
   #------------------------
   # Heat and Mass Transfer between Domains
   #-----------------------
