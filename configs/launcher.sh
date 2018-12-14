@@ -10,6 +10,7 @@
 #SBATCH --time=5-00:00:00
 #SBATCH -p batch
 #SBATCH --qos=qos-batch
+#SBATCH -C skylake
 
 echo "== Starting run at $(date)"
 echo "== Job ID: ${SLURM_JOBID}"
