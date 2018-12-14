@@ -28,6 +28,7 @@ from pyns.physical.constants import G
 from pyns.demo.p_v_sat import *
 from pyns.demo.calc_interface import *
 from pyns.demo.latent_heat import *
+from pyns.demo.rho_salt import *
 
 plt.close("all")
 
@@ -174,6 +175,12 @@ dv  = [dx[AIR]*dy[AIR]*dz[AIR],
 # variables to temporarily store vf bnd values:
 vf_h2o_S_tmp=zeros(vf[H2O].bnd[S].val.shape)
 
+# variable for salt boundary condition
+x_tot = zeros(vf[H2O].bnd[S].val.shape)
+x_salt = zeros(a[H2O].bnd[S].val.shape)
+x_tot = zeros(a[H2O].bnd[S].val.shape)
+a_2 = zeros(a[H2O].bnd[S].val.shape)
+
 # Specify boundary conditions  
 uf[H2O].bnd[W].val[:1,:,:] = u_h_in
 uf[H2O].val[:,:,:] = u_h_in
@@ -236,7 +243,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =   1400 #70000  # number of time steps
+ndt =    16000 #70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
@@ -326,6 +333,7 @@ for ts in range(tss,ndt+1):
                      
   rho[AIR][:,:,:] = np.interp(t[AIR].val, t_interp, rho_air)
   rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
+  rho[H2O][:,:,:] = rho_salt(a[H2O].val[:,:,:],t[H2O].val[:,:,:],rho[H2O][:,:,:])
     
   #------------------------
   # Heat and Mass Transfer between Domains
@@ -337,7 +345,7 @@ for ts in range(tss,ndt+1):
     
   # Interphase energy equation between AIR & FIL
   t_int, m_evap, t, p_v = calc_interface2(t, a, p_v, p_tot, kappa, M, \
-                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL), t_int)  
+                            (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, FIL), t_int)  
   
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
@@ -349,6 +357,12 @@ for ts in range(tss,ndt+1):
   # downward (negative) velocity induced through evaporation (positive mem_j)                
   vf[H2O].bnd[S].val[:,:1,:] = -mem.j[:,:1,:]/(rho[H2O][:,:1,:]*dx[H2O][:,:1,:]*dz[H2O][:,:1,:]) 
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:]
+  
+  # salt concentration boundary condition
+  x_tot[:,:1,:] = rho[H2O][:,:1,:] * dv[H2O][:,:1,:] # total mass of salt/water mix in cell
+  x_salt[:,:1,:] = a[H2O].val[:,:1,:] * rho[H2O][:,:1,:] * dv[H2O][:,:1,:] # mass of salt
+  a_2[:,:1,:] = x_salt / (x_tot - mem.j[:,:1,:]*dt) # salt concentration after evaporation
+  q_a[H2O][:,:1,:] = rho[H2O][:,:1,:]/dt*(a_2[:,:1,:] - a[H2O].val[:,:1,:])
          
   #------------------------
   # Concentration
@@ -503,8 +517,13 @@ for ts in range(tss,ndt+1):
     plt.ion()
     
     plt.figure()
+    plt.subplot(2,1,1)
     plt.contourf(np.transpose(a[H2O].val[:,:,z_pos]))
     plt.colorbar()
+    
+    plt.subplot(2,1,2)
+    plt.contourf(np.transpose(rho[H2O][:,:,z_pos]))
+    cbar = plt.colorbar()
     
     xc = avg(xn[AIR])
     yc = np.append(avg(yn[FIL]), avg(yn[AIR]),axis=0)

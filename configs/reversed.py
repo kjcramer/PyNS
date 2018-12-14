@@ -54,7 +54,7 @@ airgap = 0.0005 # m
 name = 'R_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
-restart = True
+restart = False
 restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
@@ -232,7 +232,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =    70000  # number of time steps
+ndt =    2 #70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
@@ -324,7 +324,7 @@ for ts in range(tss,ndt+1):
     
   #------------------------
   # Heat and Mass Transfer between Domains
-  #------------------------  
+  #-----------------------
   
   # AIR domain values: Partial vapor pressure & molar mass
   M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)  
@@ -332,7 +332,7 @@ for ts in range(tss,ndt+1):
     
   # Interphase energy equation between AIR & H2O
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, H2O))  
+                            (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))  
   
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
@@ -467,6 +467,8 @@ for ts in range(tss,ndt+1):
 
 #%%
   if ts % dt_plot == 0:
+    
+    z_pos = 25
       
     uc_air = avg_x(cat_x((uf[AIR].bnd[W].val[:1,:,:], uf[AIR].val, uf[AIR].bnd[E].val[:1,:,:])))
     uc_h2o = avg_x(cat_x((uf[H2O].bnd[W].val[:1,:,:], uf[H2O].val, uf[H2O].bnd[E].val[:1,:,:])))
@@ -487,8 +489,6 @@ for ts in range(tss,ndt+1):
     
     #%%
     plt.close("all")
-    
-    z_pos = 10
     
     xc = avg(xn[AIR])
     yc = np.append(avg(yn[H2O]), avg(yn[AIR]),axis=0)

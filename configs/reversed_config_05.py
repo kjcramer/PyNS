@@ -55,7 +55,7 @@ def reversed_config_05(t_h_in,u_h_in,ndt,restart = False):
     
     #u_h_in = 0.05 # m/s
     #t_h_in = 60   # C
-    a_salt = 90.0 # g/l
+    a_salt = 0.0 # g/l
     t_c_in = 15   # C
     
     # when setting the air gap thickness here
@@ -344,7 +344,7 @@ def reversed_config_05(t_h_in,u_h_in,ndt,restart = False):
         
       # Interphase energy equation between AIR & H2O
       t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                                M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, H2O))  
+                                (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))  
       
       # upward (positive) velocity induced through evaporation (positive m_evap) 
       q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
