@@ -3,9 +3,9 @@
 import sys
 sys.path.append("../..")
 
-from pyns.configs.normal_config_8 import *
-from pyns.configs.normal_config_2 import *
-from pyns.configs.normal_config_05 import *
+from pyns.configs.normal_config_salt_8 import *
+from pyns.configs.normal_config_salt_2 import *
+from pyns.configs.normal_config_salt_05 import *
 
 t_h_in = int(float(sys.argv[1]))
 u_h_in = float(sys.argv[2])
