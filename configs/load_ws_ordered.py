@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-name = 'ws_R_salt80_05_05_temp'
+name = 'ws_N_60_025_05_temp'
 
 data=np.load(name + '.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
@@ -232,7 +232,7 @@ dx = 0.00125
 #np.savetxt('axial_membrane_flux.dat', np.transpose((xc, m_j[:,0,40]/(dx*dz)*3600, -m_out[:,0,40]/(dx*dz)*3600, t_int_film[:,0,40], a_air[:,0,40])), fmt='%1.4e',header='x m_mem m_out t_int_film a_air')
 
 plt.figure
-plt.plot(xc,m_j[:,:,40]/(dx*dz)*3600, linestyle='-', color='blue', linewidth=1.2)
+plt.plot(xc,m_j[:,:,40]/(dx*dz)*3600, linestyle='-', color='black', linewidth=1.2)
 plt.xlabel('X [m]',fontsize=20)
 plt.ylabel('Membrane Mass Flux [kg/(m^2 h)]',fontsize=20)
 plt.xticks(fontsize=18)
@@ -260,7 +260,7 @@ plt.ylabel('Z [m]')
 plt.xticks((0.04, 0.08, 0.12))
 plt.tight_layout()
 ax = plt.gca()
-im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]),cmap='viridis')
+im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]))
 # create an axes on the right side of ax. The width of cax will be 5%
 # of ax and the padding between cax and ax will be fixed at 0.05 inch.
 divider = make_axes_locatable(ax)
@@ -277,7 +277,7 @@ pylab.show
 #%% Temperature polarization coefficient
 z_pos = 40
 
-polc_t = (t_int_mem[:,:1,z_pos] - t_air[:,-1:,z_pos])/(t_h2o[:,20,z_pos]-t_air[:,3,z_pos])
+polc_t = (t_int_mem[:,:1,z_pos] - t_air[:,-1:,z_pos])/(t_h2o[:,20:21,z_pos]-t_air[:,3:4,z_pos])
 
 #np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4e',header='x polc_t')
 

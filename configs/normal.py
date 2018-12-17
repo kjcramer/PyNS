@@ -41,9 +41,9 @@ AIR = 0
 H2O = 1
 FIL = 2
 
-u_h_in = 0.01 # m/s
+u_h_in = 0.05 # m/s
 t_h_in = 80   # C
-a_salt = 90.0 # g/l
+a_salt = 0.0  # g/l
 t_c_in = 15   # C
 
 # when setting the air gap thickness here
@@ -54,7 +54,7 @@ airgap = 0.0005 # m
 name = 'N_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
-restart = False
+restart = True
 restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
@@ -236,7 +236,7 @@ for c in (W,T):
   
   # Time-stepping parameters
 dt  =    0.0001  # time step
-ndt =   1400 #70000  # number of time steps
+ndt =   70000  # number of time steps
 dt_plot = ndt    # plot frequency
 dt_save = 500
 dt_save_ts = 10000
@@ -336,8 +336,8 @@ for ts in range(tss,ndt+1):
   p_v[AIR].val[:,:,:] = a[AIR].val[:,:,:] *M[AIR].val[:,:,:]/M_H2O * (p_tot[AIR].val[:,:,:] +1E5) 
     
   # Interphase energy equation between AIR & FIL
-  t_int, m_evap, t, p_v = calc_interface2(t, a, p_v, p_tot, kappa, M, \
-                            M_AIR, M_H2O, h_d, (dx,dy,dz), (AIR, FIL), t_int)  
+  t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
+                            (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, FIL))  
   
   # upward (positive) velocity induced through evaporation (positive m_evap) 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
@@ -574,5 +574,3 @@ for ts in range(tss,ndt+1):
      
 time_end = time.time()     
 print("Total time: %4.4e" % ((time_end-time_start)/3600))
-
-

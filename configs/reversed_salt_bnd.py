@@ -55,7 +55,7 @@ airgap = 0.0005 # m
 name = 'R_salt' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
-restart = False
+restart = True
 restart_file = 'ws_' + name + '_temp.npz'
 
 # Node coordinates for both domains
@@ -454,13 +454,13 @@ for ts in range(tss,ndt+1):
         airgap_outfile = airgap
         massflow_outfile = np.sum(mem.j) \
                      /np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])*3600 
-        RR_outfile = (-np.sum(np.sum(mem.j)))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
-                     *np.sum(np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])))
-        GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:]) \
-                     *(t_h_in - np.mean(t[H2O].val[-1:,:,:])))
-        text_file.write("t_h_in u_h_in airgap m_evap RR GOR\n")
-        text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e}".format \
-          (t_h_in, u_h_in, airgap_outfile, massflow_outfile, RR_outfile, GOR_outfile))
+        RR_outfile = (-np.sum(m_evap))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
+                      *np.sum(dy[H2O][:1,:,:]*dz[H2O][:1,:,:]))
+        dT_H2O = t_h_in - np.mean(t[H2O].val[-1:,:,:])
+        GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:])*dT_H2O)
+        text_file.write("t_h_in u_h_in airgap m_evap RR GOR Delta_T Delta_T*u_in\n")
+        text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e} {6:2.4e} {7:2.4e}".format \
+          (t_h_in, u_h_in, airgap_outfile, massflow_outfile, RR_outfile, GOR_outfile, dT_H2O, dT_H2O*u_h_in ))
         text_file.close()
     
   # Check relative change in domain:
