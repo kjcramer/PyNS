@@ -1,7 +1,7 @@
 #!/bin/bash -l
 ## Request one core and 2GB of the memory available on an `iris` cluster node for five days (e.g. for sequential code requesting a lot of memory)
 ## Valentin Plugaru <Valentin.Plugaru@uni.lu>
-#SBATCH -J pyns
+#SBATCH -J pyns_salt
 #SBATCH --mail-type=end,fail
 #SBATCH --mail-user=kerstin.cramer@uni.lu
 #SBATCH -N 1
@@ -28,4 +28,4 @@ module load lang/Python
 # ${4} is the restart from file option {True, False}
 # ${5} is the number of timesteps/1000
 
-python normal_salt_bnd.py # ${1} ${2} ${3} ${4} ${5}
+python normal_gaia_salt.py ${1} ${2} ${3} ${4} ${5}
