@@ -459,7 +459,7 @@ def normal_config_2(t_h_in,u_h_in,ndt,restart = False):
             dT_H2O = t_h_in - np.mean(t[H2O].val[-1:,:,:])
             GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:])*dT_H2O)
             text_file.write("t_h_in u_h_in airgap m_evap RR GOR Delta_T Delta_T*u_in\n")
-            text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e} {5:2.4e} {5:2.4e}".format \
+            text_file.write("{0:2.0f} {1:1.3f} {2:1.4f} {3:2.3e} {4:2.4e} {5:2.4e} {6:2.4e} {7:2.4e}".format \
               (t_h_in, u_h_in, airgap_outfile, massflow_outfile, RR_outfile, GOR_outfile, dT_H2O, dT_H2O*u_h_in ))
             text_file.close()
         

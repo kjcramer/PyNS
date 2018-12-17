@@ -20,7 +20,7 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-name = 'ws_N_80_025_05_temp'
+name = 'ws_R_salt80_05_05_temp'
 
 data=np.load(name + '.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
@@ -277,7 +277,7 @@ pylab.show
 #%% Temperature polarization coefficient
 z_pos = 40
 
-polc_t = (t_int_mem[:,0,z_pos] - t_air[:,20,z_pos])/(t_h2o[:,4,z_pos]-t_air[:,10,z_pos])
+polc_t = (t_int_mem[:,:1,z_pos] - t_air[:,-1:,z_pos])/(t_h2o[:,20,z_pos]-t_air[:,3,z_pos])
 
 #np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4e',header='x polc_t')
 
