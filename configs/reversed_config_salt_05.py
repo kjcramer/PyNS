@@ -63,7 +63,7 @@ def reversed_config_05(t_h_in,u_h_in,ndt,restart = False):
     # in line 63 accordingly!!!
     airgap = 0.0005 # m
     
-    name = 'R_salt' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
+    name = 'R_salt_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
     
     # restart options
     #restart = True
