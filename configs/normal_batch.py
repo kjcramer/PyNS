@@ -12,3 +12,4 @@ from pyns.configs.normal_config_05 import *
 
 #for uu in u_h_in:
 normal_config_05(60, 0.05, 100000, False)
+
