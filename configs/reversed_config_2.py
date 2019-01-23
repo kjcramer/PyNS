@@ -504,6 +504,8 @@ def reversed_config_2(t_h_in,u_h_in,ndt,restart = False):
         
         z_pos = 10
         
+        plt.ion()
+        
         xc = avg(xn[AIR])
         yc = np.append(avg(yn[H2O]), avg(yn[AIR]),axis=0)
         yc = np.append(yc, avg(yn[FIL]),axis=0)
