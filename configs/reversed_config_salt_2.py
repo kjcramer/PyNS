@@ -514,6 +514,10 @@ def reversed_config_2(t_h_in,u_h_in,ndt,restart = False):
         velo_save_title = 'velocity_' + name + '_' + str(ts) + 'ts.npz'
         np.savez(velo_save_title,uc_air,vc_air,wc_air,uc_h2o,vc_h2o,wc_h2o,uc_fil,vc_fil,wc_fil)
         
+        #%%
+        
+        salt_save_title = 'salt_' + name + '_' + str(ts) + 'ts.npz'
+        np.savez(salt_save_title, rho[H2O], a[H2O].val, t[H2O].val, t_int, p_v[AIR].bnd[S].val, xn, yn[H2O] )
         
         #%%
         plt.close("all")
