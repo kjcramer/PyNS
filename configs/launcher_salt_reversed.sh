@@ -28,4 +28,4 @@ module load lang/Python
 # ${4} is the restart from file option {True, False}
 # ${5} is the number of timesteps/1000
 
-python normal_gaia_salt.py ${1} ${2} ${3} ${4} ${5}
+python reversed_gaia_salt.py ${1} ${2} ${3} ${4} ${5}
