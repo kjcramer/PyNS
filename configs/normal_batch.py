@@ -11,4 +11,5 @@ from pyns.configs.normal_config_05 import *
 #u_h_in = [0.025, 0.05, 0.1]
 
 #for uu in u_h_in:
-AA = normal_config_05(70, 0.025, 1, False)
+normal_config_05(60, 0.05, 100000, False)
+

@@ -67,6 +67,7 @@ def reversed_config_salt_2(t_h_in,u_h_in,ndt,restart = False):
     
     # restart options
     #restart = True
+    #restart_file = 'ws_' + name + '_100000ts.npz'
     restart_file = 'ws_' + name + '_temp.npz'
     
     # Node coordinates for both domains
@@ -465,7 +466,7 @@ def reversed_config_salt_2(t_h_in,u_h_in,ndt,restart = False):
             airgap_outfile = airgap
             massflow_outfile = np.sum(mem.j) \
                          /np.sum(dx[AIR][:,-1:,:]*dz[AIR][:,-1:,:])*3600 
-            RR_outfile = (-np.sum(m_evap))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
+            RR_outfile = (-np.sum(mem.j))/(u_h_in*np.mean(rho[H2O][:1,:,:])\
                           *np.sum(dy[H2O][:1,:,:]*dz[H2O][:1,:,:]))
             dT_H2O = t_h_in - np.mean(t[H2O].val[-1:,:,:])
             GOR_outfile = RR_outfile * h_d[H2O]/(np.mean(cap[H2O][:1,:,:])*dT_H2O)
@@ -513,6 +514,10 @@ def reversed_config_salt_2(t_h_in,u_h_in,ndt,restart = False):
         velo_save_title = 'velocity_' + name + '_' + str(ts) + 'ts.npz'
         np.savez(velo_save_title,uc_air,vc_air,wc_air,uc_h2o,vc_h2o,wc_h2o,uc_fil,vc_fil,wc_fil)
         
+        #%%
+        
+        salt_save_title = 'salt_' + name + '_' + str(ts) + 'ts.npz'
+        np.savez(salt_save_title, rho[H2O], a[H2O].val, t[H2O].val, t_int, p_v[AIR].bnd[S].val, xn, yn[H2O] )
         
         #%%
         plt.close("all")
