@@ -503,6 +503,10 @@ def normal_config_2(t_h_in,u_h_in,ndt,restart = False):
         
         #%%
         
+        salt_save_title = 'salt_' + name + '_' + str(ts) + 'ts.npz'
+        np.savez(salt_save_title, rho[H2O], a[H2O].val, t[H2O].val, mem.t_int, p_v[AIR].bnd[N].val, xn, yn[H2O] )
+        #%%
+        
         plt.ion()
         
         xc = avg(xn[AIR])
