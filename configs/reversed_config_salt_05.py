@@ -31,7 +31,7 @@ from pyns.demo.latent_heat import *
 from pyns.demo.rho_salt import *
 
 # =============================================================================
-def reversed_config_05(t_h_in,u_h_in,ndt,restart = False):
+def reversed_config_salt_05(t_h_in,u_h_in,ndt,restart = False):
 # -----------------------------------------------------------------------------
     """
     Args:
