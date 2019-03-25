@@ -127,3 +127,13 @@ def t_sat(p_v):
   t = t - 273.15    # convert to °C
     
   return t # end of function
+  
+#--------------------------------------------------------------------------
+def t_sat_salt(p_v,a,M_salt,M_H2O):
+#--------------------------------------------------------------------------
+  
+  p_v = p_v / (1 - M_H2O/M_salt * a)
+  
+  t = t_sat(p_v)
+  
+  return t # end of function
