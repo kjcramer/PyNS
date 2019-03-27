@@ -44,40 +44,12 @@ def rho_salt(a,t,rho):
       rho_s= float("nan")
  
   else:
-    #dim=t.ndim
     rho_s=zeros(rho.shape)
     
     A = a0 + a1 * t + a2 * t**2 + a3 * t**3 + a4 * t**4 + a5 * t**5
     B = b0 + b1 * t + b2 * t**2
     C = c0
     rho_s= rho + A * a + B * a**1.5 + C * a**2
-  
-#    if dim==1:
-#      for ii in range(0,len(t)):
-#        if   (t[ii] >=0 and t[ii]<=90):
-#          A = a0 + a1 * t + a2 * t**2 + a3 * t**3 + a4 * t**4 + a5 * t**5
-#          B = b0 + b1 * t + b2 * t**2
-#          C = c0
-#          rho_s= rho + A * a + B * a**1.5 + C * a**2
-#          
-#    elif dim==2:
-#      for ii in range(0,t.shape[0]):
-#        for jj in range(0,t.shape[1]):
-#          if   (t[ii,jj] >=0 and t[ii,jj]<=90):
-#            A = a0 + a1 * t + a2 * t**2 + a3 * t**3 + a4 * t**4 + a5 * t**5
-#            B = b0 + b1 * t + b2 * t**2
-#            C = c0
-#            rho_s= rho + A * a + B * a**1.5 + C * a**2
-#          
-#    elif dim==3:
-#      for ii in range(0,t.shape[0]):
-#        for jj in range(0,t.shape[1]):
-#          for kk in range(0,t.shape[2]):
-#            if   (t[ii,jj,kk] >=0 and t[ii,jj,kk]<=90):
-#              A = a0 + a1 * t + a2 * t**2 + a3 * t**3 + a4 * t**4 + a5 * t**5
-#              B = b0 + b1 * t + b2 * t**2
-#              C = c0
-#              rho_s= rho + A * a + B * a**1.5 + C * a**2 
             
     rho_s[t<0]= float("nan")
     rho_s[t>90]= float("nan")

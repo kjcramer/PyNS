@@ -3,18 +3,13 @@
 
 import sys
 sys.path.append("../..")
-import time
 
-time_start = time.time()
+import time
+import numpy as np
+from scipy.constants import R
 
 # Standard Python modules
 from pyns.standard import *
-
-import matplotlib.pylab as pylab
-import numpy as np
-import matplotlib
-from scipy.optimize import fsolve
-from scipy.constants import R
 
 # PyNS modules
 from pyns.constants          import *
@@ -24,12 +19,6 @@ from pyns.display            import plot, write
 from pyns.physical           import properties
 from pyns.physical.constants import G
 
-# membrane aux functions
-from pyns.demo.p_v_sat import *
-from pyns.demo.calc_interface import *
-from pyns.demo.latent_heat import *
-from pyns.demo.rho_salt import *
-
 plt.close("all")
 
 #==========================================================================
@@ -38,27 +27,45 @@ plt.close("all")
 #
 #==========================================================================
 
+# Domain order
 AIR = 0
 H2O = 1
 FIL = 2
 
+# Operational parameters
 u_h_in = 0.05 # m/s
 t_h_in = 80   # C
 a_salt = 90.0 # g/l
 t_c_in = 15   # C
 
+# Time-stepping parameters
+dt  =    0.0001    # time step
+ndt =    5 #70000  # number of time steps
+dt_plot = ndt      # plot frequency
+dt_save = 500      # save frequency for latest results in temp file 
+dt_save_ts = 10000 # save frequency for results associated to time step
+tss = 1            # per default, start at time step 1
+
 # when setting the air gap thickness here
 # MAKE SURE TO ADJUST THE NUMBER OF CELLS IN THE AIR GAP
-# in line 63 accordingly!!!
+# for yn accordingly!!!
 airgap = 0.0005 # m
 
-name = 'R_salt' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
+# identifier for simulation
+name = 'R_' + str(t_h_in) + '_' + str(u_h_in).replace("0.", "") + '_' + str(airgap).replace("0.00", "")
 
 # restart options
-restart = True
+restart = False
 restart_file = 'ws_' + name + '_temp.npz'
 
-# Node coordinates for both domains
+# start timer
+time_start=time.time()
+
+#-----------
+# Define geometry
+#----------- 
+
+# Node coordinates for domains
 xn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07, 56))
 yn = (nodes(-airgap, 0, 6), nodes(-airgap-0.01, -airgap,  48), nodes(0.0, 0.001, 6))
 zn = (nodes(0,   0.07, 56), nodes(0, 0.07, 56), nodes(0,       0.07,  56))
@@ -83,6 +90,10 @@ rc,ru,rv,rw =        (cell[AIR][6], cell[H2O][6], cell[FIL][6]),  \
                      (cell[AIR][7], cell[H2O][7], cell[FIL][7]),  \
                      (cell[AIR][8], cell[H2O][8], cell[FIL][8]),  \
                      (cell[AIR][9], cell[H2O][9], cell[FIL][9])
+
+#-----------
+# Physical properties 
+#-----------  
 					 
 # Set physical properties temperature dependent:
 prop = [properties.air(round((t_h_in+t_c_in)/2,-1),rc[AIR]), \
@@ -96,7 +107,7 @@ rho, mu, cap, kappa = (prop[AIR][0], prop[H2O][0], prop[FIL][0]),  \
                       
 diff = (ones(rc[AIR])*3.5E-5, ones(rc[H2O])*1.99E-09)
 
-h_d = [ 0.0, latent_heat(t_h_in), latent_heat(t_c_in)]
+h_d = [ 0.0, properties.latent_heat(t_h_in), properties.latent_heat(t_c_in)]
 
 M_H2O  = 18E-3      # kg/mol
 M_AIR  = 28E-3      # kg/mol
@@ -133,7 +144,9 @@ mem = membrane(65E-6,   \
                  zeros((nx[AIR],1,nz[AIR])), \
                  zeros((nx[AIR],1,nz[AIR])))
                                
-      
+#-----------
+# Solving variables 
+#-----------      
  
 # Create unknowns; names, positions and sizes
 uf    = [Unknown("face-u-vel",    X, ru[AIR], DIRICHLET),  \
@@ -171,6 +184,10 @@ q_a = [zeros(rc[AIR]),
 dv  = [dx[AIR]*dy[AIR]*dz[AIR], 
        dx[H2O]*dy[H2O]*dz[H2O], 
        dx[FIL]*dy[FIL]*dz[FIL]]
+
+#-----------
+# Some helping variables 
+#-----------
        
 # variables to temporarily store vf bnd values:
 vf_h2o_N_tmp=zeros(vf[H2O].bnd[N].val.shape)
@@ -181,12 +198,19 @@ x_salt = zeros(a[H2O].bnd[N].val.shape)
 x_tot = zeros(a[H2O].bnd[N].val.shape)
 a_2 = zeros(a[H2O].bnd[N].val.shape)
 
-# Specify boundary conditions
+# initialize tracking of change
+change_t = zeros(ndt)
+change_a = zeros(ndt)
+change_p = zeros(ndt)
+
+#-----------
+# Specify boundary condition 
+#-----------
+
 uf[H2O].bnd[W].val[:1,:,:] = u_h_in
 uf[H2O].val[:,:,:] = u_h_in
 uf[H2O].bnd[E].typ[:1,:,:] = OUTLET 
-uf[H2O].bnd[E].val[:1,:,:] = u_h_in
-#uf[AIR].bnd[W].typ[:1,:,:] = OUTLET     
+uf[H2O].bnd[E].val[:1,:,:] = u_h_in  
   
 t[AIR].bnd[S].typ[:,:1,:] = DIRICHLET  
 t[AIR].bnd[S].val[:,:1,:] = t_h_in
@@ -203,7 +227,8 @@ t[FIL].bnd[S].val[:,:1,:] = t_c_in
 t[FIL].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[FIL].bnd[N].val[:,:1,:] = t_c_in
 
-mem.t_int[:,:,:] = t[FIL].bnd[S].val[:,:1,:] # temporary
+mem.t_int[:,:,:] = t[FIL].bnd[S].val[:,:1,:]
+t_int = t_c_in * ones(np.shape(mem.t_int))
 
 a[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 a[H2O].bnd[W].val[:1,:,:] = a_salt/rho[H2O][:1,:,:]
@@ -212,18 +237,19 @@ M[AIR].bnd[S].typ[:,:1,:] = DIRICHLET
 M[AIR].bnd[S].val[:,:1,:] = M[AIR].val[:,:1,:]
 
 p_v[AIR].bnd[S].typ[:,:,:] = DIRICHLET
-p_v[AIR].bnd[S].val[:,:,:] = p_v_sat(t[H2O].bnd[N].val[:,:,:])
+p_v[AIR].bnd[S].val[:,:,:] = properties.p_v_sat(t[H2O].bnd[N].val[:,:,:])
 p_v[AIR].bnd[N].typ[:,:,:] = DIRICHLET
-p_v[AIR].bnd[N].val[:,:,:] = p_v_sat(t[FIL].bnd[S].val[:,:,:])
+p_v[AIR].bnd[N].val[:,:,:] = properties.p_v_sat(t[FIL].bnd[S].val[:,:,:])
 
 t[AIR].val[:,:,:] = np.reshape(np.linspace(t_h_in,t_c_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1]) #round((t_h_in+t_c_in)/2,-1) #
 t[H2O].val[:,:,:] = t_h_in
 t[FIL].val[:,:,:] = t_c_in
 
-a[AIR].val[:,:,:] = p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
+a[AIR].val[:,:,:] = properties.p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
 a[H2O].val[:,:,:] = a_salt/rho[H2O][:,:,:]
- 
+
+# correct Neumann boundary conditions
 for c in (AIR,H2O,FIL):
   adj_n_bnds(p[c])
   adj_n_bnds(t[c])
@@ -233,28 +259,21 @@ for c in (AIR,H2O,FIL):
 t_max = 0.0
 t_min = 100.0
 
-for c in (W,T):
+# check for extreme temperatures to set limits
+for c in (W,E,S,N,T,B):
   t_max = np.amax([t_max, np.amax(t[H2O].bnd[c].val)])
   t_min = np.amin([t_min, np.amin(t[FIL].bnd[c].val)]) 
-  
-  # Time-stepping parameters
-dt  =    0.0001  # time step
-ndt =    70000  # number of time steps
-dt_plot = ndt    # plot frequency
-dt_save = 500
-dt_save_ts = 10000
-tss = 1
 
+#-----------
+# Specify structures in the domains
+#-----------
 obst = [zeros(rc[AIR]), zeros(rc[H2O]),zeros(rc[FIL])]
 
-# initialize tracking of change
-change_t = zeros(ndt)
-change_a = zeros(ndt)
-change_p = zeros(ndt)
-
-time_start=time.time()
 
 #%%
+#-----------
+# load previous data from file if restart is set
+#-----------
 
 if restart==True:
   
@@ -328,7 +347,7 @@ for ts in range(tss,ndt+1):
                      
   rho[AIR][:,:,:] = np.interp(t[AIR].val, t_interp, rho_air)
   rho[H2O][:,:,:] = np.interp(t[H2O].val, t_interp, rho_water)
-  rho[H2O][:,:,:] = rho_salt(a[H2O].val[:,:,:],t[H2O].val[:,:,:],rho[H2O][:,:,:])
+  rho[H2O][:,:,:] = properties.rho_salt(a[H2O].val[:,:,:],t[H2O].val[:,:,:],rho[H2O][:,:,:])
       
   
   #------------------------
@@ -341,17 +360,20 @@ for ts in range(tss,ndt+1):
     
   # Interphase energy equation between AIR & H2O
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                            (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O))  
+                            (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, H2O), t_int)  
   
-  # upward (positive) velocity induced through evaporation (positive m_evap) 
+  # vapor source due to evaporation into AIR domain
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
+  # upward (positive) velocity induced through evaporation (positive m_evap) 
+  # makes simulation instable at start 
+  #  -> only enable if ~1000 time steps have been solved 
   #vf[H2O].bnd[N].val[:,:1,:] = m_evap[:,:1,:]/(rho[FIL][:,-1:,:]*dx[FIL][:,-1:,:]*dz[FIL][:,-1:,:]) 
    
   # Membrane diffusion and energy equation between FIL & AIR
   mem, t, p_v = calc_membrane(t, a, p_v, p_tot, mem, kappa, diff, M, \
                     (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, FIL))
   
-  # downward (negative) velocity induced through evaporation (positive mem_j)                
+  # vapor source due to evaporation into AIR domain                
   q_a[AIR][:,-1:,:] = mem.j [:,:1,:] / dv[AIR][:,-1:,:] 
   
   # salt concentration boundary condition
@@ -368,13 +390,14 @@ for ts in range(tss,ndt+1):
   vf_h2o_N_tmp[:,:,:] = vf[H2O].bnd[N].val[:,:1,:]
   vf[H2O].bnd[N].val[:,:1,:] = 0.0
   
-  # in case of v[H2O].bnd[S].val ~= 0 correct convection into membrane 
+  # discretize and solve concentration profile
   for c in (AIR,H2O):
     calc_t(a[c], (uf[c],vf[c],wf[c]), rho[c], diff[c],  \
            dt, (dx[c],dy[c],dz[c]), 
            obstacle = obst[c],
            source = q_a[c])
-           
+    
+  # no negative concentrations           
   for c in (AIR,H2O):
     a[c].val[a[c].val < 0.0] = 0.0
     
@@ -398,12 +421,13 @@ for ts in range(tss,ndt+1):
   # Momentum conservation
   #-----------------------
   for c in (AIR,H2O):
+      
+    # direction of gravity
     #g_u = -G * avg(X, rho[c])
-    
     g_v = -G * avg(Y, rho[c])
   
-    ef = zeros(ru[c]), g_v, zeros(rw[c])
-    
+    # external forces like gravity
+    ef = zeros(ru[c]), g_v, zeros(rw[c])  
     
     calc_uvw((uf[c],vf[c],wf[c]), (uf[c],vf[c],wf[c]), rho[c], mu[c],  \
              dt, (dx[c],dy[c],dz[c]), 
@@ -574,15 +598,7 @@ for ts in range(tss,ndt+1):
     plt.xlabel("x [m]")
     #plt.ylim([-1E1,1E1])
     plt.ylabel("y [m]" )
-    
-    #pylab.savefig('membrane.pdf')
 
-    pylab.show()
-
-    #for c in (AIR,H2O):
-    #  plot_isolines(t[c].val, (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
-     # plot_isolines(p_tot[c], (uf[c],vf[c],wf[c]), (xn[c],yn[c],zn[c]), Z)
-     
 time_end = time.time()     
-print("Total time: %4.4e" % ((time_end-time_start)/3600))
+print("Total time: %4.4e h" % ((time_end-time_start)/3600))
 
