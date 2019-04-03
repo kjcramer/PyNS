@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 
 import sys
@@ -148,7 +147,7 @@ mem = membrane(65E-6,   \
 # Solving variables 
 #-----------      
  
-# Create unknowns; names, positions and sizes
+# Create unknowns; names, positions, sizes and default boundary condition
 uf    = [Unknown("face-u-vel",    X, ru[AIR], DIRICHLET),  \
          Unknown("face-u-vel",    X, ru[H2O], DIRICHLET),  \
          Unknown("face-u-vel",    X, ru[FIL], DIRICHLET)]
@@ -228,9 +227,6 @@ t[FIL].bnd[S].val[:,:1,:] = t_c_in
 t[FIL].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[FIL].bnd[N].val[:,:1,:] = t_c_in
 
-mem.t_int[:,:,:] = t[H2O].bnd[S].val[:,:1,:] 
-t_int = t_c_in * ones(np.shape(mem.t_int))
-
 a[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 a[H2O].bnd[W].val[:1,:,:] = a_salt/rho[H2O][:1,:,:]
 
@@ -247,6 +243,9 @@ p_v[AIR].bnd[S].val[:,:,:] = properties.p_v_sat(t[FIL].bnd[N].val[:,:,:])
 t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in,num=t[AIR].val.shape[1]),[1,t[AIR].val.shape[1],1])
 t[H2O].val[:,:,:] = t_h_in
 t[FIL].val[:,:,:] = t_c_in
+
+mem.t_int[:,:,:] = t[H2O].bnd[S].val[:,:1,:] 
+t_int = t_c_in * ones(np.shape(mem.t_int))
 
 a[AIR].val[:,:,:] = properties.p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
@@ -364,7 +363,7 @@ for ts in range(tss,ndt+1):
     
   # Interface energy equation between AIR & FIL
   t_int, m_evap, t, p_v = calc_interface(t, a, p_v, p_tot, kappa, M, \
-                            (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, FIL), t_int, 0.5)  
+            (M_AIR,M_H2O,M_salt), h_d, (dx,dy,dz), (AIR, FIL), t_int, 0.2)  
   
   # vapor source due to evaporation into AIR domain 
   q_a[AIR][:,:1,:]  = m_evap[:,:1,:] / dv[AIR][:,:1,:] 
@@ -531,15 +530,6 @@ for ts in range(tss,ndt+1):
     #%%
     
     plt.ion()
-    
-    plt.figure()
-    plt.subplot(2,1,1)
-    plt.contourf(np.transpose(a[H2O].val[:,:,z_pos]))
-    plt.colorbar()
-    
-    plt.subplot(2,1,2)
-    plt.contourf(np.transpose(rho[H2O][:,:,z_pos]))
-    cbar = plt.colorbar()
     
     xc = avg(xn[AIR])
     yc = np.append(avg(yn[FIL]), avg(yn[AIR]),axis=0)

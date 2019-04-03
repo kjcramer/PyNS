@@ -8,3 +8,4 @@ ws_*
 Output_*
 velocity*ts.npz
 slurm*.out
+*.vtr

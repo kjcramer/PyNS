@@ -246,9 +246,6 @@ t[COL].bnd[E].val[:1,:,:] = t_c_in
 t[COL].bnd[N].typ[:,:1,:] = DIRICHLET  
 t[COL].bnd[N].val[:,:1,:] = t_c_in
 
-mem.t_int[:,:,:] = t[H2O].bnd[S].val[:,:1,:]
-t_int = t_c_in * ones(np.shape(mem.t_int))
-
 a[H2O].bnd[W].typ[:1,:,:] = DIRICHLET
 a[H2O].bnd[W].val[:1,:,:] = a_salt/rho[H2O][:1,:,:]
 
@@ -267,6 +264,9 @@ t[AIR].val[:,:,:] = np.reshape(np.linspace(t_c_in,t_h_in, \
 t[H2O].val[:,:,:] = t_h_in
 t[FIL].val[:,:,:] = t_c_in
 t[COL].val[:,:,:] = t_c_in
+
+mem.t_int[:,:,:] = t[H2O].bnd[S].val[:,:1,:]
+t_int = t_c_in * ones(np.shape(mem.t_int))
 
 a[AIR].val[:,:,:] = properties.p_v_sat(t[AIR].val[:,:,:])*1E-5*M_H2O/M_AIR
 M[AIR].val[:,:,:] = 1/((1-a[AIR].val[:,:,:])/M_AIR + a[AIR].val[:,:,:]/M_H2O)
