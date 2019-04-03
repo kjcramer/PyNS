@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Nov  9 12:00:32 2017
+Postprocessing script for simulations with coolant:
+Loads the .npz files
 
-@author: kerstin.cramer
+The plots are for normal configuration and need to be adjusted for reversed
 """
 
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.pylab as pylab
 
 import sys
 sys.path.append("../..")
@@ -20,7 +20,10 @@ from pyns.constants          import *
 from pyns.operators          import *
 from pyns.discretization     import *
 
-data=np.load('ws_70_temp.npz')
+# Identifier of the simulation to be loaded
+name = 'ws_N_coolant_70_6_temp'
+
+data=np.load(name + '.npz')
 #(ts, xn, yn[AIR], yn[H2O], yn[FIL], yn[COL], zn, 
 # t[AIR].val, uf[AIR].val,vf[AIR].val,wf[AIR].val, p_tot[AIR].val, p[AIR].val, a[AIR].val,  p_v[AIR].val, p_v[AIR].bnd[N].val, p_v[AIR].bnd[S].val, 
 # t[H2O].val, uf[H2O].val,vf[H2O].val,wf[H2O].val, p_tot[H2O].val, p[H2O].val, a[H2O].val, 
@@ -70,31 +73,29 @@ m_pv = data['arr_33']
 t_int_film = data['arr_34']
 m_out = data['arr_35']
 
-
-
 AIR = 0
 H2O = 1
 FIL = 2
 COL = 3
 
-#xn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
-#yn = (nodes(-0.004, 0,     10), nodes( 0,    0.02,  30), nodes(-0.005, -0.004,  3))
-#zn = (nodes(-0.05,  0.05, 150), nodes(-0.05, 0.05, 150), nodes(-0.05,   0.05, 150))
-
+# z position for the following plots
 z_pos = 40
     
 xc = avg(xn[AIR])
-yc = np.append(avg(yn_fil), avg(yn_air),axis=0)
-#yc = np.append(yc, avg(yn_air),axis=0)
+yc = np.append(avg(yn_col), avg(yn_fil),axis=0)
+yc = np.append(yc, avg(yn_air),axis=0)
 yc = np.append(yc, avg(yn_h2o),axis=0)
 zc = avg(zn[AIR])
 
-#%% vertical temperature profil
+#%% vertical temperature profil for normal configuration, reordering necessary for reversed
+
+x_end= np.shape(xn)[1]-2
+x_mid= np.int(np.round((np.shape(xn)[1]-2)/2))
 
 yc = np.append(avg(yn_col),avg(yn_fil),axis=0)
-yc = np.append(yc, -0.0035)
+yc = np.append(yc, -0.0035) # location of condensation interface
 yc = np.append(yc, avg(yn_air),axis=0)
-yc = np.append(yc, 0.0)
+yc = np.append(yc, 0.0) # location of membrane
 yc = np.append(yc, avg(yn_h2o),axis=0)
 
 t_plot_s=np.append(t_col[0,:,z_pos],t_fil[0,:,z_pos])
@@ -103,19 +104,20 @@ t_plot_s=np.append(t_plot_s, t_air[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_int_mem[0,:,z_pos])
 t_plot_s=np.append(t_plot_s, t_h2o[0,:,z_pos])
 
-t_plot_m=np.append(t_col[64,:,z_pos],t_fil[64,:,z_pos])
-t_plot_m=np.append(t_plot_m, t_int_film[64,:,z_pos])
-t_plot_m=np.append(t_plot_m, t_air[64,:,z_pos])
-t_plot_m=np.append(t_plot_m, t_int_mem[64,:,z_pos])
-t_plot_m=np.append(t_plot_m, t_h2o[64,:,z_pos])
+t_plot_m=np.append(t_col[x_mid,:,z_pos],t_fil[x_mid,:,z_pos])
+t_plot_m=np.append(t_plot_m, t_int_film[x_mid,:,z_pos])
+t_plot_m=np.append(t_plot_m, t_air[x_mid,:,z_pos])
+t_plot_m=np.append(t_plot_m, t_int_mem[x_mid,:,z_pos])
+t_plot_m=np.append(t_plot_m, t_h2o[x_mid,:,z_pos])
 
-t_plot_e=np.append(t_col[127,:,z_pos],t_fil[127,:,z_pos])
-t_plot_e=np.append(t_plot_e, t_int_film[127,:,z_pos])
-t_plot_e=np.append(t_plot_e, t_air[127,:,z_pos])
-t_plot_e=np.append(t_plot_e, t_int_mem[127,:,z_pos])
-t_plot_e=np.append(t_plot_e, t_h2o[127,:,z_pos])
+t_plot_e=np.append(t_col[x_end,:,z_pos],t_fil[x_end,:,z_pos])
+t_plot_e=np.append(t_plot_e, t_int_film[x_end,:,z_pos])
+t_plot_e=np.append(t_plot_e, t_air[x_end,:,z_pos])
+t_plot_e=np.append(t_plot_e, t_int_mem[x_end,:,z_pos])
+t_plot_e=np.append(t_plot_e, t_h2o[x_end,:,z_pos])
 
-np.savetxt('vertical_temp_70.dat', np.transpose((yc, t_plot_s, t_plot_m, t_plot_e)), fmt='%1.4e',header='y ts tm te')
+# Saving option for further use in pgf plot
+#np.savetxt('vertical_temp_70.dat', np.transpose((yc, t_plot_s, t_plot_m, t_plot_e)), fmt='%1.4e',header='y ts tm te')
 
 plt.figure
 plt.subplot(1,3,1)
@@ -147,8 +149,6 @@ plt.xlim([18, 80])
 plt.xticks([20,40,60,80],fontsize=18)
 plt.yticks([])
 
-pylab.show
-
 #%% streamlines in air gap
 
 y,x = np.mgrid[0:20:1,0:127:1]
@@ -169,10 +169,13 @@ plt.xlabel('X [m]',fontsize=20)
 
 #%% axial membrane flux
 
+
+# correct these values for each simulation!!!!
 dz = 0.00125
 dx = 0.00125
 
-np.savetxt('axial_membrane_flux.dat', np.transpose((xc, m_j[:,0,40]/(dx*dz)*3600, -m_out[:,0,40]/(dx*dz)*3600, t_int_film[:,0,40], a_air[:,0,40])), fmt='%1.4e',header='x m_mem m_out t_int_film a_air')
+# Saving option for further use in pgf plot
+#np.savetxt('axial_membrane_flux.dat', np.transpose((xc, m_j[:,0,40]/(dx*dz)*3600, -m_out[:,0,40]/(dx*dz)*3600, t_int_film[:,0,40], a_air[:,0,40])), fmt='%1.4e',header='x m_mem m_out t_int_film a_air')
 
 plt.figure
 plt.plot(xc,m_j[:,:,40]/(dx*dz)*3600, linestyle='-', color='blue', linewidth=1.2)
@@ -181,23 +184,20 @@ plt.ylabel('Membrane Mass Flux [kg/(m^2 h)]',fontsize=20)
 plt.xticks(fontsize=18)
 plt.yticks(fontsize=18)
 plt.tight_layout()
-pylab.show
 
-#%% mem interface contour plot
+#%% mem interface contour plot, options for pgf plot are commented
 
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import matplotlib as mpl
-mpl.use("pgf")
-pgf_with_rc_fonts = {
-    "pgf.texsystem": "pdflatex",
-    "font.family": "serif",
-    "font.serif": [],                   # use latex default serif font
-    "font.sans-serif": ["DejaVu Sans"], # use a specific sans-serif font
-    "pgf.preamble": [
-         "\\usepackage{sistyle}"         # load additional packages
-         ]
-}
-mpl.rcParams.update(pgf_with_rc_fonts)
+
+#import matplotlib as mpl
+#mpl.use("pgf")
+#pgf_with_rc_fonts = {
+#    "pgf.texsystem": "pdflatex",
+#    "font.family": "serif",
+#    "font.serif": [],                   # use latex default serif font
+#    "font.sans-serif": ["DejaVu Sans"], # use a specific sans-serif font
+#}
+#mpl.rcParams.update(pgf_with_rc_fonts)
 
 plt.figure(figsize=(4.5,2.5))
 plt.gca(aspect="equal")
@@ -206,29 +206,17 @@ plt.ylabel('Z [m]')
 plt.xticks((0.04, 0.08, 0.12))
 plt.tight_layout()
 ax = plt.gca()
-
 im = plt.contourf(xc,zc,np.transpose(t_int_mem[:,0,:]),cmap='viridis')
 # create an axes on the right side of ax. The width of cax will be 5%
 # of ax and the padding between cax and ax will be fixed at 0.05 inch.
 divider = make_axes_locatable(ax)
 cax = divider.append_axes("right", size="5%", pad=0.05)
 
-cbar = plt.colorbar(im, cax=cax)
-#plt.text(4.205, 0.87, "Temperature [\degC]", rotation='vertical')
-cbar.set_label('Temperature [\degC]')
+plt.colorbar(im, cax=cax)
 
-#plt.title('Evaporation Interface Temperature [\degC]')
-pylab.show
-
-plt.savefig('t_int_mem_70.pdf')
-plt.savefig('t_int_mem_70.pgf')
-
-#from scipy import interpolate
-#z_grid,x_grid = np.mgrid[0:0.1:80j,0:0.16:128j]
-#x_grid_1d = x_grid.flatten()
-#z_grid_1d = z_grid.flatten()
-#t_1d = t_int_mem.flatten()
-#np.savetxt('t_int_mem_70.dat', np.transpose((x_grid_1d, z_grid_1d, t_1d)), fmt='%1.4e',header='x z t_int_mem')
+# save options
+#plt.savefig('t_int_mem_70.pdf')
+#plt.savefig('t_int_mem_70.pgf')
 
 
 #%% Temperature polarization coefficient
@@ -236,11 +224,11 @@ z_pos = 40
 
 polc_t = (t_int_mem[:,0,z_pos] - t_air[:,20,z_pos])/(t_h2o[:,4,z_pos]-t_air[:,10,z_pos])
 
-np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4e',header='x polc_t')
+# Saving option for further use in pgf plot
+#np.savetxt('temperature_polarization.dat', np.transpose((xc, polc_t)), fmt='%1.4e',header='x polc_t')
 
 plt.figure()
 plt.plot(polc_t[:])
-
 
 #%% inlet velocity profile
 
@@ -248,14 +236,13 @@ u_h2o_plot=u_h2o
 u_h2o[u_h2o<0]=0
 
 plt.figure
-plt.contourf(zc,avg(yn[H2O]),u_h2o_plot[0,:,:])
+plt.contourf(zc,avg(yn_h2o),u_h2o_plot[0,:,:])
 plt.colorbar()
 plt.xlabel('Z [m]',fontsize=20)
 plt.xticks(fontsize=18)
 plt.yticks(fontsize=18)
 plt.ylabel('Y [m]',fontsize=20)
 plt.title('Inlet Velocity Profile [m/s]',fontsize=20)
-pylab.show
 
 #%% contour plots
 
@@ -294,9 +281,8 @@ levels_t=linspace( t_plot.min(), t_plot.max(), 11)
 norm_t=cm.colors.Normalize( vmax=t_plot.max(), vmin=t_plot.min() )
 cax_u=plt.contourf(xc,yc,t_plot,levels_t,cmap="rainbow",norm=norm_t)
 cbar_u=plt.colorbar(cax_u)
-plt.title("Temperature [m/s]")
+plt.title("Temperature")
 plt.xlabel("x [m]")
-#plt.ylim([-1E1,1E1])
 plt.ylabel("y [m]" )
 
 plt.subplot(3,2,2)
@@ -307,7 +293,6 @@ plt.clabel(cax_p2, fontsize=12, inline=1)
 cbar_p = plt.colorbar(cax_p)
 plt.title("Pressure Correction")
 plt.xlabel("x [m]")
-#plt.ylim([-1E1,1E1])
 plt.ylabel("y [m]" )
 
 plt.subplot(3,2,3)
@@ -315,7 +300,6 @@ cax_a=plt.contourf(xc,yc,a_plot,cmap="rainbow")
 cbar_a=plt.colorbar(cax_a)
 plt.title("Concentration")
 plt.xlabel("x [m]")
-#plt.ylim([-1E1,1E1])
 plt.ylabel("y [m]" )
 
 plt.subplot(3,2,4)
@@ -326,7 +310,6 @@ plt.clabel(cax_p2, fontsize=12, inline=1)
 cbar_p = plt.colorbar(cax_p)
 plt.title("Total Pressure")
 plt.xlabel("x [m]")
-#plt.ylim([-1E1,1E1])
 plt.ylabel("y [m]" )
 
 plt.subplot(3,2,6)
@@ -334,5 +317,4 @@ cax_u=plt.contourf(avg(xc),yc,u_plot,cmap="rainbow")
 cbar_u=plt.colorbar(cax_u)
 plt.title("Axial Velocity")
 plt.xlabel("x [m]")
-#plt.ylim([-1E1,1E1])
 plt.ylabel("y [m]" )

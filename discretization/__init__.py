@@ -20,3 +20,5 @@ from .diffusion       import diffusion
 from .nodes           import nodes
 from .nodal_uvw       import nodal_uvw
 from .vol_balance     import vol_balance
+from .calc_interface  import calc_interface
+from .calc_membrane   import calc_membrane

@@ -9,4 +9,6 @@ Output_*
 *.npz
 *.dat
 *.pgf
+velocity*ts.npz
+slurm*.out
 *.vtr
