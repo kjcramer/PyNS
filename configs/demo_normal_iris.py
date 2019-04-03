@@ -54,7 +54,7 @@ t_c_in = 15   # C
 dt  =    0.0001    # time step
 ndt =    timestep  # number of time steps, defined by command line argument
 dt_plot = ndt      # plot frequency
-dt_save = 5 #500   # save frequency for latest results in temp file 
+dt_save = 500      # save frequency for latest results in temp file 
 dt_save_ts = 10000 # save frequency for results associated to time step
 tss = 1            # per default, start at time step 1
 

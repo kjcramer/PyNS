@@ -3,7 +3,7 @@
 ## Valentin Plugaru <Valentin.Plugaru@uni.lu>
 #SBATCH -J pyns
 #SBATCH --mail-type=end,fail
-#SBATCH --mail-user=kerstin.cramer@uni.lu
+##SBATCH --mail-user=kerstin.cramer@uni.lu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=2GB
@@ -27,4 +27,4 @@ module load lang/Python
 # ${3} is the restart from file option {True, False}
 # ${4} is the number of timesteps/1000
 
-python normal_gaia.py ${1} ${2} ${3} ${4}
+python demo_normal_iris.py ${1} ${2} ${3} ${4}
